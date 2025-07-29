@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanye Ranker - Simple Version</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .screen {
+            display: none;
+        }
+        
+        .screen.active {
+            display: block;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+        }
+        
+        .btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto;
+        }
+        
+        .btn:hover {
+            background: #ff5252;
+        }
+        
+        .comparison-container {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            align-items: center;
+            margin: 40px 0;
+        }
+        
+        .song-card {
+            background: #111;
+            padding: 30px;
+            border-radius: 20px;
+            width: 350px;
+            text-align: center;
+        }
+        
+        .album-art {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .song-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .album-name {
+            color: #999;
+            margin-bottom: 20px;
+        }
+        
+        .vs {
+            font-size: 2rem;
+            color: #666;
+        }
+        
+        .progress {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #999;
+        }
+        
+        .results-list {
+            background: #111;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .result-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 15px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .result-rank {
+            font-size: 1.5rem;
+            color: #ff6b6b;
+            width: 50px;
+        }
+        
+        .error {
+            background: #ff4444;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Landing Screen -->
+        <div id="landing" class="screen active">
+            <h1>KANYE RANKER</h1>
+            <p style="text-align: center; margin-bottom: 40px;">Compare songs and find your favorites</p>
+            <button class="btn" onclick="startApp()">Start Ranking</button>
+            <div id="landing-error" class="error" style="display: none;"></div>
+        </div>
+        
+        <!-- Comparison Screen -->
+        <div id="comparison" class="screen">
+            <h1>KANYE RANKER</h1>
+            <p class="progress">Comparison <span id="current">1</span> of <span id="total">50</span></p>
+            
+            <div class="comparison-container">
+                <div class="song-card">
+                    <img id="img-a" class="album-art" src="assets/album-covers/placeholder.svg" alt="">
+                    <h2 id="title-a" class="song-title">Loading...</h2>
+                    <p id="album-a" class="album-name">Loading...</p>
+                    <button class="btn" onclick="chooseSong(0)">Choose This</button>
+                </div>
+                
+                <div class="vs">VS</div>
+                
+                <div class="song-card">
+                    <img id="img-b" class="album-art" src="assets/album-covers/placeholder.svg" alt="">
+                    <h2 id="title-b" class="song-title">Loading...</h2>
+                    <p id="album-b" class="album-name">Loading...</p>
+                    <button class="btn" onclick="chooseSong(1)">Choose This</button>
+                </div>
+            </div>
+            
+            <button class="btn" style="background: #666;" onclick="showResults()">Show Results Early</button>
+        </div>
+        
+        <!-- Results Screen -->
+        <div id="results" class="screen">
+            <h1>Your Top 10 Kanye Songs</h1>
+            <div id="results-list" class="results-list"></div>
+            <button class="btn" onclick="restart()">Start Over</button>
+        </div>
+    </div>
+    
+    <script>
+        // Global variables
+        let songs = [];
+        let albums = {};
+        let ratings = {};
+        let comparisons = [];
+        let currentPair = null;
+        let pairIndex = 0;
+        
+        // Simple start function
+        async function startApp() {
+            console.log('Starting app...');
+            const errorDiv = document.getElementById('landing-error');
+            errorDiv.style.display = 'none';
+            
+            try {
+                // Load data
+                console.log('Loading songs.json...');
+                const response = await fetch('data/songs.json');
+                const data = await response.json();
+                
+                console.log('Data loaded:', data);
+                
+                // Store songs and albums
+                songs = data.songs;
+                data.albums.forEach(album => {
+                    albums[album.id] = album;
+                });
+                
+                console.log(`Loaded ${songs.length} songs and ${Object.keys(albums).length} albums`);
+                
+                // Initialize ratings
+                songs.forEach(song => {
+                    ratings[song.id] = 1500;
+                });
+                
+                // Generate simple random pairings
+                generatePairings();
+                
+                // Show comparison screen
+                showScreen('comparison');
+                showNextComparison();
+                
+            } catch (error) {
+                console.error('Error starting app:', error);
+                errorDiv.textContent = 'Failed to load songs: ' + error.message;
+                errorDiv.style.display = 'block';
+            }
+        }
+        
+        function generatePairings() {
+            comparisons = [];
+            const numComparisons = Math.min(50, songs.length * 2);
+            
+            for (let i = 0; i < numComparisons; i++) {
+                const a = Math.floor(Math.random() * songs.length);
+                let b = Math.floor(Math.random() * songs.length);
+                while (b === a) {
+                    b = Math.floor(Math.random() * songs.length);
+                }
+                comparisons.push([a, b]);
+            }
+            
+            console.log(`Generated ${comparisons.length} comparisons`);
+        }
+        
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+        
+        function showNextComparison() {
+            if (pairIndex >= comparisons.length) {
+                showResults();
+                return;
+            }
+            
+            currentPair = comparisons[pairIndex];
+            const songA = songs[currentPair[0]];
+            const songB = songs[currentPair[1]];
+            const albumA = albums[songA.albumId];
+            const albumB = albums[songB.albumId];
+            
+            // Update UI
+            document.getElementById('current').textContent = pairIndex + 1;
+            document.getElementById('total').textContent = comparisons.length;
+            
+            // Song A
+            document.getElementById('title-a').textContent = songA.title;
+            document.getElementById('album-a').textContent = albumA ? albumA.name : 'Unknown Album';
+            const imgA = document.getElementById('img-a');
+            imgA.src = albumA && albumA.coverArt ? `assets/album-covers/${albumA.coverArt}` : 'assets/album-covers/placeholder.svg';
+            imgA.onerror = () => { imgA.src = 'assets/album-covers/placeholder.svg'; };
+            
+            // Song B
+            document.getElementById('title-b').textContent = songB.title;
+            document.getElementById('album-b').textContent = albumB ? albumB.name : 'Unknown Album';
+            const imgB = document.getElementById('img-b');
+            imgB.src = albumB && albumB.coverArt ? `assets/album-covers/${albumB.coverArt}` : 'assets/album-covers/placeholder.svg';
+            imgB.onerror = () => { imgB.src = 'assets/album-covers/placeholder.svg'; };
+        }
+        
+        function chooseSong(choice) {
+            if (!currentPair) return;
+            
+            const winnerId = songs[currentPair[choice]].id;
+            const loserId = songs[currentPair[1 - choice]].id;
+            
+            // Simple ELO update
+            const k = 32;
+            const expectedWin = 1 / (1 + Math.pow(10, (ratings[loserId] - ratings[winnerId]) / 400));
+            ratings[winnerId] += k * (1 - expectedWin);
+            ratings[loserId] += k * (0 - (1 - expectedWin));
+            
+            pairIndex++;
+            showNextComparison();
+        }
+        
+        function showResults() {
+            // Sort songs by rating
+            const sortedSongs = songs
+                .map(song => ({ ...song, rating: ratings[song.id] }))
+                .sort((a, b) => b.rating - a.rating)
+                .slice(0, 10);
+            
+            // Display results
+            const resultsList = document.getElementById('results-list');
+            resultsList.innerHTML = '';
+            
+            sortedSongs.forEach((song, index) => {
+                const album = albums[song.albumId];
+                const div = document.createElement('div');
+                div.className = 'result-item';
+                div.innerHTML = `
+                    <div class="result-rank">#${index + 1}</div>
+                    <div>
+                        <div style="font-weight: bold;">${song.title}</div>
+                        <div style="color: #999;">${album ? album.name : 'Unknown'}</div>
+                    </div>
+                    <div style="margin-left: auto; color: #666;">Rating: ${Math.round(song.rating)}</div>
+                `;
+                resultsList.appendChild(div);
+            });
+            
+            showScreen('results');
+        }
+        
+        function restart() {
+            pairIndex = 0;
+            songs.forEach(song => {
+                ratings[song.id] = 1500;
+            });
+            generatePairings();
+            showScreen('landing');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,435 @@
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #1a1a1a !important;
+    color: #e0e0e0 !important;
+}
+
+/* Screens */
+.dark-mode .screen {
+    background-color: #1a1a1a !important;
+    color: #e0e0e0 !important;
+}
+
+/* Song Cards */
+.dark-mode .song-card {
+    background: #2a2a2a !important;
+    border-color: #444 !important;
+    color: #e0e0e0 !important;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
+.dark-mode .song-card:hover {
+    border-color: #1db954 !important;
+    box-shadow: 0 4px 20px rgba(29, 185, 84, 0.3) !important;
+}
+
+.dark-mode .song-card::before {
+    color: #999 !important;
+}
+
+/* Song Info */
+.dark-mode .song-title {
+    color: #ffffff !important;
+}
+
+.dark-mode .album-name {
+    color: #b0b0b0 !important;
+}
+
+.dark-mode .year {
+    color: #888 !important;
+}
+
+/* Buttons */
+.dark-mode .btn-small {
+    background: #333 !important;
+    color: #e0e0e0 !important;
+}
+
+.dark-mode .song-actions a.btn-small {
+    background: #333 !important;
+    color: #e0e0e0 !important;
+}
+
+.dark-mode .song-actions a.btn-small:hover {
+    background: #444 !important;
+}
+
+.dark-mode .preview-btn:not(.has-preview) {
+    background: #333 !important;
+    color: #666 !important;
+}
+
+/* Fix preview button text visibility */
+.dark-mode .preview-btn.has-preview {
+    background: #ff4444 !important;
+    color: white !important;
+}
+
+.dark-mode .preview-btn.has-preview:hover {
+    background: #ff0000 !important;
+    color: white !important;
+}
+
+/* VS Divider */
+.dark-mode .vs-divider {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #999 !important;
+    border-color: #444 !important;
+}
+
+/* Progress Bar */
+.dark-mode .progress-bar {
+    background: #333 !important;
+}
+
+/* Back Button */
+.dark-mode #back-button {
+    border-color: #888 !important;
+    color: #e0e0e0 !important;
+}
+
+.dark-mode #back-button:hover {
+    background: #888 !important;
+    color: #1a1a1a !important;
+}
+
+/* Footer Buttons */
+.dark-mode #skip-comparison {
+    border-color: #666 !important;
+    color: #b0b0b0 !important;
+}
+
+.dark-mode #skip-comparison:hover {
+    border-color: #888 !important;
+    color: #e0e0e0 !important;
+}
+
+.dark-mode #show-results {
+    background: #666 !important;
+}
+
+.dark-mode #show-results:hover {
+    background: #888 !important;
+}
+
+/* Headers */
+.dark-mode h1, .dark-mode h2, .dark-mode h3 {
+    color: #ffffff !important;
+}
+
+/* Landing Screen */
+.dark-mode .app-title {
+    color: #ffffff !important;
+}
+
+.dark-mode .tagline {
+    color: #b0b0b0 !important;
+}
+
+.dark-mode .instructions {
+    background: #2a2a2a !important;
+    border: 1px solid #444 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Quote sections */
+.dark-mode .main-quote {
+    color: #e0e0e0 !important;
+}
+
+.dark-mode .quote-attribution {
+    color: #b0b0b0 !important;
+}
+
+.dark-mode .bottom-quote p {
+    color: #e0e0e0 !important;
+}
+
+/* Stats line */
+.dark-mode .stats-line {
+    color: #b0b0b0 !important;
+}
+
+.dark-mode .stat-number {
+    color: var(--secondary-color) !important;
+}
+
+/* Step content */
+.dark-mode .step-content p {
+    color: #b0b0b0 !important;
+}
+
+.dark-mode .step-number {
+    color: #666 !important;
+}
+
+/* Hero button */
+.dark-mode .btn-hero {
+    background: var(--secondary-color) !important;
+    color: #000 !important;
+}
+
+.dark-mode .btn-hero:hover {
+    background: #FFD700 !important;
+    color: #000 !important;
+}
+
+/* App footer */
+.dark-mode .app-footer {
+    color: #b0b0b0 !important;
+}
+
+.dark-mode .app-footer a {
+    color: #b0b0b0 !important;
+}
+
+.dark-mode .app-footer a:hover {
+    color: var(--secondary-color) !important;
+    border-bottom-color: var(--secondary-color) !important;
+}
+
+/* Intro section */
+.dark-mode .intro-section h2 {
+    color: #ffffff !important;
+}
+
+/* Step headers */
+.dark-mode .step-content h3 {
+    color: #ffffff !important;
+}
+
+/* Modal and Overlays */
+.dark-mode .preview-modal {
+    background: rgba(0, 0, 0, 0.95) !important;
+}
+
+.dark-mode .preview-content {
+    background: #1a1a1a !important;
+}
+
+.dark-mode .preview-header {
+    background: #2a2a2a !important;
+}
+
+/* Results Screen */
+.dark-mode .result-item {
+    background: linear-gradient(135deg, #2a2a2a 0%, #252525 100%) !important;
+    border: 1px solid #444 !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark-mode .result-item:hover {
+    background: linear-gradient(135deg, #333 0%, #2d2d2d 100%) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+.dark-mode .result-item::before {
+    background: var(--secondary-color) !important;
+}
+
+/* Fix result text colors in dark mode */
+.dark-mode .result-title {
+    color: #ffffff !important;
+}
+
+.dark-mode .result-album {
+    color: #b0b0b0 !important;
+}
+
+/* Fix ELO rating visibility in dark mode */
+.dark-mode .result-rating {
+    color: #1db954 !important;
+    font-weight: 700 !important;
+}
+
+/* Result Actions in dark mode */
+.dark-mode .result-actions .preview-btn {
+    background: var(--secondary-color) !important;
+    color: white !important;
+}
+
+.dark-mode .result-actions .preview-btn:hover:not(:disabled) {
+    background: #ff5757 !important;
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3) !important;
+}
+
+.dark-mode .result-actions .preview-btn:disabled {
+    background: #333 !important;
+    color: #666 !important;
+}
+
+.dark-mode .result-actions .lyrics-btn {
+    background: transparent !important;
+    color: #ffffff !important;
+    border: 2px solid #ffffff !important;
+}
+
+.dark-mode .result-actions .lyrics-btn:hover {
+    background: #ffffff !important;
+    color: #1a1a1a !important;
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Fix Start Over button visibility in dark mode */
+.dark-mode .btn-secondary {
+    background-color: transparent !important;
+    color: #ffffff !important;
+    border-color: #ffffff !important;
+}
+
+.dark-mode .btn-secondary:hover {
+    background-color: #ffffff !important;
+    color: #1a1a1a !important;
+    border-color: #ffffff !important;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #333;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 30px;
+    cursor: pointer;
+    z-index: 999;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    white-space: nowrap;
+    min-width: 140px;
+}
+
+.theme-toggle:hover {
+    background: #444;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.dark-mode .theme-toggle {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.dark-mode .theme-toggle:hover {
+    background: #fff;
+}
+
+/* Instructions Modal */
+.dark-mode #ui-instructions {
+    background: rgba(0, 0, 0, 0.98) !important;
+    color: #e0e0e0 !important;
+}
+
+/* Error/Success Messages */
+.dark-mode .error-message {
+    background: #4a1a1a !important;
+    color: #ff6b6b !important;
+}
+
+.dark-mode .success-message {
+    background: #1a4a1a !important;
+    color: #6bff6b !important;
+}
+
+/* Help Button */
+.dark-mode button[title="Show instructions"] {
+    background: #444 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Download Buttons */
+.dark-mode .download-buttons {
+    background: #2a2a2a !important;
+    border-color: #444 !important;
+}
+
+.dark-mode .btn-large {
+    background-color: #333 !important;
+    color: #e0e0e0 !important;
+    border-color: #666 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark-mode .btn-large:hover {
+    background-color: #ff6b6b !important;
+    border-color: #ff6b6b !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3) !important;
+}
+
+/* Export Section - only visible on mobile */
+@media (max-width: 768px) {
+    .dark-mode .export-section {
+        background: #2a2a2a !important;
+        color: #e0e0e0 !important;
+    }
+}
+
+/* Share Buttons */
+.dark-mode .share-buttons {
+    /* Keep original colors for brand recognition */
+}
+
+.dark-mode .btn-share {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark-mode .btn-share:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Keep share button colors the same for brand recognition */
+.dark-mode .share-twitter,
+.dark-mode .share-facebook,
+.dark-mode .share-whatsapp,
+.dark-mode .share-instagram {
+    /* Maintain original colors */
+}
+
+.dark-mode .share-link {
+    background-color: #4a4a4a !important;
+}
+
+.dark-mode .share-link:hover {
+    background-color: #5a5a5a !important;
+}
+
+/* Toast Notifications - Keep original colors for clarity */
+.dark-mode .toast-success,
+.dark-mode .toast-error,
+.dark-mode .toast-info {
+    /* Maintain original colors */
+}
+
+/* Shared Notice */
+.dark-mode .shared-notice {
+    background-color: #444 !important;
+    color: #ff6b6b !important;
+    border: 1px solid #666 !important;
+}
+
+/* Export and Copy buttons */
+.dark-mode #export-image {
+    background-color: #1db954 !important;
+    color: white !important;
+}
+
+.dark-mode #export-image:hover {
+    background-color: #1ed760 !important;
+}
+
+.dark-mode #copy-results {
+    background-color: transparent !important;
+    color: #1db954 !important;
+    border-color: #1db954 !important;
+}
+
+.dark-mode #copy-results:hover {
+    background-color: #1db954 !important;
+    color: #ffffff !important;
+}

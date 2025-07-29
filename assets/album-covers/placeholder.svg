@@ -1,0 +1,4 @@
+<svg width="500" height="500" xmlns="http://www.w3.org/2000/svg">
+  <rect width="500" height="500" fill="#333333"/>
+  <text x="250" y="250" font-family="Arial, sans-serif" font-size="24" fill="#999999" text-anchor="middle" dominant-baseline="middle">Album Cover</text>
+</svg>

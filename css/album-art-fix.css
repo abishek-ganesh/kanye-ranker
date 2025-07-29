@@ -1,0 +1,124 @@
+/* Album Art Container Fixes */
+.album-art-container {
+    width: 100% !important;
+    max-width: 280px !important;
+    height: 280px !important;
+    margin: 0 auto 20px !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    background: #f5f5f5 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+}
+
+/* Ensure album art loads properly for Vultures albums */
+.album-art[src*="vultures"] {
+    background-color: #000 !important;
+}
+
+.album-art {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+}
+
+/* Song info styling */
+.song-title {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    margin: 0 0 8px 0 !important;
+    color: #111 !important;
+    text-align: center !important;
+    line-height: 1.2 !important;
+}
+
+.album-name {
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    margin: 0 0 4px 0 !important;
+    color: #666 !important;
+    text-align: center !important;
+}
+
+.year {
+    font-size: 14px !important;
+    color: #999 !important;
+    margin: 0 0 15px 0 !important;
+    text-align: center !important;
+}
+
+/* Comparison container layout */
+.comparison-container {
+    display: flex !important;
+    align-items: stretch !important;
+    justify-content: center !important;
+    gap: 30px !important;
+    margin: 30px auto !important;
+    max-width: 1000px !important;
+    position: relative !important;
+}
+
+/* Progress bar styling */
+.progress-bar {
+    width: 100% !important;
+    max-width: 600px !important;
+    height: 6px !important;
+    background: #e0e0e0 !important;
+    border-radius: 3px !important;
+    margin: 10px auto 30px !important;
+    overflow: hidden !important;
+}
+
+.progress-fill {
+    height: 100% !important;
+    background: #ff4444 !important;
+    transition: width 0.3s ease !important;
+    border-radius: 3px !important;
+}
+
+/* Header styling */
+.comparison-header {
+    text-align: center !important;
+    margin-bottom: 20px !important;
+}
+
+.comparison-header h1 {
+    font-size: 32px !important;
+    margin: 0 0 10px 0 !important;
+    font-weight: 800 !important;
+    letter-spacing: -1px !important;
+}
+
+.comparison-count {
+    font-size: 16px !important;
+    color: #666 !important;
+    margin: 0 0 15px 0 !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .comparison-container {
+        flex-direction: column !important;
+        gap: 20px !important;
+    }
+    
+    .album-art-container {
+        max-width: 200px !important;
+        height: 200px !important;
+    }
+    
+    .song-title {
+        font-size: 20px !important;
+    }
+    
+    .album-name {
+        font-size: 14px !important;
+    }
+    
+    .vs-divider {
+        margin: 10px 0 !important;
+    }
+}

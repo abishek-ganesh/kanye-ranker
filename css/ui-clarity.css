@@ -1,0 +1,217 @@
+/* UI Clarity Improvements */
+
+/* Hide Choose buttons - using card click instead */
+.btn-choose {
+    display: none !important;
+}
+
+/* Hide YouTube buttons - Preview already links to YouTube */
+#youtube-a, #youtube-b, a[id^="youtube-"] {
+    display: none !important;
+}
+
+/* Style the song actions section */
+.song-actions {
+    background: transparent;
+    padding: 12px 10px;
+    margin: 15px 0;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Preview button styling */
+.btn-small {
+    border: none !important;
+    padding: 8px 16px !important;
+    font-size: 14px !important;
+    border-radius: 20px !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    font-weight: 500 !important;
+}
+
+.preview-btn {
+    background: #e0e0e0 !important;
+    color: #999 !important;
+    cursor: not-allowed !important;
+}
+
+/* Override any red styling for No Preview state */
+.preview-btn:not(.has-preview) {
+    background: #e0e0e0 !important;
+    color: #999 !important;
+    cursor: not-allowed !important;
+}
+
+/* Ensure disabled state takes precedence */
+.preview-btn.disabled,
+.preview-btn[disabled] {
+    background: #e0e0e0 !important;
+    color: #999 !important;
+    cursor: not-allowed !important;
+}
+
+.preview-btn.has-preview {
+    background: #ff4444 !important;
+    color: white !important;
+    cursor: pointer !important;
+    font-weight: normal !important;
+    opacity: 1 !important;
+}
+
+.preview-btn.has-preview:hover {
+    background: #ff0000 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 2px 6px rgba(255, 0, 0, 0.3) !important;
+    color: white !important;
+    opacity: 1 !important;
+}
+
+/* Style other action buttons */
+.song-actions a.btn-small {
+    background: #f0f0f0 !important;
+    color: #333 !important;
+}
+
+.song-actions a.btn-small:hover {
+    background: #e0e0e0 !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Song card styling */
+.song-card {
+    cursor: pointer !important;
+    border: 2px solid transparent !important;
+    background: white !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1) !important;
+    padding: 20px !important;
+    transition: all 0.2s ease !important;
+    position: relative !important;
+}
+
+.song-card:hover {
+    border-color: #1db954 !important;
+    box-shadow: 0 4px 20px rgba(29, 185, 84, 0.2) !important;
+    transform: translateY(-2px) !important;
+}
+
+.song-card::before {
+    content: "Click anywhere to choose this song" !important;
+    position: absolute !important;
+    bottom: -25px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    font-size: 12px !important;
+    color: #999 !important;
+    opacity: 0 !important;
+    transition: opacity 0.2s ease !important;
+    white-space: nowrap !important;
+}
+
+.song-card:hover::before {
+    opacity: 1 !important;
+}
+
+/* Hide preview indicator - not needed anymore */
+.preview-indicator {
+    display: none !important;
+}
+
+/* Remove the separator - not needed with new design */
+
+/* VS divider enhancement */
+.vs-divider {
+    background: #222 !important;
+    color: white !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    width: 45px !important;
+    height: 45px !important;
+    line-height: 45px !important;
+    border-radius: 50% !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+    text-align: center !important;
+}
+
+/* Footer buttons styling */
+.comparison-footer {
+    margin-top: 30px !important;
+    display: flex !important;
+    gap: 15px !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+}
+
+#skip-comparison {
+    background: transparent !important;
+    color: #666 !important;
+    border: 2px solid #ddd !important;
+    padding: 12px 24px !important;
+    border-radius: 30px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    display: inline-block !important;
+    margin: 0 !important;
+    position: relative !important;
+}
+
+#skip-comparison:hover {
+    border-color: #999 !important;
+    color: #333 !important;
+    transform: translateY(-1px) !important;
+}
+
+#show-results {
+    background: #333 !important;
+    color: white !important;
+    border: 2px solid transparent !important;
+    padding: 12px 24px !important;
+    border-radius: 30px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    display: inline-block !important;
+    margin: 0 !important;
+    position: relative !important;
+}
+
+#show-results:hover {
+    background: #000 !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Improve button visibility on mobile */
+@media (max-width: 768px) {
+    .btn-choose {
+        font-size: 15px !important;
+        padding: 12px 20px !important;
+        width: calc(100% - 30px) !important;
+        margin: 15px auto 10px !important;
+    }
+    
+    .song-actions {
+        padding: 8px 5px !important;
+    }
+    
+    .btn-small {
+        font-size: 12px !important;
+        padding: 6px 12px !important;
+    }
+    
+    .vs-divider {
+        margin: 0 10px !important;
+    }
+    
+    .song-card {
+        padding: 15px !important;
+    }
+}

@@ -1,0 +1,228 @@
+/* Feedback Button */
+.feedback-button {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: #333;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 30px;
+    cursor: pointer;
+    z-index: 998;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    white-space: nowrap;
+    min-width: 100px;
+}
+
+.feedback-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    background: #444;
+}
+
+.feedback-button:active {
+    transform: translateY(0);
+}
+
+.feedback-text {
+    line-height: 1;
+}
+
+/* Feedback Modal */
+.feedback-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.feedback-modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+.feedback-content {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.feedback-content h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.75rem;
+    color: var(--primary-color);
+}
+
+.feedback-subtitle {
+    color: #666;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #1db954;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.char-count {
+    text-align: right;
+    font-size: 0.875rem;
+    color: #666;
+    margin-top: 0.25rem;
+}
+
+.feedback-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+}
+
+.feedback-actions .btn {
+    min-width: 120px;
+}
+
+/* Dark Mode Styles */
+.dark-mode .feedback-button {
+    background: #f0f0f0;
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .feedback-button:hover {
+    background: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.dark-mode .feedback-content {
+    background: #2a2a2a;
+    color: #e0e0e0;
+}
+
+.dark-mode .feedback-content h3 {
+    color: #ffffff;
+}
+
+.dark-mode .feedback-subtitle {
+    color: #b0b0b0;
+}
+
+.dark-mode .form-group label {
+    color: #e0e0e0;
+}
+
+.dark-mode .form-group input,
+.dark-mode .form-group textarea {
+    background: #1a1a1a;
+    color: #e0e0e0;
+    border-color: #444;
+}
+
+.dark-mode .form-group input:focus,
+.dark-mode .form-group textarea:focus {
+    border-color: #1db954;
+}
+
+.dark-mode .char-count {
+    color: #999;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .feedback-button {
+        padding: 10px 20px;
+        font-size: 12px;
+        bottom: 15px;
+        left: 15px;
+        min-width: 80px;
+    }
+    
+    .feedback-content {
+        padding: 1.5rem;
+        width: 95%;
+    }
+    
+    .feedback-content h3 {
+        font-size: 1.5rem;
+    }
+    
+    .feedback-actions {
+        flex-direction: column;
+    }
+    
+    .feedback-actions .btn {
+        width: 100%;
+    }
+}
+
+/* Toast Notifications for Feedback */
+.toast-success {
+    background-color: #1db954;
+}
+
+.toast-error {
+    background-color: #ff6b6b;
+}
+
+.toast-info {
+    background-color: #17a2b8;
+}

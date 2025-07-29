@@ -1,0 +1,1926 @@
+{
+  "albums": [
+    {
+      "id": "tcd",
+      "name": "The College Dropout",
+      "year": 2004,
+      "trackCount": 21,
+      "type": "studio",
+      "coverArt": "college-dropout.jpg"
+    },
+    {
+      "id": "lr",
+      "name": "Late Registration",
+      "year": 2005,
+      "trackCount": 21,
+      "type": "studio",
+      "coverArt": "late-registration.jpg"
+    },
+    {
+      "id": "grad",
+      "name": "Graduation",
+      "year": 2007,
+      "trackCount": 13,
+      "type": "studio",
+      "coverArt": "graduation.jpg"
+    },
+    {
+      "id": "808s",
+      "name": "808s & Heartbreak",
+      "year": 2008,
+      "trackCount": 12,
+      "type": "studio",
+      "coverArt": "808s-heartbreak.jpg"
+    },
+    {
+      "id": "mbdtf",
+      "name": "My Beautiful Dark Twisted Fantasy",
+      "year": 2010,
+      "trackCount": 13,
+      "type": "studio",
+      "coverArt": "mbdtf.jpg"
+    },
+    {
+      "id": "wtt",
+      "name": "Watch the Throne",
+      "year": 2011,
+      "trackCount": 16,
+      "type": "studio",
+      "coverArt": "watch-the-throne.jpg"
+    },
+    {
+      "id": "yeezus",
+      "name": "Yeezus",
+      "year": 2013,
+      "trackCount": 10,
+      "type": "studio",
+      "coverArt": "yeezus.jpg"
+    },
+    {
+      "id": "tlop",
+      "name": "The Life of Pablo",
+      "year": 2016,
+      "trackCount": 20,
+      "type": "studio",
+      "coverArt": "life-of-pablo.jpg"
+    },
+    {
+      "id": "ye",
+      "name": "ye",
+      "year": 2018,
+      "trackCount": 7,
+      "type": "studio",
+      "coverArt": "ye.jpg"
+    },
+    {
+      "id": "ksg",
+      "name": "Kids See Ghosts",
+      "year": 2018,
+      "trackCount": 7,
+      "type": "studio",
+      "coverArt": "kids-see-ghosts.jpg"
+    },
+    {
+      "id": "jik",
+      "name": "Jesus Is King",
+      "year": 2019,
+      "trackCount": 11,
+      "type": "studio",
+      "coverArt": "jesus-is-king.jpg"
+    },
+    {
+      "id": "donda",
+      "name": "Donda",
+      "year": 2021,
+      "trackCount": 27,
+      "type": "studio",
+      "coverArt": "donda.jpg"
+    },
+    {
+      "id": "donda2",
+      "name": "Donda 2",
+      "year": 2022,
+      "trackCount": 16,
+      "type": "studio",
+      "coverArt": "donda-2.jpg"
+    },
+    {
+      "id": "v1",
+      "name": "Vultures 1",
+      "year": 2024,
+      "trackCount": 16,
+      "type": "studio",
+      "coverArt": "vultures-1.jpg"
+    },
+    {
+      "id": "v2",
+      "name": "Vultures 2",
+      "year": 2024,
+      "trackCount": 16,
+      "type": "studio",
+      "coverArt": "vultures-2.jpg"
+    }
+  ],
+  "songs": [
+    {
+      "id": "tcd-1",
+      "title": "We Don't Care",
+      "albumId": "tcd",
+      "trackNumber": 1,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tcd-2",
+      "title": "Graduation Day",
+      "albumId": "tcd",
+      "trackNumber": 2,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tcd-3",
+      "title": "All Falls Down",
+      "albumId": "tcd",
+      "trackNumber": 3,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tcd-4",
+      "title": "I'll Fly Away",
+      "albumId": "tcd",
+      "trackNumber": 4,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tcd-5",
+      "title": "Spaceship",
+      "albumId": "tcd",
+      "trackNumber": 5,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tcd-6",
+      "title": "Jesus Walks",
+      "albumId": "tcd",
+      "trackNumber": 6,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tcd-7",
+      "title": "Never Let Me Down",
+      "albumId": "tcd",
+      "trackNumber": 7,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tcd-8",
+      "title": "Get Em High",
+      "albumId": "tcd",
+      "trackNumber": 8,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tcd-9",
+      "title": "Workout Plan",
+      "albumId": "tcd",
+      "trackNumber": 9,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tcd-10",
+      "title": "The New Workout Plan",
+      "albumId": "tcd",
+      "trackNumber": 10,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tcd-11",
+      "title": "Slow Jamz",
+      "albumId": "tcd",
+      "trackNumber": 11,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tcd-12",
+      "title": "Breathe In Breathe Out",
+      "albumId": "tcd",
+      "trackNumber": 12,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tcd-13",
+      "title": "School Spirit",
+      "albumId": "tcd",
+      "trackNumber": 13,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tcd-14",
+      "title": "School Spirit Skit 1",
+      "albumId": "tcd",
+      "trackNumber": 14,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tcd-15",
+      "title": "School Spirit Skit 2",
+      "albumId": "tcd",
+      "trackNumber": 15,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tcd-16",
+      "title": "Lil Jimmy Skit",
+      "albumId": "tcd",
+      "trackNumber": 16,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tcd-17",
+      "title": "Two Words",
+      "albumId": "tcd",
+      "trackNumber": 17,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tcd-18",
+      "title": "Through the Wire",
+      "albumId": "tcd",
+      "trackNumber": 18,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tcd-19",
+      "title": "Family Business",
+      "albumId": "tcd",
+      "trackNumber": 19,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tcd-20",
+      "title": "Last Call",
+      "albumId": "tcd",
+      "trackNumber": 20,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "lr-1",
+      "title": "Wake Up Mr. West",
+      "albumId": "lr",
+      "trackNumber": 1,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "lr-2",
+      "title": "Heard 'Em Say",
+      "albumId": "lr",
+      "trackNumber": 2,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "lr-3",
+      "title": "Touch the Sky",
+      "albumId": "lr",
+      "trackNumber": 3,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "lr-4",
+      "title": "Gold Digger",
+      "albumId": "lr",
+      "trackNumber": 4,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "lr-5",
+      "title": "Skit #1",
+      "albumId": "lr",
+      "trackNumber": 5,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "lr-6",
+      "title": "Drive Slow",
+      "albumId": "lr",
+      "trackNumber": 6,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "lr-7",
+      "title": "My Way Home",
+      "albumId": "lr",
+      "trackNumber": 7,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "lr-8",
+      "title": "Crack Music",
+      "albumId": "lr",
+      "trackNumber": 8,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "lr-9",
+      "title": "Roses",
+      "albumId": "lr",
+      "trackNumber": 9,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "lr-10",
+      "title": "Bring Me Down",
+      "albumId": "lr",
+      "trackNumber": 10,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "lr-11",
+      "title": "Addiction",
+      "albumId": "lr",
+      "trackNumber": 11,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "lr-12",
+      "title": "Skit #2",
+      "albumId": "lr",
+      "trackNumber": 12,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "lr-13",
+      "title": "Diamonds from Sierra Leone (Remix)",
+      "albumId": "lr",
+      "trackNumber": 13,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "lr-14",
+      "title": "We Major",
+      "albumId": "lr",
+      "trackNumber": 14,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "lr-15",
+      "title": "Skit #3",
+      "albumId": "lr",
+      "trackNumber": 15,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "lr-16",
+      "title": "Hey Mama",
+      "albumId": "lr",
+      "trackNumber": 16,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "lr-17",
+      "title": "Celebration",
+      "albumId": "lr",
+      "trackNumber": 17,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "lr-18",
+      "title": "Skit #4",
+      "albumId": "lr",
+      "trackNumber": 18,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "lr-19",
+      "title": "Gone",
+      "albumId": "lr",
+      "trackNumber": 19,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "lr-20",
+      "title": "Diamonds from Sierra Leone",
+      "albumId": "lr",
+      "trackNumber": 20,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "lr-21",
+      "title": "Late",
+      "albumId": "lr",
+      "trackNumber": 21,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "grad-1",
+      "title": "Good Morning",
+      "albumId": "grad",
+      "trackNumber": 1,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "grad-2",
+      "title": "Champion",
+      "albumId": "grad",
+      "trackNumber": 2,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "grad-3",
+      "title": "Stronger",
+      "albumId": "grad",
+      "trackNumber": 3,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "grad-4",
+      "title": "I Wonder",
+      "albumId": "grad",
+      "trackNumber": 4,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "grad-5",
+      "title": "Good Life",
+      "albumId": "grad",
+      "trackNumber": 5,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "grad-6",
+      "title": "Can't Tell Me Nothing",
+      "albumId": "grad",
+      "trackNumber": 6,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "grad-7",
+      "title": "Barry Bonds",
+      "albumId": "grad",
+      "trackNumber": 7,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "grad-8",
+      "title": "Drunk and Hot Girls",
+      "albumId": "grad",
+      "trackNumber": 8,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "grad-9",
+      "title": "Flashing Lights",
+      "albumId": "grad",
+      "trackNumber": 9,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "grad-10",
+      "title": "Everything I Am",
+      "albumId": "grad",
+      "trackNumber": 10,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "grad-11",
+      "title": "The Glory",
+      "albumId": "grad",
+      "trackNumber": 11,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "grad-12",
+      "title": "Homecoming",
+      "albumId": "grad",
+      "trackNumber": 12,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "grad-13",
+      "title": "Big Brother",
+      "albumId": "grad",
+      "trackNumber": 13,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "808s-1",
+      "title": "Say You Will",
+      "albumId": "808s",
+      "trackNumber": 1,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "808s-2",
+      "title": "Welcome to Heartbreak",
+      "albumId": "808s",
+      "trackNumber": 2,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "808s-3",
+      "title": "Heartless",
+      "albumId": "808s",
+      "trackNumber": 3,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "808s-4",
+      "title": "Amazing",
+      "albumId": "808s",
+      "trackNumber": 4,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "808s-5",
+      "title": "Love Lockdown",
+      "albumId": "808s",
+      "trackNumber": 5,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "808s-6",
+      "title": "Paranoid",
+      "albumId": "808s",
+      "trackNumber": 6,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "808s-7",
+      "title": "RoboCop",
+      "albumId": "808s",
+      "trackNumber": 7,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "808s-8",
+      "title": "Street Lights",
+      "albumId": "808s",
+      "trackNumber": 8,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "808s-9",
+      "title": "Bad News",
+      "albumId": "808s",
+      "trackNumber": 9,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "808s-10",
+      "title": "See You in My Nightmares",
+      "albumId": "808s",
+      "trackNumber": 10,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "808s-11",
+      "title": "Coldest Winter",
+      "albumId": "808s",
+      "trackNumber": 11,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "808s-12",
+      "title": "Pinocchio Story",
+      "albumId": "808s",
+      "trackNumber": 12,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "mbdtf-1",
+      "title": "Dark Fantasy",
+      "albumId": "mbdtf",
+      "trackNumber": 1,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "mbdtf-2",
+      "title": "Gorgeous",
+      "albumId": "mbdtf",
+      "trackNumber": 2,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "mbdtf-3",
+      "title": "POWER",
+      "albumId": "mbdtf",
+      "trackNumber": 3,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "mbdtf-4",
+      "title": "All of the Lights (Interlude)",
+      "albumId": "mbdtf",
+      "trackNumber": 4,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "mbdtf-5",
+      "title": "All of the Lights",
+      "albumId": "mbdtf",
+      "trackNumber": 5,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "mbdtf-6",
+      "title": "Monster",
+      "albumId": "mbdtf",
+      "trackNumber": 6,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "mbdtf-7",
+      "title": "So Appalled",
+      "albumId": "mbdtf",
+      "trackNumber": 7,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "mbdtf-8",
+      "title": "Devil in a New Dress",
+      "albumId": "mbdtf",
+      "trackNumber": 8,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "mbdtf-9",
+      "title": "Runaway",
+      "albumId": "mbdtf",
+      "trackNumber": 9,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "mbdtf-10",
+      "title": "Hell of a Life",
+      "albumId": "mbdtf",
+      "trackNumber": 10,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "mbdtf-11",
+      "title": "Blame Game",
+      "albumId": "mbdtf",
+      "trackNumber": 11,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "mbdtf-12",
+      "title": "Lost in the World",
+      "albumId": "mbdtf",
+      "trackNumber": 12,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "mbdtf-13",
+      "title": "Who Will Survive in America",
+      "albumId": "mbdtf",
+      "trackNumber": 13,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "wtt-1",
+      "title": "No Church in the Wild",
+      "albumId": "wtt",
+      "trackNumber": 1,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "wtt-2",
+      "title": "Lift Off",
+      "albumId": "wtt",
+      "trackNumber": 2,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "wtt-3",
+      "title": "Niggas in Paris",
+      "albumId": "wtt",
+      "trackNumber": 3,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "wtt-4",
+      "title": "Otis",
+      "albumId": "wtt",
+      "trackNumber": 4,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "wtt-5",
+      "title": "Gotta Have It",
+      "albumId": "wtt",
+      "trackNumber": 5,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "wtt-6",
+      "title": "New Day",
+      "albumId": "wtt",
+      "trackNumber": 6,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "wtt-7",
+      "title": "That's My Bitch",
+      "albumId": "wtt",
+      "trackNumber": 7,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "wtt-8",
+      "title": "Welcome to the Jungle",
+      "albumId": "wtt",
+      "trackNumber": 8,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "wtt-9",
+      "title": "Who Gon Stop Me",
+      "albumId": "wtt",
+      "trackNumber": 9,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "wtt-10",
+      "title": "Murder to Excellence",
+      "albumId": "wtt",
+      "trackNumber": 10,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "wtt-11",
+      "title": "Made in America",
+      "albumId": "wtt",
+      "trackNumber": 11,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "wtt-12",
+      "title": "Why I Love You",
+      "albumId": "wtt",
+      "trackNumber": 12,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "wtt-13",
+      "title": "Illest Motherfucker Alive",
+      "albumId": "wtt",
+      "trackNumber": 13,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "wtt-14",
+      "title": "H•A•M",
+      "albumId": "wtt",
+      "trackNumber": 14,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "wtt-15",
+      "title": "Primetime",
+      "albumId": "wtt",
+      "trackNumber": 15,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "wtt-16",
+      "title": "The Joy",
+      "albumId": "wtt",
+      "trackNumber": 16,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "yeezus-1",
+      "title": "On Sight",
+      "albumId": "yeezus",
+      "trackNumber": 1,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "yeezus-2",
+      "title": "Black Skinhead",
+      "albumId": "yeezus",
+      "trackNumber": 2,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "yeezus-3",
+      "title": "I Am a God",
+      "albumId": "yeezus",
+      "trackNumber": 3,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "yeezus-4",
+      "title": "New Slaves",
+      "albumId": "yeezus",
+      "trackNumber": 4,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "yeezus-5",
+      "title": "Hold My Liquor",
+      "albumId": "yeezus",
+      "trackNumber": 5,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "yeezus-6",
+      "title": "I'm In It",
+      "albumId": "yeezus",
+      "trackNumber": 6,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "yeezus-7",
+      "title": "Blood on the Leaves",
+      "albumId": "yeezus",
+      "trackNumber": 7,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "yeezus-8",
+      "title": "Guilt Trip",
+      "albumId": "yeezus",
+      "trackNumber": 8,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "yeezus-9",
+      "title": "Send It Up",
+      "albumId": "yeezus",
+      "trackNumber": 9,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "yeezus-10",
+      "title": "Bound 2",
+      "albumId": "yeezus",
+      "trackNumber": 10,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tlop-1",
+      "title": "Ultralight Beam",
+      "albumId": "tlop",
+      "trackNumber": 1,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tlop-2",
+      "title": "Father Stretch My Hands, Pt. 1",
+      "albumId": "tlop",
+      "trackNumber": 2,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tlop-3",
+      "title": "Pt. 2",
+      "albumId": "tlop",
+      "trackNumber": 3,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tlop-4",
+      "title": "Famous",
+      "albumId": "tlop",
+      "trackNumber": 4,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tlop-5",
+      "title": "Feedback",
+      "albumId": "tlop",
+      "trackNumber": 5,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tlop-6",
+      "title": "Low Lights",
+      "albumId": "tlop",
+      "trackNumber": 6,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tlop-7",
+      "title": "Highlights",
+      "albumId": "tlop",
+      "trackNumber": 7,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tlop-8",
+      "title": "Freestyle 4",
+      "albumId": "tlop",
+      "trackNumber": 8,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tlop-9",
+      "title": "I Love Kanye",
+      "albumId": "tlop",
+      "trackNumber": 9,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tlop-10",
+      "title": "Waves",
+      "albumId": "tlop",
+      "trackNumber": 10,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tlop-11",
+      "title": "FML",
+      "albumId": "tlop",
+      "trackNumber": 11,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tlop-12",
+      "title": "Real Friends",
+      "albumId": "tlop",
+      "trackNumber": 12,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tlop-13",
+      "title": "Wolves",
+      "albumId": "tlop",
+      "trackNumber": 13,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tlop-14",
+      "title": "Frank's Track",
+      "albumId": "tlop",
+      "trackNumber": 14,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tlop-15",
+      "title": "Siiiiiiiiilver Surffffeeeeer Intermission",
+      "albumId": "tlop",
+      "trackNumber": 15,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tlop-16",
+      "title": "30 Hours",
+      "albumId": "tlop",
+      "trackNumber": 16,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tlop-17",
+      "title": "No More Parties in LA",
+      "albumId": "tlop",
+      "trackNumber": 17,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tlop-18",
+      "title": "Facts (Charlie Heat Version)",
+      "albumId": "tlop",
+      "trackNumber": 18,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tlop-19",
+      "title": "Fade",
+      "albumId": "tlop",
+      "trackNumber": 19,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "tlop-20",
+      "title": "Saint Pablo",
+      "albumId": "tlop",
+      "trackNumber": 20,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "ye-1",
+      "title": "I Thought About Killing You",
+      "albumId": "ye",
+      "trackNumber": 1,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "ye-2",
+      "title": "Yikes",
+      "albumId": "ye",
+      "trackNumber": 2,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "ye-3",
+      "title": "All Mine",
+      "albumId": "ye",
+      "trackNumber": 3,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "ye-4",
+      "title": "Wouldn't Leave",
+      "albumId": "ye",
+      "trackNumber": 4,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "ye-5",
+      "title": "No Mistakes",
+      "albumId": "ye",
+      "trackNumber": 5,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "ye-6",
+      "title": "Ghost Town",
+      "albumId": "ye",
+      "trackNumber": 6,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "ye-7",
+      "title": "Violent Crimes",
+      "albumId": "ye",
+      "trackNumber": 7,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "ksg-1",
+      "title": "Feel the Love",
+      "albumId": "ksg",
+      "trackNumber": 1,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "ksg-2",
+      "title": "Fire",
+      "albumId": "ksg",
+      "trackNumber": 2,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "ksg-3",
+      "title": "4th Dimension",
+      "albumId": "ksg",
+      "trackNumber": 3,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "ksg-4",
+      "title": "Freeee (Ghost Town, Pt. 2)",
+      "albumId": "ksg",
+      "trackNumber": 4,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "ksg-5",
+      "title": "Reborn",
+      "albumId": "ksg",
+      "trackNumber": 5,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "ksg-6",
+      "title": "Kids See Ghosts",
+      "albumId": "ksg",
+      "trackNumber": 6,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "ksg-7",
+      "title": "Cudi Montage",
+      "albumId": "ksg",
+      "trackNumber": 7,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "jik-1",
+      "title": "Every Hour",
+      "albumId": "jik",
+      "trackNumber": 1,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "jik-2",
+      "title": "Selah",
+      "albumId": "jik",
+      "trackNumber": 2,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "jik-3",
+      "title": "Follow God",
+      "albumId": "jik",
+      "trackNumber": 3,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "jik-4",
+      "title": "Closed on Sunday",
+      "albumId": "jik",
+      "trackNumber": 4,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "jik-5",
+      "title": "On God",
+      "albumId": "jik",
+      "trackNumber": 5,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "jik-6",
+      "title": "Everything We Need",
+      "albumId": "jik",
+      "trackNumber": 6,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "jik-7",
+      "title": "Water",
+      "albumId": "jik",
+      "trackNumber": 7,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "jik-8",
+      "title": "God Is",
+      "albumId": "jik",
+      "trackNumber": 8,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "jik-9",
+      "title": "Hands On",
+      "albumId": "jik",
+      "trackNumber": 9,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "jik-10",
+      "title": "Use This Gospel",
+      "albumId": "jik",
+      "trackNumber": 10,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "jik-11",
+      "title": "Jesus Is Lord",
+      "albumId": "jik",
+      "trackNumber": 11,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-1",
+      "title": "Donda Chant",
+      "albumId": "donda",
+      "trackNumber": 1,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-2",
+      "title": "Jail",
+      "albumId": "donda",
+      "trackNumber": 2,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-3",
+      "title": "God Breathed",
+      "albumId": "donda",
+      "trackNumber": 3,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-4",
+      "title": "Off the Grid",
+      "albumId": "donda",
+      "trackNumber": 4,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-5",
+      "title": "Hurricane",
+      "albumId": "donda",
+      "trackNumber": 5,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-6",
+      "title": "Praise God",
+      "albumId": "donda",
+      "trackNumber": 6,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-7",
+      "title": "Jonah",
+      "albumId": "donda",
+      "trackNumber": 7,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-8",
+      "title": "Ok Ok",
+      "albumId": "donda",
+      "trackNumber": 8,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-9",
+      "title": "Junya",
+      "albumId": "donda",
+      "trackNumber": 9,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-10",
+      "title": "Believe What I Say",
+      "albumId": "donda",
+      "trackNumber": 10,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-11",
+      "title": "24",
+      "albumId": "donda",
+      "trackNumber": 11,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-12",
+      "title": "Remote Control",
+      "albumId": "donda",
+      "trackNumber": 12,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-13",
+      "title": "Moon",
+      "albumId": "donda",
+      "trackNumber": 13,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-14",
+      "title": "Heaven and Hell",
+      "albumId": "donda",
+      "trackNumber": 14,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-15",
+      "title": "Donda",
+      "albumId": "donda",
+      "trackNumber": 15,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-16",
+      "title": "Keep My Spirit Alive",
+      "albumId": "donda",
+      "trackNumber": 16,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-17",
+      "title": "Jesus Lord",
+      "albumId": "donda",
+      "trackNumber": 17,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-18",
+      "title": "New Again",
+      "albumId": "donda",
+      "trackNumber": 18,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-19",
+      "title": "Tell the Vision",
+      "albumId": "donda",
+      "trackNumber": 19,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-20",
+      "title": "Lord I Need You",
+      "albumId": "donda",
+      "trackNumber": 20,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-21",
+      "title": "Pure Souls",
+      "albumId": "donda",
+      "trackNumber": 21,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-22",
+      "title": "Come to Life",
+      "albumId": "donda",
+      "trackNumber": 22,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-23",
+      "title": "No Child Left Behind",
+      "albumId": "donda",
+      "trackNumber": 23,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-24",
+      "title": "Jail pt 2",
+      "albumId": "donda",
+      "trackNumber": 24,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-25",
+      "title": "Ok Ok pt 2",
+      "albumId": "donda",
+      "trackNumber": 25,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-26",
+      "title": "Junya pt 2",
+      "albumId": "donda",
+      "trackNumber": 26,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda-27",
+      "title": "Jesus Lord pt 2",
+      "albumId": "donda",
+      "trackNumber": 27,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda2-1",
+      "title": "True Love",
+      "albumId": "donda2",
+      "trackNumber": 1,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda2-2",
+      "title": "Broken Road",
+      "albumId": "donda2",
+      "trackNumber": 2,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda2-3",
+      "title": "Get Lost",
+      "albumId": "donda2",
+      "trackNumber": 3,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda2-4",
+      "title": "Too Easy",
+      "albumId": "donda2",
+      "trackNumber": 4,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda2-5",
+      "title": "Flowers",
+      "albumId": "donda2",
+      "trackNumber": 5,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda2-6",
+      "title": "Security",
+      "albumId": "donda2",
+      "trackNumber": 6,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda2-7",
+      "title": "Pablo",
+      "albumId": "donda2",
+      "trackNumber": 7,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda2-8",
+      "title": "Louie Bags",
+      "albumId": "donda2",
+      "trackNumber": 8,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda2-9",
+      "title": "Happy",
+      "albumId": "donda2",
+      "trackNumber": 9,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda2-10",
+      "title": "Sci Fi",
+      "albumId": "donda2",
+      "trackNumber": 10,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda2-11",
+      "title": "Selfish",
+      "albumId": "donda2",
+      "trackNumber": 11,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda2-12",
+      "title": "Lord Lift Me Up",
+      "albumId": "donda2",
+      "trackNumber": 12,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda2-13",
+      "title": "City of Gods",
+      "albumId": "donda2",
+      "trackNumber": 13,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda2-14",
+      "title": "First Time in a Long Time",
+      "albumId": "donda2",
+      "trackNumber": 14,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda2-15",
+      "title": "Eazy",
+      "albumId": "donda2",
+      "trackNumber": 15,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "donda2-16",
+      "title": "Lift Me Up",
+      "albumId": "donda2",
+      "trackNumber": 16,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v1-1",
+      "title": "Stars",
+      "albumId": "v1",
+      "trackNumber": 1,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v1-2",
+      "title": "Keys to My Life",
+      "albumId": "v1",
+      "trackNumber": 2,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v1-3",
+      "title": "Paid",
+      "albumId": "v1",
+      "trackNumber": 3,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v1-4",
+      "title": "Talking",
+      "albumId": "v1",
+      "trackNumber": 4,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v1-5",
+      "title": "Back to Me",
+      "albumId": "v1",
+      "trackNumber": 5,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v1-6",
+      "title": "Hoodrat",
+      "albumId": "v1",
+      "trackNumber": 6,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v1-7",
+      "title": "Do It",
+      "albumId": "v1",
+      "trackNumber": 7,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v1-8",
+      "title": "Paperwork",
+      "albumId": "v1",
+      "trackNumber": 8,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v1-9",
+      "title": "Burn",
+      "albumId": "v1",
+      "trackNumber": 9,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v1-10",
+      "title": "Fuk Sumn",
+      "albumId": "v1",
+      "trackNumber": 10,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v1-11",
+      "title": "Vultures",
+      "albumId": "v1",
+      "trackNumber": 11,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v1-12",
+      "title": "Carnival",
+      "albumId": "v1",
+      "trackNumber": 12,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v1-13",
+      "title": "Beg Forgiveness",
+      "albumId": "v1",
+      "trackNumber": 13,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v1-14",
+      "title": "Good (Don't Die)",
+      "albumId": "v1",
+      "trackNumber": 14,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v1-15",
+      "title": "Problematic",
+      "albumId": "v1",
+      "trackNumber": 15,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v1-16",
+      "title": "King",
+      "albumId": "v1",
+      "trackNumber": 16,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v2-1",
+      "title": "Slide",
+      "albumId": "v2",
+      "trackNumber": 1,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v2-2",
+      "title": "Field Trip",
+      "albumId": "v2",
+      "trackNumber": 2,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v2-3",
+      "title": "Fried",
+      "albumId": "v2",
+      "trackNumber": 3,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v2-4",
+      "title": "Isabella",
+      "albumId": "v2",
+      "trackNumber": 4,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v2-5",
+      "title": "Promotion",
+      "albumId": "v2",
+      "trackNumber": 5,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v2-6",
+      "title": "530",
+      "albumId": "v2",
+      "trackNumber": 6,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v2-7",
+      "title": "Lifestyle",
+      "albumId": "v2",
+      "trackNumber": 7,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v2-8",
+      "title": "Husband",
+      "albumId": "v2",
+      "trackNumber": 8,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v2-9",
+      "title": "Worship",
+      "albumId": "v2",
+      "trackNumber": 9,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v2-10",
+      "title": "River",
+      "albumId": "v2",
+      "trackNumber": 10,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v2-11",
+      "title": "Bomb",
+      "albumId": "v2",
+      "trackNumber": 11,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v2-12",
+      "title": "Vultures 2",
+      "albumId": "v2",
+      "trackNumber": 12,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v2-13",
+      "title": "Forever Rolling",
+      "albumId": "v2",
+      "trackNumber": 13,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v2-14",
+      "title": "Time Moving Slow",
+      "albumId": "v2",
+      "trackNumber": 14,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v2-15",
+      "title": "Dead",
+      "albumId": "v2",
+      "trackNumber": 15,
+      "initialRating": 1500,
+      "spotifyId": null
+    },
+    {
+      "id": "v2-16",
+      "title": "My Soul",
+      "albumId": "v2",
+      "trackNumber": 16,
+      "initialRating": 1500,
+      "spotifyId": null
+    }
+  ]
+}

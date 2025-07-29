@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Preview Test - Kanye Ranker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        
+        h2 {
+            color: #666;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .btn-primary {
+            background: #ff0000;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #666;
+            color: white;
+        }
+        
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+        
+        #test-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            min-height: 300px;
+        }
+        
+        .test-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎵 YouTube Preview System Test</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Direct Embed Test</h2>
+        <p>This tests if YouTube embeds work at all in your browser.</p>
+        <button class="btn-primary" onclick="testDirectEmbed()">Test Direct Embed</button>
+        <button class="btn-secondary" onclick="clearTest()">Clear</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 2: Autoplay Test</h2>
+        <p>This tests if autoplay works in your browser.</p>
+        <button class="btn-primary" onclick="testAutoplay()">Test Autoplay</button>
+        <button class="btn-primary" onclick="testMutedAutoplay()">Test Muted Autoplay</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 3: YouTube API Test</h2>
+        <p>This tests if the YouTube API loads and works correctly.</p>
+        <button class="btn-primary" onclick="testYouTubeAPI()">Load YouTube API</button>
+        <button class="btn-secondary" onclick="testAPIPlayer()">Create API Player</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 4: Browser Diagnostics</h2>
+        <button class="btn-primary" onclick="runFullDiagnostics()">Run Full Diagnostics</button>
+    </div>
+    
+    <div id="status-messages"></div>
+    <div id="test-container"></div>
+    
+    <div class="test-section">
+        <h2>Quick Solution</h2>
+        <p>If the tests above show autoplay is blocked, try this:</p>
+        <ol>
+            <li>Click the lock icon in your browser's address bar</li>
+            <li>Find "Sound" or "Autoplay" settings</li>
+            <li>Set to "Allow"</li>
+            <li>Refresh the page</li>
+        </ol>
+        <p><strong>Or simply use the fallback click-to-play system:</strong></p>
+        <button class="btn-primary" onclick="window.location.href='index.html'">Go to App with Fallback</button>
+    </div>
+    
+    <script>
+        function addStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status-messages');
+            const status = document.createElement('div');
+            status.className = `status ${type}`;
+            status.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            statusDiv.appendChild(status);
+            statusDiv.scrollTop = statusDiv.scrollHeight;
+        }
+        
+        function clearTest() {
+            document.getElementById('test-container').innerHTML = '';
+            addStatus('Test container cleared', 'warning');
+        }
+        
+        function testDirectEmbed() {
+            clearTest();
+            addStatus('Testing direct YouTube embed...', 'info');
+            
+            const container = document.getElementById('test-container');
+            container.innerHTML = `
+                <h3>Direct Embed (Click Play):</h3>
+                <iframe 
+                    width="560" 
+                    height="315" 
+                    src="https://www.youtube.com/embed/PsO6ZnUZI0g" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            `;
+            
+            addStatus('Embed created. If you see the video, embeds work!', 'success');
+        }
+        
+        function testAutoplay() {
+            clearTest();
+            addStatus('Testing autoplay...', 'info');
+            
+            const container = document.getElementById('test-container');
+            container.innerHTML = `
+                <h3>Autoplay Test (Should Start Playing):</h3>
+                <iframe 
+                    width="560" 
+                    height="315" 
+                    src="https://www.youtube.com/embed/PsO6ZnUZI0g?autoplay=1" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            `;
+            
+            addStatus('If video plays automatically, autoplay works!', 'success');
+            addStatus('If not, your browser blocks autoplay', 'warning');
+        }
+        
+        function testMutedAutoplay() {
+            clearTest();
+            addStatus('Testing muted autoplay...', 'info');
+            
+            const container = document.getElementById('test-container');
+            container.innerHTML = `
+                <h3>Muted Autoplay Test (Should Start Playing Muted):</h3>
+                <iframe 
+                    width="560" 
+                    height="315" 
+                    src="https://www.youtube.com/embed/PsO6ZnUZI0g?autoplay=1&mute=1" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            `;
+            
+            addStatus('Muted videos usually autoplay even with restrictions', 'success');
+        }
+        
+        let apiLoaded = false;
+        let player = null;
+        
+        function testYouTubeAPI() {
+            addStatus('Loading YouTube API...', 'info');
+            
+            if (window.YT && window.YT.Player) {
+                addStatus('API already loaded!', 'success');
+                apiLoaded = true;
+                return;
+            }
+            
+            window.onYouTubeIframeAPIReady = function() {
+                addStatus('YouTube API loaded successfully!', 'success');
+                apiLoaded = true;
+            };
+            
+            const tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            tag.onerror = () => addStatus('Failed to load YouTube API', 'error');
+            document.head.appendChild(tag);
+        }
+        
+        function testAPIPlayer() {
+            if (!apiLoaded) {
+                addStatus('Load API first!', 'error');
+                return;
+            }
+            
+            clearTest();
+            const container = document.getElementById('test-container');
+            container.innerHTML = '<div id="api-player"></div>';
+            
+            try {
+                player = new YT.Player('api-player', {
+                    height: '390',
+                    width: '640',
+                    videoId: 'PsO6ZnUZI0g',
+                    events: {
+                        'onReady': (event) => {
+                            addStatus('Player ready!', 'success');
+                            event.target.playVideo();
+                        },
+                        'onError': (error) => {
+                            addStatus(`Player error: ${error.data}`, 'error');
+                        },
+                        'onStateChange': (event) => {
+                            const states = {'-1': 'unstarted', '0': 'ended', '1': 'playing', '2': 'paused', '3': 'buffering', '5': 'cued'};
+                            addStatus(`Player state: ${states[event.data]}`, 'info');
+                        }
+                    }
+                });
+            } catch (e) {
+                addStatus(`Error creating player: ${e.message}`, 'error');
+            }
+        }
+        
+        async function runFullDiagnostics() {
+            addStatus('Running full diagnostics...', 'info');
+            
+            // Test 1: Autoplay capability
+            const video = document.createElement('video');
+            video.src = 'data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAAAAhtZGF0AAAA';
+            
+            try {
+                await video.play();
+                addStatus('✅ Autoplay with sound: ALLOWED', 'success');
+            } catch (e) {
+                addStatus('❌ Autoplay with sound: BLOCKED', 'error');
+                
+                video.muted = true;
+                try {
+                    await video.play();
+                    addStatus('⚠️ Muted autoplay: ALLOWED', 'warning');
+                } catch (e2) {
+                    addStatus('❌ All autoplay: BLOCKED', 'error');
+                }
+            }
+            
+            // Test 2: AudioContext
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                const ctx = new AudioContext();
+                addStatus(`✅ AudioContext state: ${ctx.state}`, ctx.state === 'running' ? 'success' : 'warning');
+            } catch (e) {
+                addStatus('❌ AudioContext: FAILED', 'error');
+            }
+            
+            // Test 3: YouTube connectivity
+            const img = new Image();
+            img.src = 'https://i.ytimg.com/favicon.ico?' + Date.now();
+            img.onload = () => addStatus('✅ YouTube connectivity: OK', 'success');
+            img.onerror = () => addStatus('❌ YouTube connectivity: FAILED', 'error');
+            
+            // Test 4: Browser info
+            addStatus(`Browser: ${navigator.userAgent}`, 'info');
+            
+            // Test 5: Permissions
+            if (navigator.permissions) {
+                try {
+                    const result = await navigator.permissions.query({ name: 'autoplay' });
+                    addStatus(`Autoplay permission: ${result.state}`, result.state === 'granted' ? 'success' : 'warning');
+                } catch (e) {
+                    // Not all browsers support this
+                }
+            }
+        }
+    </script>
+</body>
+</html>

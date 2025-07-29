@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Preview Test</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/youtube-preview.css">
+    <style>
+        body {
+            padding: 40px;
+            background: #f0f0f0;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .instructions {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 2rem;
+            align-items: center;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="instructions">
+            <h1>YouTube Preview Test</h1>
+            <p>Hover over any song card below to preview the song. The preview will start after a short delay.</p>
+            <p>A YouTube player will appear in the bottom right corner.</p>
+        </div>
+        
+        <div class="comparison-container">
+            <div class="song-card" id="song-a">
+                <div class="album-art-container">
+                    <img class="album-art" src="assets/album-covers/college-dropout.jpg" alt="">
+                </div>
+                <h2 class="song-title">Through the Wire</h2>
+                <p class="album-name">The College Dropout</p>
+                <p class="year">(2004)</p>
+                <button class="btn btn-choose">Choose This</button>
+            </div>
+
+            <div class="vs-divider">VS</div>
+
+            <div class="song-card" id="song-b">
+                <div class="album-art-container">
+                    <img class="album-art" src="assets/album-covers/graduation.jpg" alt="">
+                </div>
+                <h2 class="song-title">Stronger</h2>
+                <p class="album-name">Graduation</p>
+                <p class="year">(2007)</p>
+                <button class="btn btn-choose">Choose This</button>
+            </div>
+        </div>
+        
+        <div class="comparison-container">
+            <div class="song-card" id="song-c">
+                <div class="album-art-container">
+                    <img class="album-art" src="assets/album-covers/mbdtf.jpg" alt="">
+                </div>
+                <h2 class="song-title">Power</h2>
+                <p class="album-name">My Beautiful Dark Twisted Fantasy</p>
+                <p class="year">(2010)</p>
+                <button class="btn btn-choose">Choose This</button>
+            </div>
+
+            <div class="vs-divider">VS</div>
+
+            <div class="song-card" id="song-d">
+                <div class="album-art-container">
+                    <img class="album-art" src="assets/album-covers/808s-heartbreak.jpg" alt="">
+                </div>
+                <h2 class="song-title">Heartless</h2>
+                <p class="album-name">808s & Heartbreak</p>
+                <p class="year">(2008)</p>
+                <button class="btn btn-choose">Choose This</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/youtube-preview.js"></script>
+    <script>
+        // Initialize YouTube preview system
+        let youtubePreview;
+        
+        window.addEventListener('load', () => {
+            youtubePreview = new YouTubePreview();
+            
+            // Attach hover listeners to test cards
+            const songCards = document.querySelectorAll('.song-card');
+            songCards.forEach(card => {
+                const title = card.querySelector('.song-title').textContent;
+                const album = card.querySelector('.album-name').textContent;
+                youtubePreview.attachHoverListeners(card, title, album);
+            });
+            
+            console.log('YouTube preview test initialized');
+        });
+    </script>
+</body>
+</html>

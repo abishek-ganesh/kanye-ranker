@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanye Ranker - Find Your Favorite Ye Songs</title>
+    <meta name="author" content="Abishek Ganesh">
+    <meta name="creator" content="Abishek Ganesh">
+    <meta name="description" content="Rank Kanye West songs using an ELO rating system. Created by Abishek Ganesh.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/youtube-preview.css">
+    <link rel="stylesheet" href="css/ui-clarity.css">
+    <link rel="stylesheet" href="css/album-art-fix.css">
+    <link rel="stylesheet" href="css/dark-mode.css">
+    <link rel="stylesheet" href="css/feedback.css">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z2S91E0R6Z"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-Z2S91E0R6Z');
+    </script>
+</head>
+<body>
+    <!-- Landing Screen -->
+    <div id="landing-screen" class="screen active">
+        <div class="container">
+            <div class="album-gradient-bar"></div>
+            
+            <h1 class="app-title">KANYE RANKER</h1>
+            
+            <div class="quote-section">
+                <p class="main-quote">"My greatest pain in life is that I will never be able to see myself perform live."</p>
+                <p class="quote-attribution">— KANYE WEST</p>
+            </div>
+            
+            <div class="instructions">
+                <div class="intro-section">
+                    <h2>WHICH SONG DEFINES YOUR YE ERA?</h2>
+                    <p class="stats-line"><span class="stat-number">180+</span> SONGS · <span class="stat-number">16</span> ALBUMS · <span class="stat-number">20+</span> YEARS</p>
+                </div>
+                
+                <div class="how-section">
+                    <div class="step">
+                        <span class="step-number">01</span>
+                        <div class="step-content">
+                            <h3>COMPARE</h3>
+                            <p>Two songs, side by side. Which one moves you more?</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-number">02</span>
+                        <div class="step-content">
+                            <h3>CHOOSE</h3>
+                            <p>Trust your instincts. Every choice shapes your ranking.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-number">03</span>
+                        <div class="step-content">
+                            <h3>DISCOVER</h3>
+                            <p>Your personal Top 10 emerges through smart ELO ranking.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bottom-quote">
+                    <p>"I still think I am the greatest."</p>
+                </div>
+            </div>
+            
+            <button id="start-ranking" class="btn btn-primary btn-hero">
+                START
+            </button>
+        </div>
+        
+        <footer class="app-footer">
+            <p>Created by <a href="https://www.linkedin.com/in/abishekganesh" target="_blank" rel="noopener">Abishek Ganesh</a></p>
+        </footer>
+    </div>
+
+    <!-- Comparison Screen -->
+    <div id="comparison-screen" class="screen">
+        <div class="container">
+            <header class="comparison-header">
+                <h1>KANYE RANKER</h1>
+                <p class="comparison-count">Comparison <span id="current-comparison">1</span> of ~<span id="total-comparisons">100</span></p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </header>
+
+            <div class="comparison-container">
+                <div class="song-card" id="song-a">
+                    <div class="album-art-container">
+                        <img class="album-art" id="album-art-a" src="" alt="">
+                    </div>
+                    <h2 class="song-title" id="song-title-a"></h2>
+                    <p class="album-name" id="album-name-a"></p>
+                    <p class="year" id="year-a"></p>
+                    
+                    <div class="song-actions">
+                        <button class="btn-small preview-btn" id="preview-a">▶ Preview</button>
+                        <a class="btn-small" id="youtube-a" target="_blank">YouTube</a>
+                        <a class="btn-small" id="lyrics-a" target="_blank">Lyrics</a>
+                    </div>
+                    
+                    <button class="btn btn-choose" id="choose-a">Choose This</button>
+                </div>
+
+                <div class="vs-divider">VS</div>
+
+                <div class="song-card" id="song-b">
+                    <div class="album-art-container">
+                        <img class="album-art" id="album-art-b" src="" alt="">
+                    </div>
+                    <h2 class="song-title" id="song-title-b"></h2>
+                    <p class="album-name" id="album-name-b"></p>
+                    <p class="year" id="year-b"></p>
+                    
+                    <div class="song-actions">
+                        <button class="btn-small preview-btn" id="preview-b">▶ Preview</button>
+                        <a class="btn-small" id="youtube-b" target="_blank">YouTube</a>
+                        <a class="btn-small" id="lyrics-b" target="_blank">Lyrics</a>
+                    </div>
+                    
+                    <button class="btn btn-choose" id="choose-b">Choose This</button>
+                </div>
+            </div>
+
+            <div class="comparison-footer">
+                <button id="skip-comparison" class="btn btn-secondary">Skip This Comparison</button>
+                <button id="show-results" class="btn btn-primary" style="display: none;">I'm Done - Show Results</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="results-screen" class="screen">
+        <div class="container">
+            <div class="download-buttons">
+                <button id="export-songs-image" class="btn btn-primary btn-large">
+                    <span class="btn-icon">📸</span>
+                    <span class="btn-label">SAVE SONGS</span>
+                </button>
+                <button id="export-albums-image" class="btn btn-primary btn-large">
+                    <span class="btn-icon">💿</span>
+                    <span class="btn-label">SAVE ALBUMS</span>
+                </button>
+                <button id="continue-ranking" class="btn btn-primary btn-large">
+                    <span class="btn-icon">➕</span>
+                    <span class="btn-label">CONTINUE RANKING</span>
+                </button>
+                <button id="restart" class="btn btn-secondary btn-large">
+                    <span class="btn-icon">🔄</span>
+                    <span class="btn-label">START OVER</span>
+                </button>
+            </div>
+            
+            <h1 id="results-header">Your Yeezy Hall of Fame</h1>
+            <p class="results-subtitle" id="results-subtitle">The waves have spoken...</p>
+            
+            <div id="top-songs" class="results-list"></div>
+            
+            <h2 id="albums-header">Most Influential Eras</h2>
+            <div id="top-albums" class="results-list"></div>
+            
+            <div class="export-section">
+                <h3>Share Your Results</h3>
+                
+                <div class="share-buttons">
+                    <button id="share-twitter" class="btn-share share-twitter">Share on X</button>
+                    <button id="share-facebook" class="btn-share share-facebook">Share on Facebook</button>
+                    <button id="share-whatsapp" class="btn-share share-whatsapp">Share on WhatsApp</button>
+                    <button id="share-instagram" class="btn-share share-instagram">Instagram Stories</button>
+                    <button id="share-link" class="btn-share share-link">Copy Link</button>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Audio Player (hidden) -->
+    <audio id="audio-player" preload="none"></audio>
+
+    <!-- Canvas for export (hidden) -->
+    <canvas id="export-canvas" style="display: none;"></canvas>
+
+    <!-- Loading/Error overlay -->
+    <div id="overlay" class="overlay" style="display: none;">
+        <div class="overlay-content">
+            <div class="spinner"></div>
+            <p id="overlay-message">Loading...</p>
+        </div>
+    </div>
+
+    <!-- Feedback Button -->
+    <button id="feedback-button" class="feedback-button" aria-label="Send Feedback">
+        <span class="feedback-text">Feedback</span>
+    </button>
+
+    <!-- Feedback Modal -->
+    <div id="feedback-modal" class="feedback-modal">
+        <div class="feedback-content">
+            <h3>Send Feedback</h3>
+            <p class="feedback-subtitle">Help us improve Kanye Ranker!</p>
+            
+            <form id="feedback-form">
+                <div class="form-group">
+                    <label for="feedback-email">Your Email (optional)</label>
+                    <input type="email" id="feedback-email" placeholder="your@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="feedback-message">Your Feedback</label>
+                    <textarea id="feedback-message" rows="5" placeholder="Share your thoughts, suggestions, or report issues..." required></textarea>
+                    <div class="char-count">
+                        <span id="char-current">0</span> / <span id="char-limit">500</span>
+                    </div>
+                </div>
+                
+                <div class="feedback-actions">
+                    <button type="button" id="feedback-cancel" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" id="feedback-send" class="btn btn-primary">Send Feedback</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/album-colors.js"></script>
+    <script src="js/kanye-messages.js"></script>
+    <script src="js/elo.js"></script>
+    <script src="js/lyrics-loader.js"></script>
+    <script src="js/video-loader.js"></script>
+    <!-- YouTube Preview System - Switch between implementations as needed -->
+    <!-- <script src="js/youtube-preview.js"></script> -->
+    <!-- <script src="js/youtube-preview-debug.js"></script> -->
+    <!-- <script src="js/youtube-preview-simple.js"></script> -->
+    <script src="js/youtube-preview-fallback.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/export.js"></script>
+    <script src="js/share.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/app-init.js"></script>
+    <script src="js/event-fix.js"></script>
+    <script src="js/back-button.js"></script>
+    <script src="js/preview-diagnostics.js"></script>
+    <script src="js/ui-instructions.js"></script>
+    <script src="js/theme-manager.js"></script>
+    <script src="js/feedback.js"></script>
+</body>
+</html>

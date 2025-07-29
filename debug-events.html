@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Event Listeners</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <div id="debug-info" style="position: fixed; top: 10px; right: 10px; background: white; padding: 10px; border: 1px solid black; z-index: 9999;">
+        <h3>Debug Info</h3>
+        <div id="debug-log"></div>
+    </div>
+    
+    <!-- Copy of comparison screen -->
+    <div id="comparison-screen" class="screen active">
+        <div class="container">
+            <header class="comparison-header">
+                <h1>KANYE RANKER</h1>
+                <p class="comparison-count">Comparison <span id="current-comparison">1</span> of ~<span id="total-comparisons">100</span></p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </header>
+
+            <div class="comparison-container">
+                <div class="song-card" id="song-a">
+                    <div class="album-art-container">
+                        <img class="album-art" id="album-art-a" src="assets/album-covers/college-dropout.jpg" alt="">
+                    </div>
+                    <h2 class="song-title" id="song-title-a">Test Song A</h2>
+                    <p class="album-name" id="album-name-a">The College Dropout</p>
+                    <p class="year" id="year-a">(2004)</p>
+                    
+                    <div class="song-actions">
+                        <button class="btn-small preview-btn" id="preview-a">▶ Preview</button>
+                        <a class="btn-small" id="youtube-a" target="_blank">YouTube</a>
+                        <a class="btn-small" id="lyrics-a" target="_blank">Lyrics</a>
+                    </div>
+                    
+                    <button class="btn btn-choose" id="choose-a">Choose This</button>
+                </div>
+
+                <div class="vs-divider">VS</div>
+
+                <div class="song-card" id="song-b">
+                    <div class="album-art-container">
+                        <img class="album-art" id="album-art-b" src="assets/album-covers/late-registration.jpg" alt="">
+                    </div>
+                    <h2 class="song-title" id="song-title-b">Test Song B</h2>
+                    <p class="album-name" id="album-name-b">Late Registration</p>
+                    <p class="year" id="year-b">(2005)</p>
+                    
+                    <div class="song-actions">
+                        <button class="btn-small preview-btn" id="preview-b">▶ Preview</button>
+                        <a class="btn-small" id="youtube-b" target="_blank">YouTube</a>
+                        <a class="btn-small" id="lyrics-b" target="_blank">Lyrics</a>
+                    </div>
+                    
+                    <button class="btn btn-choose" id="choose-b">Choose This</button>
+                </div>
+            </div>
+
+            <div class="comparison-footer">
+                <button id="skip-comparison" class="btn btn-secondary">Skip This Comparison</button>
+                <button id="show-results" class="btn btn-primary">I'm Done - Show Results</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const debugLog = document.getElementById('debug-log');
+        
+        function log(msg) {
+            const p = document.createElement('p');
+            p.textContent = new Date().toLocaleTimeString() + ': ' + msg;
+            p.style.margin = '2px 0';
+            p.style.fontSize = '12px';
+            debugLog.appendChild(p);
+            console.log(msg);
+        }
+        
+        // Test basic button clicks
+        document.getElementById('choose-a').addEventListener('click', function(e) {
+            log('Choose A button clicked directly');
+            this.style.backgroundColor = 'green';
+            setTimeout(() => this.style.backgroundColor = '', 500);
+        });
+        
+        document.getElementById('choose-b').addEventListener('click', function(e) {
+            log('Choose B button clicked directly');
+            this.style.backgroundColor = 'green';
+            setTimeout(() => this.style.backgroundColor = '', 500);
+        });
+        
+        document.getElementById('skip-comparison').addEventListener('click', function(e) {
+            log('Skip button clicked');
+            this.style.backgroundColor = 'orange';
+            setTimeout(() => this.style.backgroundColor = '', 500);
+        });
+        
+        document.getElementById('show-results').addEventListener('click', function(e) {
+            log('Show Results button clicked');
+            this.style.backgroundColor = 'blue';
+            setTimeout(() => this.style.backgroundColor = '', 500);
+        });
+        
+        // Test card clicks
+        document.getElementById('song-a').addEventListener('click', function(e) {
+            log('Song card A clicked on: ' + e.target.tagName + ' with class: ' + e.target.className);
+        });
+        
+        document.getElementById('song-b').addEventListener('click', function(e) {
+            log('Song card B clicked on: ' + e.target.tagName + ' with class: ' + e.target.className);
+        });
+        
+        // Add visual feedback
+        const cards = document.querySelectorAll('.song-card');
+        cards.forEach(card => {
+            card.style.cursor = 'pointer';
+            card.addEventListener('mouseenter', function() {
+                this.style.border = '2px solid #ff6b6b';
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.border = '';
+            });
+        });
+        
+        log('Debug page loaded - all event listeners attached');
+    </script>
+</body>
+</html>
