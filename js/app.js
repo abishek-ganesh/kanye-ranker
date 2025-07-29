@@ -274,6 +274,11 @@ class KanyeRankerApp {
         console.log('Songs loaded:', this.songs.length);
         console.log('Albums loaded:', this.albums.size);
         
+        // Track analytics
+        if (window.analytics) {
+            window.analytics.trackRankingStarted();
+        }
+        
         if (this.songs.length === 0) {
             this.ui.showError('No songs loaded. Please refresh the page.');
             return;
@@ -1501,6 +1506,15 @@ class KanyeRankerApp {
         this.isProcessingChoice = true;
         this.ui.disableComparisonButtons();
         
+        // Track analytics
+        const completedCount = this.elo.getCompletedComparisons() + 1;
+        if (window.analytics) {
+            window.analytics.trackComparisonMade(
+                completedCount,
+                this.useDynamicPairing ? Math.max(this.minComparisons, this.pairings.length + 10) : this.pairings.length
+            );
+        }
+        
         const [songIdA, songIdB] = this.pairings[this.currentPairIndex];
         const winnerId = side === 'a' ? songIdA : songIdB;
         const loserId = side === 'a' ? songIdB : songIdA;
@@ -1576,6 +1590,11 @@ class KanyeRankerApp {
         }
         
         this.isProcessingChoice = true;
+        
+        // Track analytics
+        if (window.analytics) {
+            window.analytics.trackComparisonSkipped(this.currentPairIndex + 1);
+        }
         
         const [songIdA, songIdB] = this.pairings[this.currentPairIndex];
         this.elo.recordSkip(songIdA, songIdB);
@@ -1659,6 +1678,16 @@ class KanyeRankerApp {
         
         this.ui.displayResults(topSongs, topAlbums, this.albums);
         this.ui.showScreen('results');
+        
+        // Track analytics
+        if (window.analytics && topSongs.length > 0 && topAlbums.length > 0) {
+            const topAlbum = this.albums.get(topSongs[0].albumId);
+            window.analytics.trackRankingCompleted(
+                completedComparisons,
+                topAlbum ? topAlbum.name : 'Unknown',
+                topSongs[0].title
+            );
+        }
         
         // Update results headers with Kanye-themed messages
         if (window.KanyeMessages) {
@@ -1947,6 +1976,11 @@ class KanyeRankerApp {
     
     continueRanking() {
         console.log('Continuing ranking from results screen');
+        
+        // Track analytics
+        if (window.analytics) {
+            window.analytics.trackContinueRanking(this.elo.getCompletedComparisons());
+        }
         
         // Reset the "I'm Done" button threshold if user wants to continue
         this.minComparisons = this.elo.getCompletedComparisons() + 20;

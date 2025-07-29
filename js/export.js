@@ -58,6 +58,11 @@ class KanyeRankerExport {
         this.drawFooter(topAlbumId);
         
         if (!skipDownload) {
+            // Track songs export
+            if (window.analytics) {
+                const topAlbum = albumsMap.get(topSongs[0]?.albumId);
+                window.analytics.trackSongsExported(topAlbum?.name || 'Unknown');
+            }
             this.downloadImage();
         }
     }
@@ -396,6 +401,12 @@ class KanyeRankerExport {
         this.drawAlbumsHeader(topAlbumId);
         await this.drawAlbumsList(topAlbums);
         this.drawFooter(topAlbumId);
+        
+        // Track albums export
+        if (window.analytics) {
+            const topAlbum = topAlbums[0]?.album;
+            window.analytics.trackAlbumsExported(topAlbum?.name || 'Unknown');
+        }
         
         this.downloadImage('kanye-ranker-top-albums');
     }

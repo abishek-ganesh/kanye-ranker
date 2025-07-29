@@ -69,6 +69,11 @@ class KanyeRankerShare {
     }
     
     shareToTwitter() {
+        // Track analytics
+        if (window.analytics) {
+            window.analytics.trackShareClicked('twitter');
+        }
+        
         const text = this.getShareText();
         const url = this.getShareUrl();
         const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
@@ -76,12 +81,22 @@ class KanyeRankerShare {
     }
     
     shareToFacebook() {
+        // Track analytics
+        if (window.analytics) {
+            window.analytics.trackShareClicked('facebook');
+        }
+        
         const url = this.getShareUrl();
         const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
         window.open(facebookUrl, '_blank', 'width=550,height=420');
     }
     
     shareToWhatsApp() {
+        // Track analytics
+        if (window.analytics) {
+            window.analytics.trackShareClicked('whatsapp');
+        }
+        
         const text = this.getShareText();
         const url = this.getShareUrl();
         const whatsappText = `${text} ${url}`;
@@ -90,6 +105,11 @@ class KanyeRankerShare {
     }
     
     async copyShareLink() {
+        // Track analytics
+        if (window.analytics) {
+            window.analytics.trackShareClicked('copy_link');
+        }
+        
         const url = this.getShareUrl();
         try {
             await navigator.clipboard.writeText(url);
@@ -101,6 +121,11 @@ class KanyeRankerShare {
     }
     
     async shareToInstagram() {
+        // Track analytics
+        if (window.analytics) {
+            window.analytics.trackShareClicked('instagram');
+        }
+        
         // Check if we're on mobile
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         

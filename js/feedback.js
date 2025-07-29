@@ -158,6 +158,11 @@ User Agent: ${context.userAgent}
             // Open mail client
             window.location.href = mailtoLink;
             
+            // Track analytics
+            if (window.analytics) {
+                window.analytics.trackFeedbackSubmitted(!!email);
+            }
+            
             // Update last submit time
             this.lastSubmitTime = now;
             
