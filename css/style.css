@@ -512,7 +512,7 @@ body {
 
 .result-info {
     flex: 1;
-    text-align: left;
+    text-align: center;
 }
 
 .result-song-title {
@@ -520,13 +520,13 @@ body {
     font-weight: 700;
     color: var(--text-color);
     margin-bottom: 0.25rem;
-    text-align: left;
+    text-align: center;
 }
 
-.result-album-name {
+.result-album {
     font-size: 1rem;
     color: #666;
-    text-align: left;
+    text-align: center;
 }
 
 .result-rating {
