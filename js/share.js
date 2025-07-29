@@ -47,7 +47,7 @@ class KanyeRankerShare {
             topThree.forEach((song, index) => {
                 text += `${index + 1}. ${song.title}\n`;
             });
-            text += "\n🌊 Ride the wave at";
+            text += "\nFind yours at";
             return text;
         }
         

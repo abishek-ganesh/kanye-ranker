@@ -1,4 +1,4 @@
-# Kanye Ranker 🌊
+# Kanye Ranker
 
 Find your favorite Kanye West songs through an interactive ELO rating system.
 

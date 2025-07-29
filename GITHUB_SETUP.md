@@ -11,7 +11,7 @@ gh auth login
 
 3. Once authenticated, create and push the repository:
 ```bash
-gh repo create kanye-ranker --public --description "🌊 Find your favorite Kanye West songs through an interactive ELO rating system" --source=. --remote=origin --push
+gh repo create kanye-ranker --public --description "Find your favorite Kanye West songs through an interactive ELO rating system" --source=. --remote=origin --push
 ```
 
 ## Option 2: Manual Setup via GitHub.com
@@ -20,7 +20,7 @@ gh repo create kanye-ranker --public --description "🌊 Find your favorite Kany
 
 2. Create a new repository with these settings:
    - Repository name: `kanye-ranker`
-   - Description: `🌊 Find your favorite Kanye West songs through an interactive ELO rating system`
+   - Description: `Find your favorite Kanye West songs through an interactive ELO rating system`
    - Public repository
    - Do NOT initialize with README (we already have one)
 

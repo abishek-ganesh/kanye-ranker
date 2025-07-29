@@ -120,7 +120,7 @@ const KanyeMessages = {
                 return "Welcome to the Good Life - let's find your favorites";
             case 'milestone':
                 const milestoneMessages = [
-                    "Keep it wavy 🌊",
+                    "Keep going strong",
                     "You're doing amazing, sweetie",
                     "That's that crack music",
                     "Everything I'm not made me everything I am",
