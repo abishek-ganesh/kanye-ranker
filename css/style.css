@@ -230,7 +230,7 @@ body {
 }
 
 #start-ranking {
-    margin: 3rem auto 0;
+    margin: 3rem auto;
     display: block;
 }
 
@@ -770,7 +770,7 @@ body {
 /* App Footer */
 .app-footer {
     position: absolute;
-    bottom: 20px;
+    bottom: 40px;
     left: 0;
     right: 0;
     text-align: center;
