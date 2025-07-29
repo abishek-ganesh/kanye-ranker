@@ -1726,6 +1726,12 @@ class KanyeRankerApp {
     }
     
     handleKeyPress(event) {
+        // Check if feedback modal is open - if so, don't handle shortcuts
+        const feedbackModal = document.getElementById('feedback-modal');
+        if (feedbackModal && feedbackModal.classList.contains('show')) {
+            return;
+        }
+        
         if (this.ui.screens.comparison.classList.contains('active')) {
             switch(event.key) {
                 case 'ArrowLeft':
