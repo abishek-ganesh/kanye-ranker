@@ -331,7 +331,7 @@ class KanyeRankerExport {
             month: 'long', 
             day: 'numeric' 
         });
-        this.ctx.fillStyle = dateColor;
+        this.ctx.fillStyle = textColor;
         this.ctx.font = `24px ${bodyFont}`;
         this.ctx.fillText(date, this.canvas.width / 2, footerY + 95);
     }
