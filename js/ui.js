@@ -23,7 +23,6 @@ class UI {
         
         this.elements = {
             startButton: document.getElementById('start-ranking'),
-            loadButton: document.getElementById('load-session'),
             skipButton: document.getElementById('skip-comparison'),
             showResultsButton: document.getElementById('show-results'),
             restartButton: document.getElementById('restart'),

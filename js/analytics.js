@@ -142,12 +142,7 @@ class Analytics {
         });
     }
 
-    trackSessionLoaded() {
-        this.track('session_loaded', {
-            event_category: 'engagement',
-            event_label: 'load_session'
-        });
-    }
+    // Session tracking removed - no longer saving/loading sessions
 
     trackError(errorMessage, errorLocation) {
         this.track('error_occurred', {

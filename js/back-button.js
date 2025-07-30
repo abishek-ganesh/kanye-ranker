@@ -157,13 +157,9 @@ class BackButtonManager {
     }
     
     getStoredRatingsBeforeComparison(pairIndex) {
-        // Get ratings snapshot from session storage
-        const sessionData = localStorage.getItem('kanye-ranker-session');
-        if (sessionData) {
-            const session = JSON.parse(sessionData);
-            if (session.ratingSnapshots && session.ratingSnapshots[pairIndex - 1]) {
-                return session.ratingSnapshots[pairIndex - 1];
-            }
+        // Session storage removed - get ratings from app's rating snapshots
+        if (this.app.ratingSnapshots && this.app.ratingSnapshots[pairIndex - 1]) {
+            return this.app.ratingSnapshots[pairIndex - 1];
         }
         return null;
     }

@@ -95,11 +95,7 @@ class KanyeRankerApp {
             //     }
             // }
             
-            // Check if returning user with saved session
-            const savedSession = this.loadSession();
-            if (savedSession && window.analytics) {
-                window.analytics.trackSessionLoaded();
-            }
+            // Session saving removed - users start fresh each time
             
             console.log('App initialization complete');
         } catch (error) {
@@ -317,14 +313,6 @@ class KanyeRankerApp {
         console.log('All event listeners attached');
     }
     
-    checkForSavedSession() {
-        const savedSession = localStorage.getItem('kanyeRankerSession');
-        if (savedSession) {
-            this.ui.elements.loadButton.style.display = 'inline-block';
-        } else {
-            this.ui.elements.loadButton.style.display = 'none';
-        }
-    }
     
     startRanking() {
         console.log('Starting ranking...');
@@ -346,9 +334,7 @@ class KanyeRankerApp {
         this.elo = new EloRating(32);
         this.currentPairIndex = 0;
         
-        // Clear any stored session data to ensure fresh start
-        localStorage.removeItem('kanyeRankerSession');
-        // Clear any cached album data that might have old paths
+        // Clear any cached data that might have old paths
         localStorage.removeItem('albumCache');
         localStorage.removeItem('songsCache');
         // Clear ALL localStorage to eliminate any cached old album paths
@@ -357,9 +343,6 @@ class KanyeRankerApp {
                 localStorage.removeItem(key);
             }
         });
-        if (this.backButton) {
-            this.backButton.clear();
-        }
         
         this.generatePairings();
         if (this.pairings.length === 0) {
@@ -1551,7 +1534,10 @@ class KanyeRankerApp {
         // Save rating snapshot before comparison
         this.saveRatingSnapshot();
         
-        this.saveSession();
+        // Ensure buttons are enabled for interaction
+        if (!this.isProcessingChoice) {
+            this.ui.enableComparisonButtons();
+        }
         
         // Preload next comparison's images to prevent broken pipe errors
         this.preloadNextComparison();
@@ -1802,8 +1788,7 @@ class KanyeRankerApp {
             setTimeout(() => this.ui.playPreview(topSongs[0].spotifyId), 1000);
         }
         
-        // Don't clear session yet in case user wants to continue
-        // this.clearSession();
+        // Session saving removed - no clearing needed
     }
     
     handlePreview(event) {
@@ -1884,52 +1869,7 @@ class KanyeRankerApp {
         }
     }
     
-    saveSession() {
-        const sessionData = {
-            songRatings: Array.from(this.songRatings.entries()),
-            eloData: this.elo.exportData(),
-            pairings: this.pairings,
-            currentPairIndex: this.currentPairIndex,
-            sessionStartTime: this.sessionStartTime,
-            ratingSnapshots: this.ratingSnapshots
-        };
-        
-        localStorage.setItem('kanyeRankerSession', JSON.stringify(sessionData));
-    }
-    
-    loadSession() {
-        const savedSession = localStorage.getItem('kanyeRankerSession');
-        if (!savedSession) {
-            this.ui.showError('No saved session found');
-            return;
-        }
-        
-        try {
-            const sessionData = JSON.parse(savedSession);
-            
-            this.songRatings = new Map(sessionData.songRatings);
-            this.elo.importData(sessionData.eloData);
-            this.pairings = sessionData.pairings;
-            this.currentPairIndex = sessionData.currentPairIndex;
-            this.sessionStartTime = sessionData.sessionStartTime;
-            this.ratingSnapshots = sessionData.ratingSnapshots || {};
-            
-            this.ui.showScreen('comparison');
-            this.showNextComparison();
-            this.ui.showSuccess('Session loaded successfully');
-            
-        } catch (error) {
-            console.error('Error loading session:', error);
-            this.ui.showError('Failed to load session');
-        }
-    }
-    
-    clearSession() {
-        localStorage.removeItem('kanyeRankerSession');
-        if (this.backButton) {
-            this.backButton.clear();
-        }
-    }
+    // Session methods removed - no longer saving/loading sessions
     
     restart() {
         this.songRatings.clear();
@@ -1954,7 +1894,6 @@ class KanyeRankerApp {
             this.comparisonsSinceBreak = 0;
         }
         
-        this.clearSession();
         this.ui.stopPreview();
         this.ui.showScreen('landing');
         
@@ -2087,8 +2026,7 @@ class KanyeRankerApp {
         // Continue with next comparison
         this.showNextComparison();
         
-        // Save the updated session
-        this.saveSession();
+        // Session saving removed - no need to save
     }
 }
 
