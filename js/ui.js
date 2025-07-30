@@ -143,7 +143,7 @@ class UI {
                     if (firstCard) {
                         const header = document.querySelector('.comparison-header');
                         const headerHeight = header ? header.offsetHeight : 0;
-                        window.scrollTo({ top: headerHeight, behavior: 'smooth' });
+                        window.scrollTo({ top: headerHeight + 10, behavior: 'smooth' });
                     }
                 } else if (screenName === 'results') {
                     const hallOfFame = document.querySelector('.results-header h1');

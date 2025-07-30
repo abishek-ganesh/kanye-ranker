@@ -1,32 +1,52 @@
 /* Mobile Override Styles - Ensure mobile layout works properly */
 
 @media screen and (max-width: 768px) {
-    /* Align back button with header */
+    /* Align back button with KANYE RANKER text */
     #comparison-screen #back-button {
         position: absolute !important;
-        top: 50% !important;
-        transform: translateY(-50%) !important;
+        top: 20px !important;
+        left: 15px !important;
+        transform: none !important;
+        z-index: 100 !important;
+        height: 30px !important;
+        display: flex !important;
+        align-items: center !important;
     }
     
-    /* Ensure header is relative for back button positioning */
-    #comparison-screen .comparison-header {
+    /* Ensure header h1 has proper alignment */
+    #comparison-screen .comparison-header h1 {
         position: relative !important;
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+        line-height: 30px !important;
     }
     /* Ensure comparison screen is positioned for absolute back button */
     #comparison-screen {
         position: relative !important;
         min-height: 100vh !important;
+        padding-top: 0 !important;
     }
     
-    /* Header positioning */
+    #comparison-screen .container {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+    
+    /* Header positioning - reduced top padding since back button is inline */
     #comparison-screen .comparison-header {
-        padding: 60px 20px 10px !important;
+        padding: 20px 20px 10px !important;
         margin-bottom: 10px !important;
+        margin-top: 0 !important;
+        position: relative !important;
     }
     
     #comparison-screen .comparison-header h1 {
         font-size: 24px !important;
         margin-bottom: 5px !important;
+        height: 30px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
     
     #comparison-screen .progress-bar {
@@ -39,7 +59,7 @@
         display: flex !important;
         flex-direction: column !important;
         gap: 10px !important;
-        height: calc(100vh - 250px) !important;
+        height: calc(100vh - 180px) !important;
         padding: 0 15px !important;
         margin: 0 !important;
     }

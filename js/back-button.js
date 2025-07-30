@@ -30,6 +30,8 @@ class BackButtonManager {
                 transition: all 0.2s ease !important;
                 display: none;
                 z-index: 10000 !important;
+                align-items: center;
+                gap: 4px;
             }
             
             #back-button:hover {
@@ -39,26 +41,30 @@ class BackButtonManager {
             }
             
             #back-button.visible {
-                display: inline-block !important;
+                display: flex !important;
             }
             
             #comparison-screen.active #back-button.visible {
-                display: inline-block !important;
+                display: flex !important;
             }
             
             /* Ensure back button is visible on comparison screen */
             body:has(#comparison-screen.active) #back-button.visible {
-                display: inline-block !important;
+                display: flex !important;
             }
             
             @media (max-width: 768px) {
                 #back-button {
                     position: absolute !important;
-                    top: 15px;
+                    top: 20px;
                     left: 15px;
-                    padding: 8px 12px;
-                    font-size: 16px;
+                    padding: 0 10px;
+                    font-size: 14px;
                     min-width: auto;
+                    height: 30px;
+                    line-height: 30px;
+                    display: flex !important;
+                    align-items: center !important;
                 }
                 
                 #back-button .back-text {
