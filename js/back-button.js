@@ -16,7 +16,7 @@ class BackButtonManager {
         const style = document.createElement('style');
         style.textContent = `
             #back-button {
-                position: fixed !important;
+                position: absolute !important;
                 top: 20px !important;
                 left: 20px !important;
                 background: transparent !important;
@@ -53,6 +53,7 @@ class BackButtonManager {
             
             @media (max-width: 768px) {
                 #back-button {
+                    position: absolute !important;
                     top: 15px;
                     left: 15px;
                     padding: 8px 12px;
@@ -62,6 +63,13 @@ class BackButtonManager {
                 
                 #back-button .back-text {
                     display: none;
+                }
+            }
+            
+            /* Desktop stays fixed */
+            @media (min-width: 769px) {
+                #back-button {
+                    position: fixed !important;
                 }
             }
         `;

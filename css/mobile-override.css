@@ -1,0 +1,154 @@
+/* Mobile Override Styles - Ensure mobile layout works properly */
+
+@media screen and (max-width: 768px) {
+    /* Ensure comparison screen is positioned for absolute back button */
+    #comparison-screen {
+        position: relative !important;
+        min-height: 100vh !important;
+    }
+    
+    /* Header positioning */
+    #comparison-screen .comparison-header {
+        padding: 60px 20px 10px !important;
+        margin-bottom: 10px !important;
+    }
+    
+    #comparison-screen .comparison-header h1 {
+        font-size: 24px !important;
+        margin-bottom: 5px !important;
+    }
+    
+    #comparison-screen .progress-bar {
+        margin: 10px auto !important;
+        height: 4px !important;
+    }
+    
+    /* Container for both cards */
+    #comparison-screen .comparison-container {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        height: calc(100vh - 250px) !important;
+        padding: 0 15px !important;
+        margin: 0 !important;
+    }
+    
+    /* Each song card takes up ~45% of available height */
+    #comparison-screen .song-card {
+        flex: 1 !important;
+        max-height: calc(45vh - 50px) !important;
+        min-height: 180px !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        padding: 20px !important;
+        position: relative !important;
+        width: 100% !important;
+        border-radius: 16px !important;
+        background: white !important;
+        border: 2px solid #e0e0e0 !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    /* Dark mode card styling */
+    .dark-mode #comparison-screen .song-card {
+        background: #2a2a2a !important;
+        border-color: #444 !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+    }
+    
+    /* Album art on the left, dynamically sized */
+    #comparison-screen .album-art-container {
+        position: relative !important;
+        width: min(30vw, 120px) !important;
+        height: min(30vw, 120px) !important;
+        min-width: 80px !important;
+        min-height: 80px !important;
+        margin: 0 !important;
+        margin-right: 20px !important;
+        flex-shrink: 0 !important;
+        border-radius: 12px !important;
+        overflow: hidden !important;
+    }
+    
+    #comparison-screen .album-art {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+    
+    /* Create implicit wrapper for song content that's not album art */
+    #comparison-screen .song-card > *:not(.album-art-container) {
+        flex: 1 !important;
+        min-width: 0 !important;
+    }
+    
+    /* Song info section */
+    #comparison-screen .song-title {
+        font-size: clamp(16px, 4.5vw, 20px) !important;
+        font-weight: 700 !important;
+        margin: 0 0 8px 0 !important;
+        text-align: left !important;
+        line-height: 1.2 !important;
+    }
+    
+    #comparison-screen .album-name {
+        font-size: clamp(13px, 3.5vw, 16px) !important;
+        font-weight: 500 !important;
+        margin: 0 0 4px 0 !important;
+        text-align: left !important;
+        opacity: 0.9 !important;
+    }
+    
+    #comparison-screen .year {
+        font-size: clamp(11px, 3vw, 14px) !important;
+        margin: 0 0 12px 0 !important;
+        text-align: left !important;
+        opacity: 0.7 !important;
+    }
+    
+    /* Action buttons */
+    #comparison-screen .song-actions {
+        display: flex !important;
+        gap: 8px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: transparent !important;
+    }
+    
+    #comparison-screen .song-actions .btn-small {
+        padding: 8px 16px !important;
+        font-size: clamp(12px, 3vw, 14px) !important;
+        border-radius: 20px !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Hide elements we don't need */
+    #comparison-screen .vs-divider,
+    #comparison-screen .btn-choose {
+        display: none !important;
+    }
+    
+    /* Footer adjustments */
+    #comparison-screen .comparison-footer {
+        padding: 10px 15px 20px !important;
+        margin-top: 10px !important;
+    }
+    
+    /* Fix comparison count text */
+    #comparison-screen .comparison-count {
+        font-size: 14px !important;
+        margin-bottom: 5px !important;
+    }
+}
+
+/* Results page mobile fix */
+@media screen and (max-width: 480px) {
+    .result-actions {
+        width: calc(100% - 115px) !important;
+        margin-left: 115px !important;
+        justify-content: center !important;
+        display: flex !important;
+        gap: 0.5rem !important;
+    }
+}
