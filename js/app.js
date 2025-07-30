@@ -61,6 +61,15 @@ class KanyeRankerApp {
     async init() {
         try {
             console.log('Initializing KanyeRankerApp...');
+            
+            // Track initial page view
+            if (window.analytics) {
+                window.analytics.trackPageView('Landing Page', {
+                    referrer: document.referrer,
+                    user_agent: navigator.userAgent
+                });
+            }
+            
             await this.loadData();
             console.log('Data loaded successfully');
             
@@ -86,10 +95,19 @@ class KanyeRankerApp {
             //     }
             // }
             
+            // Check if returning user with saved session
+            const savedSession = this.loadSession();
+            if (savedSession && window.analytics) {
+                window.analytics.trackSessionLoaded();
+            }
+            
             console.log('App initialization complete');
         } catch (error) {
             console.error('Error during initialization:', error);
             this.ui.showError('Failed to initialize app: ' + error.message);
+            if (window.analytics) {
+                window.analytics.trackError(error.message, 'app_init');
+            }
             throw error;
         }
     }
@@ -172,6 +190,18 @@ class KanyeRankerApp {
         if (this.ui.elements.showResultsButton) {
             this.ui.elements.showResultsButton.addEventListener('click', () => {
                 console.log('Show results button clicked');
+                
+                // Track early exit
+                if (window.analytics) {
+                    const totalPossible = this.useDynamicPairing ? 
+                        Math.max(this.minComparisons, this.pairings.length + 10) : 
+                        this.pairings.length;
+                    window.analytics.trackEarlyExit(
+                        this.elo.getCompletedComparisons(),
+                        totalPossible
+                    );
+                }
+                
                 this.showResults();
             });
             console.log('Show results button listener attached');
@@ -258,6 +288,32 @@ class KanyeRankerApp {
         
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => this.handleKeyPress(e));
+        
+        // Add external link tracking
+        document.addEventListener('click', (e) => {
+            // Track YouTube link clicks
+            if (e.target.id && (e.target.id === 'youtube-a' || e.target.id === 'youtube-b')) {
+                const songCard = e.target.closest('.song-card');
+                const songTitle = songCard?.querySelector('.song-title')?.textContent || '';
+                const albumName = songCard?.querySelector('.album-name')?.textContent || '';
+                
+                if (window.analytics) {
+                    window.analytics.trackExternalLinkClick('youtube', songTitle, albumName);
+                }
+            }
+            
+            // Track Lyrics link clicks
+            if (e.target.id && (e.target.id === 'lyrics-a' || e.target.id === 'lyrics-b')) {
+                const songCard = e.target.closest('.song-card');
+                const songTitle = songCard?.querySelector('.song-title')?.textContent || '';
+                const albumName = songCard?.querySelector('.album-name')?.textContent || '';
+                
+                if (window.analytics) {
+                    window.analytics.trackExternalLinkClick('lyrics', songTitle, albumName);
+                }
+            }
+        });
+        
         console.log('All event listeners attached');
     }
     
@@ -275,8 +331,9 @@ class KanyeRankerApp {
         console.log('Songs loaded:', this.songs.length);
         console.log('Albums loaded:', this.albums.size);
         
-        // Track analytics
+        // Track page view for comparison screen
         if (window.analytics) {
+            window.analytics.trackPageView('Comparison Screen');
             window.analytics.trackRankingStarted();
         }
         
@@ -1478,6 +1535,11 @@ class KanyeRankerApp {
         this.ui.displayComparison(songA, songB, this.albums);
         const completedCount = this.elo.getCompletedComparisons();
         
+        // Start timer for this comparison
+        if (window.analytics) {
+            window.analytics.startComparisonTimer();
+        }
+        
         // For dynamic pairing, show progress based on minimum comparisons
         if (this.useDynamicPairing) {
             const totalEstimate = Math.max(this.minComparisons, this.pairings.length + 10);
@@ -1507,22 +1569,38 @@ class KanyeRankerApp {
         this.isProcessingChoice = true;
         this.ui.disableComparisonButtons();
         
-        // Track analytics
+        // Start timing for this comparison
+        const timeTaken = window.analytics ? window.analytics.endComparisonTimer() : 0;
+        
+        const [songIdA, songIdB] = this.pairings[this.currentPairIndex];
+        const winnerId = side === 'a' ? songIdA : songIdB;
+        const loserId = side === 'a' ? songIdB : songIdA;
+        
+        // Get song details for tracking
+        const winnerSong = this.songs.find(s => s.id === winnerId);
+        const loserSong = this.songs.find(s => s.id === loserId);
+        const winnerAlbum = this.albums.get(winnerSong?.albumId);
+        const loserAlbum = this.albums.get(loserSong?.albumId);
+        
+        // Track analytics with detailed comparison data
         const completedCount = this.elo.getCompletedComparisons() + 1;
         if (window.analytics) {
             window.analytics.trackComparisonMade(
                 completedCount,
                 this.useDynamicPairing ? Math.max(this.minComparisons, this.pairings.length + 10) : this.pairings.length
             );
+            
+            // Track detailed song comparison
+            window.analytics.trackSongComparison(
+                { title: winnerSong?.title, album: winnerAlbum?.name },
+                { title: loserSong?.title, album: loserAlbum?.name },
+                completedCount,
+                timeTaken
+            );
         }
-        
-        const [songIdA, songIdB] = this.pairings[this.currentPairIndex];
-        const winnerId = side === 'a' ? songIdA : songIdB;
-        const loserId = side === 'a' ? songIdB : songIdA;
         
         // Track user's favorite songs for exploration/exploitation
         this.userFavorites.add(winnerId);
-        const winnerSong = this.songs.find(s => s.id === winnerId);
         console.log(`User chose: "${winnerSong?.title}" (${this.userFavorites.size} favorites tracked)`);
         
         // Track winner for dynamic pairing
@@ -1626,6 +1704,11 @@ class KanyeRankerApp {
     }
     
     showResults() {
+        // Track page view for results screen
+        if (window.analytics) {
+            window.analytics.trackPageView('Results Screen');
+        }
+        
         // Check minimum comparisons
         const completedComparisons = this.elo.getCompletedComparisons();
         if (completedComparisons < 20) {
@@ -1688,6 +1771,12 @@ class KanyeRankerApp {
                 topAlbum ? topAlbum.name : 'Unknown',
                 topSongs[0].title
             );
+            
+            // Track album rankings
+            window.analytics.trackAlbumRanking(topAlbums.map(stats => ({
+                name: stats.album?.name || 'Unknown',
+                averageRating: stats.averageRating
+            })));
         }
         
         // Update results headers with Kanye-themed messages

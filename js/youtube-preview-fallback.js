@@ -298,8 +298,13 @@ class YouTubePreviewFallback {
                 
                 const songCard = e.target.closest('.song-card') || e.target.closest('.result-item');
                 const songTitle = songCard?.querySelector('.song-title')?.textContent || songCard?.querySelector('.result-title')?.textContent;
+                const albumName = songCard?.querySelector('.album-name')?.textContent || '';
                 
                 if (songTitle) {
+                    // Track preview click
+                    if (window.analytics) {
+                        window.analytics.trackSongPreviewed(songTitle, albumName, 'preview_button');
+                    }
                     this.playPreview(songTitle);
                 }
             }
@@ -311,8 +316,13 @@ class YouTubePreviewFallback {
                 
                 const songCard = e.target.closest('.song-card') || e.target.closest('.result-item');
                 const songTitle = songCard?.querySelector('.song-title')?.textContent || songCard?.querySelector('.result-title')?.textContent;
+                const albumName = songCard?.querySelector('.album-name')?.textContent || '';
                 
                 if (songTitle) {
+                    // Track preview click
+                    if (window.analytics) {
+                        window.analytics.trackSongPreviewed(songTitle, albumName, 'preview_button');
+                    }
                     this.playPreview(songTitle);
                 }
             }

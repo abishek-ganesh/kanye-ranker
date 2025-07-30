@@ -1,5 +1,7 @@
 // Initialize the app after all scripts are loaded
 window.addEventListener('load', async function() {
+    const loadStartTime = performance.now();
+    
     console.log('Window load event fired');
     console.log('%cKanye Ranker', 'font-size: 24px; font-weight: bold; color: #D4AF37;');
     console.log('%cCreated by Abishek Ganesh', 'font-size: 14px; color: #666;');
@@ -48,6 +50,15 @@ window.addEventListener('load', async function() {
             try {
                 window.kanyeApp = new KanyeRankerApp();
                 console.log('App initialized successfully!');
+                
+                // Track app load performance
+                const loadEndTime = performance.now();
+                const loadTime = loadEndTime - loadStartTime;
+                console.log(`App loaded in ${loadTime.toFixed(2)}ms`);
+                
+                if (window.analytics) {
+                    window.analytics.trackPerformanceMetric('app_load_time', loadTime);
+                }
                 
                 // Add a global click handler for debugging
                 document.addEventListener('click', function(e) {
