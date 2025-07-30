@@ -102,23 +102,46 @@
 @media (max-width: 768px) {
     .comparison-container {
         flex-direction: column !important;
-        gap: 20px !important;
+        gap: 15px !important;
+        height: calc(100vh - 200px) !important;
+        max-height: none !important;
+        margin: 20px auto !important;
+    }
+    
+    .song-card {
+        max-height: calc(50vh - 120px) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        padding: 15px !important;
     }
     
     .album-art-container {
-        max-width: 200px !important;
-        height: 200px !important;
+        max-width: min(200px, 40vw) !important;
+        height: min(200px, 40vw) !important;
+        margin-bottom: 15px !important;
     }
     
     .song-title {
-        font-size: 20px !important;
+        font-size: clamp(16px, 4vw, 20px) !important;
+        margin-bottom: 5px !important;
     }
     
     .album-name {
-        font-size: 14px !important;
+        font-size: clamp(12px, 3vw, 14px) !important;
+    }
+    
+    .year {
+        font-size: clamp(11px, 2.5vw, 13px) !important;
+        margin-bottom: 10px !important;
     }
     
     .vs-divider {
+        display: none !important;
+    }
+    
+    .song-actions {
         margin: 10px 0 !important;
+        padding: 8px 5px !important;
     }
 }

@@ -53,10 +53,15 @@ class BackButtonManager {
             
             @media (max-width: 768px) {
                 #back-button {
-                    top: 10px;
-                    left: 10px;
-                    padding: 6px 12px;
-                    font-size: 12px;
+                    top: 15px;
+                    left: 15px;
+                    padding: 8px 12px;
+                    font-size: 16px;
+                    min-width: auto;
+                }
+                
+                #back-button .back-text {
+                    display: none;
                 }
             }
         `;
@@ -65,7 +70,7 @@ class BackButtonManager {
         // Create back button
         const backBtn = document.createElement('button');
         backBtn.id = 'back-button';
-        backBtn.innerHTML = '← Back';
+        backBtn.innerHTML = '← <span class="back-text">Back</span>';
         backBtn.onclick = () => this.goBack();
         document.body.appendChild(backBtn);
     }
