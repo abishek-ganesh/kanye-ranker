@@ -40,7 +40,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
     z-index: 1000;
     align-items: center;
     justify-content: center;
@@ -55,14 +56,15 @@
 
 .feedback-content {
     background: white;
-    border-radius: 20px;
-    padding: 2rem;
-    max-width: 500px;
+    border-radius: 0;
+    padding: 3rem;
+    max-width: 600px;
     width: 90%;
     max-height: 90vh;
     overflow-y: auto;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 0 2px #000, 0 10px 50px rgba(0, 0, 0, 0.5);
     animation: slideUp 0.3s ease;
+    position: relative;
 }
 
 @keyframes slideUp {
@@ -77,49 +79,73 @@
 }
 
 .feedback-content h3 {
-    margin: 0 0 0.5rem 0;
-    font-size: 1.75rem;
-    color: var(--primary-color);
+    margin: 0 0 1rem 0;
+    font-size: 2.5rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    color: #000;
+    text-align: center;
 }
 
 .feedback-subtitle {
     color: #666;
-    margin-bottom: 1.5rem;
-    font-size: 1rem;
+    margin-bottom: 2.5rem;
+    font-size: 1.1rem;
+    text-align: center;
+    font-weight: 300;
 }
 
 /* Form Styles */
+.feedback-form-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
 .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: #333;
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #000;
 }
 
 .form-group input,
 .form-group textarea {
     width: 100%;
-    padding: 0.75rem 1rem;
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
-    font-size: 1rem;
+    padding: 1rem 1.25rem;
+    border: 2px solid #000;
+    border-radius: 0;
+    font-size: 1.1rem;
     font-family: inherit;
-    transition: border-color 0.2s ease;
+    transition: all 0.2s ease;
+    background: #fff;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #1db954;
+    border-color: #000;
+    background: #f8f8f8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 0 #000;
 }
 
 .form-group textarea {
     resize: vertical;
-    min-height: 100px;
+    min-height: 150px;
+    line-height: 1.5;
+}
+
+/* Reorder form - email after feedback */
+.form-group:last-of-type {
+    order: 2;
 }
 
 .char-count {
@@ -131,13 +157,51 @@
 
 .feedback-actions {
     display: flex;
-    gap: 1rem;
-    justify-content: flex-end;
-    margin-top: 2rem;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 3rem;
 }
 
 .feedback-actions .btn {
-    min-width: 120px;
+    min-width: 180px;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: 2px solid #000;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.feedback-actions .btn-secondary {
+    background: #fff;
+    color: #000;
+}
+
+.feedback-actions .btn-secondary:hover {
+    background: #f0f0f0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 0 #000;
+}
+
+.feedback-actions .btn-primary {
+    background: #000;
+    color: #fff;
+}
+
+.feedback-actions .btn-primary:hover {
+    background: #222;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 0 #666;
+}
+
+.feedback-actions .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 /* Dark Mode Styles */
@@ -154,32 +218,57 @@
 }
 
 .dark-mode .feedback-content {
-    background: #2a2a2a;
-    color: #e0e0e0;
+    background: #000;
+    color: #fff;
+    box-shadow: 0 0 0 2px #fff, 0 10px 50px rgba(255, 255, 255, 0.1);
 }
 
 .dark-mode .feedback-content h3 {
-    color: #ffffff;
+    color: #fff;
 }
 
 .dark-mode .feedback-subtitle {
-    color: #b0b0b0;
+    color: #999;
 }
 
 .dark-mode .form-group label {
-    color: #e0e0e0;
+    color: #fff;
 }
 
 .dark-mode .form-group input,
 .dark-mode .form-group textarea {
-    background: #1a1a1a;
-    color: #e0e0e0;
-    border-color: #444;
+    background: #000;
+    color: #fff;
+    border-color: #fff;
 }
 
 .dark-mode .form-group input:focus,
 .dark-mode .form-group textarea:focus {
-    border-color: #1db954;
+    background: #111;
+    border-color: #fff;
+    box-shadow: 0 4px 0 #fff;
+}
+
+.dark-mode .feedback-actions .btn-secondary {
+    background: #000;
+    color: #fff;
+    border-color: #fff;
+}
+
+.dark-mode .feedback-actions .btn-secondary:hover {
+    background: #111;
+    box-shadow: 0 4px 0 #fff;
+}
+
+.dark-mode .feedback-actions .btn-primary {
+    background: #fff;
+    color: #000;
+    border-color: #fff;
+}
+
+.dark-mode .feedback-actions .btn-primary:hover {
+    background: #f0f0f0;
+    box-shadow: 0 4px 0 #999;
 }
 
 .dark-mode .char-count {

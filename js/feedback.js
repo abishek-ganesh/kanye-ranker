@@ -140,20 +140,73 @@ class FeedbackManager {
             screen: screenName,
             timestamp: new Date().toISOString(),
             userAgent: navigator.userAgent,
-            darkMode: document.body.classList.contains('dark-mode')
+            darkMode: document.body.classList.contains('dark-mode'),
+            // Additional metadata (without exposing personal info)
+            platform: navigator.platform || 'Unknown',
+            language: navigator.language || 'Unknown',
+            screenResolution: `${window.screen.width}x${window.screen.height}`,
+            windowSize: `${window.innerWidth}x${window.innerHeight}`,
+            referrer: document.referrer || 'Direct visit'
         };
         
         // Add screen-specific context
         if (screenName === 'comparison-screen') {
             const currentComp = document.getElementById('current-comparison');
             const totalComp = document.getElementById('total-comparisons');
+            
+            // Get song names from comparison
+            const songA = document.querySelector('#song-a .song-title');
+            const songB = document.querySelector('#song-b .song-title');
+            const albumA = document.querySelector('#song-a .album-name');
+            const albumB = document.querySelector('#song-b .album-name');
+            
             context.comparison = {
                 current: currentComp ? currentComp.textContent : 'unknown',
-                total: totalComp ? totalComp.textContent : 'unknown'
+                total: totalComp ? totalComp.textContent : 'unknown',
+                songA: songA ? songA.textContent : 'Unknown Song',
+                songB: songB ? songB.textContent : 'Unknown Song',
+                albumA: albumA ? albumA.textContent : 'Unknown Album',
+                albumB: albumB ? albumB.textContent : 'Unknown Album'
             };
         } else if (screenName === 'results-screen') {
-            const topSongs = document.querySelectorAll('#top-songs .result-item');
-            context.completedComparisons = topSongs.length > 0;
+            // Get top 10 songs from results
+            const topSongElements = document.querySelectorAll('#top-songs .result-item');
+            const topSongs = [];
+            
+            for (let i = 0; i < Math.min(10, topSongElements.length); i++) {
+                const songTitle = topSongElements[i].querySelector('.result-title');
+                const albumName = topSongElements[i].querySelector('.result-album');
+                if (songTitle) {
+                    topSongs.push({
+                        rank: i + 1,
+                        title: songTitle.textContent,
+                        album: albumName ? albumName.textContent : 'Unknown Album'
+                    });
+                }
+            }
+            
+            // Get top 5 albums from results
+            const topAlbumElements = document.querySelectorAll('#top-albums .result-item');
+            const topAlbums = [];
+            
+            for (let i = 0; i < Math.min(5, topAlbumElements.length); i++) {
+                const albumTitle = topAlbumElements[i].querySelector('.result-title');
+                const albumYear = topAlbumElements[i].querySelector('.result-album');
+                if (albumTitle) {
+                    topAlbums.push({
+                        rank: i + 1,
+                        title: albumTitle.textContent,
+                        year: albumYear ? albumYear.textContent : ''
+                    });
+                }
+            }
+            
+            const totalComps = document.getElementById('total-comparisons');
+            context.results = {
+                completedComparisons: totalComps ? totalComps.textContent : 'unknown',
+                topSongs: topSongs,
+                topAlbums: topAlbums
+            };
         }
         
         return context;
@@ -201,13 +254,32 @@ class FeedbackManager {
             
             // Prepare context info string
             let contextInfo = 'No additional context';
+            let comparisonDetails = '';
+            let resultsDetails = '';
+            
             if (context.comparison) {
                 contextInfo = `Comparison: ${context.comparison.current} of ${context.comparison.total}`;
-            } else if (context.completedComparisons) {
-                // Get the actual number of comparisons if available
-                const totalComps = document.getElementById('total-comparisons');
-                const compCount = totalComps ? totalComps.textContent : 'unknown';
-                contextInfo = `User completed rankings (${compCount} comparisons)`;
+                comparisonDetails = `Currently comparing:
+• "${context.comparison.songA}" (${context.comparison.albumA})
+• "${context.comparison.songB}" (${context.comparison.albumB})`;
+            } else if (context.results) {
+                contextInfo = `User completed rankings (${context.results.completedComparisons} comparisons)`;
+                
+                // Format top songs
+                if (context.results.topSongs.length > 0) {
+                    resultsDetails = '=== TOP 10 SONGS ===\n' + 
+                        context.results.topSongs.map(song => 
+                            `${song.rank}. "${song.title}" - ${song.album}`
+                        ).join('\n');
+                }
+                
+                // Add top albums
+                if (context.results.topAlbums.length > 0) {
+                    resultsDetails += '\n\n=== TOP 5 ALBUMS ===\n' + 
+                        context.results.topAlbums.map(album => 
+                            `${album.rank}. ${album.title} ${album.year ? `(${album.year})` : ''}`
+                        ).join('\n');
+                }
             }
             
             // Prepare template parameters for EmailJS
@@ -218,7 +290,15 @@ class FeedbackManager {
                 dark_mode: context.darkMode ? 'Yes' : 'No',
                 timestamp: context.timestamp,
                 context_info: contextInfo,
-                user_agent: context.userAgent
+                comparison_details: comparisonDetails,
+                results_details: resultsDetails,
+                user_agent: context.userAgent,
+                // Additional metadata
+                platform: context.platform,
+                language: context.language,
+                screen_resolution: context.screenResolution,
+                window_size: context.windowSize,
+                referrer: context.referrer
             };
             
             console.log('Template params:', templateParams);
