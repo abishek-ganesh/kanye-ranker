@@ -117,6 +117,31 @@
     opacity: 1 !important;
 }
 
+@media (max-width: 768px) {
+    .song-card::before {
+        display: none !important;
+    }
+    
+    /* Wrap song info on mobile */
+    .song-card {
+        padding: 12px !important;
+    }
+    
+    .song-title,
+    .album-name,
+    .year,
+    .song-actions {
+        margin-left: 115px !important;
+    }
+    
+    .album-art-container {
+        position: absolute !important;
+        left: 12px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+    }
+}
+
 /* Hide preview indicator - not needed anymore */
 .preview-indicator {
     display: none !important;
