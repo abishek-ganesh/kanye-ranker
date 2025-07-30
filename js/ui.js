@@ -744,6 +744,31 @@ class UI {
         }, 3000);
     }
     
+    showWarning(message) {
+        const warningDiv = document.createElement('div');
+        warningDiv.className = 'warning-message';
+        warningDiv.textContent = message;
+        warningDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #FFA500;
+            color: #333;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            animation: slideInRight 0.3s ease-out;
+        `;
+        
+        document.body.appendChild(warningDiv);
+        
+        setTimeout(() => {
+            warningDiv.style.animation = 'slideOutRight 0.3s ease-out';
+            setTimeout(() => warningDiv.remove(), 300);
+        }, 3000);
+    }
+    
     disableComparisonButtons() {
         this.elements.songCards.a.chooseBtn.disabled = true;
         this.elements.songCards.b.chooseBtn.disabled = true;

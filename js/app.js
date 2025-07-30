@@ -1698,7 +1698,7 @@ class KanyeRankerApp {
         // Check minimum comparisons
         const completedComparisons = this.elo.getCompletedComparisons();
         if (completedComparisons < 20) {
-            this.ui.showError(`Please complete at least 20 comparisons for meaningful results. You've completed ${completedComparisons} so far.`);
+            this.ui.showWarning(`Need 20+ comparisons for results (${completedComparisons} done)`);
             return;
         }
         
