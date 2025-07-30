@@ -38,13 +38,10 @@
         flex: 1 !important;
         max-height: calc(45vh - 50px) !important;
         min-height: 180px !important;
-        display: grid !important;
-        grid-template-columns: min(30vw, 120px) 1fr !important;
-        grid-template-rows: auto auto auto auto !important;
-        grid-column-gap: 15px !important;
-        grid-row-gap: 4px !important;
-        align-items: start !important;
-        align-content: center !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
         padding: 20px !important;
         position: relative !important;
         width: 100% !important;
@@ -52,6 +49,7 @@
         background: white !important;
         border: 2px solid #e0e0e0 !important;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+        text-align: center !important;
     }
     
     /* Dark mode card styling */
@@ -61,18 +59,16 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
     }
     
-    /* Album art on the left - spans all rows */
+    /* Album art centered at top */
     #comparison-screen .album-art-container {
-        grid-column: 1 !important;
-        grid-row: 1 / -1 !important;
-        width: min(30vw, 120px) !important;
-        height: min(30vw, 120px) !important;
-        min-width: 80px !important;
-        min-height: 80px !important;
-        margin: 0 !important;
+        width: min(40vw, 150px) !important;
+        height: min(40vw, 150px) !important;
+        min-width: 100px !important;
+        min-height: 100px !important;
+        margin: 0 0 15px 0 !important;
         border-radius: 12px !important;
         overflow: hidden !important;
-        align-self: center !important;
+        order: 1 !important;
     }
     
     #comparison-screen .album-art {
@@ -81,47 +77,50 @@
         object-fit: cover !important;
     }
     
-    /* Song title - row 1, column 2 */
+    /* Song title - full width on its own line */
     #comparison-screen .song-title {
-        grid-column: 2 !important;
-        grid-row: 1 !important;
-        font-size: clamp(16px, 4.5vw, 20px) !important;
+        width: 100% !important;
+        font-size: clamp(18px, 5vw, 22px) !important;
         font-weight: 700 !important;
-        margin: 0 !important;
+        margin: 0 0 6px 0 !important;
         line-height: 1.2 !important;
         color: #333 !important;
+        order: 2 !important;
+        text-align: center !important;
     }
     
-    /* Album name - row 2, column 2 */
+    /* Album name - full width on its own line */
     #comparison-screen .album-name {
-        grid-column: 2 !important;
-        grid-row: 2 !important;
-        font-size: clamp(13px, 3.5vw, 16px) !important;
+        width: 100% !important;
+        font-size: clamp(14px, 4vw, 17px) !important;
         font-weight: 500 !important;
-        margin: 0 !important;
+        margin: 0 0 4px 0 !important;
         opacity: 0.9 !important;
         color: #555 !important;
+        order: 3 !important;
+        text-align: center !important;
     }
     
-    /* Year - row 3, column 2 */
+    /* Year - full width on its own line */
     #comparison-screen .year {
-        grid-column: 2 !important;
-        grid-row: 3 !important;
-        font-size: clamp(11px, 3vw, 14px) !important;
-        margin: 0 !important;
+        width: 100% !important;
+        font-size: clamp(12px, 3.5vw, 15px) !important;
+        margin: 0 0 12px 0 !important;
         opacity: 0.7 !important;
         color: #666 !important;
+        order: 4 !important;
+        text-align: center !important;
     }
     
-    /* Action buttons - row 4, column 2 */
+    /* Action buttons - centered on their own line */
     #comparison-screen .song-actions {
-        grid-column: 2 !important;
-        grid-row: 4 !important;
         display: flex !important;
-        gap: 8px !important;
+        gap: 10px !important;
         margin: 0 !important;
         padding: 0 !important;
         background: transparent !important;
+        order: 5 !important;
+        justify-content: center !important;
     }
     
     /* Dark mode text colors */
@@ -177,5 +176,13 @@
         justify-content: center !important;
         display: flex !important;
         gap: 0.5rem !important;
+    }
+}
+
+/* Center-align album name in results */
+@media screen and (max-width: 768px) {
+    #results-screen .album-name,
+    .results-list .album-name {
+        text-align: center !important;
     }
 }
