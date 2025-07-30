@@ -1,4 +1,7 @@
-// Feedback System
+// Feedback System - Updated with EmailJS
+// Version 2.0 - Cache bust: ${Date.now()}
+console.log('Loading new feedback.js with EmailJS support...');
+
 class FeedbackManager {
     constructor() {
         this.modal = document.getElementById('feedback-modal');
@@ -13,10 +16,36 @@ class FeedbackManager {
         this.lastSubmitTime = 0;
         this.submitCooldown = 60000; // 1 minute cooldown
         
+        // EmailJS configuration
+        this.serviceID = 'service_m82svqs';
+        this.templateID = 'template_ea3aht8';
+        this.publicKey = '9Sa_4DDtQczyQSQ-b';
+        
         this.init();
     }
     
     init() {
+        // Initialize EmailJS - wait for it to be available
+        const initEmailJS = () => {
+            if (window.emailjs) {
+                emailjs.init(this.publicKey);
+                console.log('EmailJS initialized with key:', this.publicKey);
+                return true;
+            }
+            return false;
+        };
+        
+        // Try to initialize immediately
+        if (!initEmailJS()) {
+            console.warn('EmailJS not ready, waiting...');
+            // If not ready, wait for window load
+            window.addEventListener('load', () => {
+                if (!initEmailJS()) {
+                    console.error('EmailJS SDK failed to load!');
+                }
+            });
+        }
+        
         // Button click handler
         this.button.addEventListener('click', () => this.openModal());
         
@@ -33,8 +62,14 @@ class FeedbackManager {
         // Character counter
         this.messageInput.addEventListener('input', () => this.updateCharCount());
         
-        // Form submission
-        this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+        // Form submission - prevent ALL default behavior
+        this.form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Form submit intercepted!');
+            this.handleSubmit(e);
+            return false;
+        });
         
         // Escape key to close
         document.addEventListener('keydown', (e) => {
@@ -53,6 +88,28 @@ class FeedbackManager {
         this.modal.classList.remove('show');
         this.form.reset();
         this.updateCharCount();
+        
+        // Restore original content if we showed success message
+        if (this.originalFormContent) {
+            const formContent = this.modal.querySelector('.feedback-content');
+            formContent.innerHTML = this.originalFormContent;
+            this.originalFormContent = null;
+            
+            // Re-attach event listeners
+            this.form = document.getElementById('feedback-form');
+            this.emailInput = document.getElementById('feedback-email');
+            this.messageInput = document.getElementById('feedback-message');
+            this.charCurrent = document.getElementById('char-current');
+            
+            // Re-attach form submission
+            this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+            
+            // Re-attach character counter
+            this.messageInput.addEventListener('input', () => this.updateCharCount());
+            
+            // Re-attach cancel button
+            document.getElementById('feedback-cancel').addEventListener('click', () => this.closeModal());
+        }
     }
     
     updateCharCount() {
@@ -104,6 +161,7 @@ class FeedbackManager {
     
     async handleSubmit(e) {
         e.preventDefault();
+        console.log('Form submitted!');
         
         // Check rate limiting
         const now = Date.now();
@@ -116,10 +174,21 @@ class FeedbackManager {
         const email = this.emailInput.value.trim();
         const message = this.messageInput.value.trim();
         
+        console.log('Email:', email, 'Message:', message);
+        
         if (!message) {
             this.showToast('Please enter a message', 'error');
             return;
         }
+        
+        // Check if EmailJS is available
+        if (!window.emailjs) {
+            console.error('EmailJS not available in window object');
+            this.showToast('Email service not available. Please try again later.', 'error');
+            return;
+        }
+        
+        console.log('EmailJS is available, proceeding...');
         
         // Disable submit button
         const submitBtn = document.getElementById('feedback-send');
@@ -130,33 +199,41 @@ class FeedbackManager {
             // Get context
             const context = this.getContext();
             
+            // Prepare context info string
+            let contextInfo = 'No additional context';
+            if (context.comparison) {
+                contextInfo = `Comparison: ${context.comparison.current} of ${context.comparison.total}`;
+            } else if (context.completedComparisons) {
+                // Get the actual number of comparisons if available
+                const totalComps = document.getElementById('total-comparisons');
+                const compCount = totalComps ? totalComps.textContent : 'unknown';
+                contextInfo = `User completed rankings (${compCount} comparisons)`;
+            }
+            
+            // Prepare template parameters for EmailJS
+            const templateParams = {
+                message: message,
+                user_email: email || 'Not provided',
+                screen_name: context.screen,
+                dark_mode: context.darkMode ? 'Yes' : 'No',
+                timestamp: context.timestamp,
+                context_info: contextInfo,
+                user_agent: context.userAgent
+            };
+            
+            console.log('Template params:', templateParams);
+            console.log('Service ID:', this.serviceID);
+            console.log('Template ID:', this.templateID);
+            
             // Send email using EmailJS
-            // Note: You'll need to sign up for EmailJS and get your service ID, template ID, and user ID
-            // For now, I'll use a fallback mailto method
+            console.log('About to call emailjs.send...');
+            const response = await emailjs.send(
+                this.serviceID,
+                this.templateID,
+                templateParams
+            );
             
-            // Fallback: Use mailto link
-            const subject = `Kanye Ranker Feedback - ${context.screen}`;
-            const body = `
-Feedback from Kanye Ranker
-
-Message: ${message}
-
-User Email: ${email || 'Not provided'}
-
-Context:
-- Screen: ${context.screen}
-- Dark Mode: ${context.darkMode ? 'Yes' : 'No'}
-- Timestamp: ${context.timestamp}
-${context.comparison ? `- Comparison: ${context.comparison.current} of ${context.comparison.total}` : ''}
-
-User Agent: ${context.userAgent}
-            `.trim();
-            
-            // Create mailto link
-            const mailtoLink = `mailto:abishek.ganesh30@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-            
-            // Open mail client
-            window.location.href = mailtoLink;
+            console.log('EmailJS response:', response);
             
             // Track analytics
             if (window.analytics) {
@@ -167,21 +244,38 @@ User Agent: ${context.userAgent}
             this.lastSubmitTime = now;
             
             // Show success message
-            this.showToast('Opening your email client...', 'success');
+            this.showSuccessInModal();
             
-            // Close modal after a short delay
+            // Close modal after showing success
             setTimeout(() => {
                 this.closeModal();
-            }, 1500);
+            }, 2000);
             
         } catch (error) {
             console.error('Error sending feedback:', error);
-            this.showToast('Failed to send feedback. Please try again.', 'error');
-        } finally {
-            // Re-enable submit button
+            this.showToast('Failed to send feedback. Please try again later.', 'error');
+            
+            // Re-enable form
             submitBtn.disabled = false;
             submitBtn.textContent = 'Send Feedback';
         }
+    }
+    
+    showSuccessInModal() {
+        // Replace form content with success message
+        const formContent = this.modal.querySelector('.feedback-content');
+        const originalContent = formContent.innerHTML;
+        
+        formContent.innerHTML = `
+            <div style="text-align: center; padding: 40px 20px;">
+                <div style="font-size: 48px; color: #4CAF50; margin-bottom: 20px;">✓</div>
+                <h3 style="color: #333; margin-bottom: 10px;">Thank You!</h3>
+                <p style="color: #666;">Your feedback has been sent successfully.</p>
+            </div>
+        `;
+        
+        // Store original content to restore later
+        this.originalFormContent = originalContent;
     }
     
     showToast(message, type = 'info') {
@@ -205,5 +299,13 @@ User Agent: ${context.userAgent}
 
 // Initialize feedback system when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('Initializing FeedbackManager v2.0 with EmailJS...');
     window.feedbackManager = new FeedbackManager();
+    
+    // Double-check EmailJS is loaded
+    if (!window.emailjs) {
+        console.error('CRITICAL: EmailJS not found! Check if CDN is blocked.');
+    } else {
+        console.log('EmailJS confirmed available');
+    }
 });
