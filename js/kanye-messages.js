@@ -37,21 +37,21 @@ const KanyeMessages = {
     // Results page headers
     results: {
         songHeader: "My Beautiful Dark Twisted Ranking",
-        albumHeader: "The Life of Your Albums",
-        shareHeader: "Runaway with these results"
+        albumHeader: "The Life of Your Albums"
+        // shareHeader: "Runaway with these results" // Removed per user request
     },
     
-    // Social share messages
-    shareMessages: [
-        "I just found my Stronger opinions on Kanye Ranker",
-        "Can't Tell Me Nothing - here's my top 10",
-        "Touched the Sky with my Kanye rankings",
-        "My Beautiful Dark Twisted Ranking is complete",
-        "Through the Wire to find my favorite Ye songs",
-        "All of the Lights on my top tracks",
-        "Power ranking complete - check my Kanye top 10",
-        "Bound 2 share my Kanye rankings"
-    ],
+    // Social share messages - removed per user request
+    // shareMessages: [
+    //     "I just found my Stronger opinions on Kanye Ranker",
+    //     "Can't Tell Me Nothing - here's my top 10",
+    //     "Touched the Sky with my Kanye rankings",
+    //     "My Beautiful Dark Twisted Ranking is complete",
+    //     "Through the Wire to find my favorite Ye songs",
+    //     "All of the Lights on my top tracks",
+    //     "Power ranking complete - check my Kanye top 10",
+    //     "Bound 2 share my Kanye rankings"
+    // ],
     
     // Skip button alternative text
     skipMessages: [
@@ -101,8 +101,8 @@ const KanyeMessages = {
                 return this.getRandom(this.loading);
             case 'comparison':
                 return this.getRandom(this.comparison);
-            case 'share':
-                return this.getRandom(this.shareMessages);
+            // case 'share': // Removed per user request
+            //     return this.getRandom(this.shareMessages);
             case 'skip':
                 return this.getRandom(this.skipMessages);
             case 'resultsHeader':

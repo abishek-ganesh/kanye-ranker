@@ -3,6 +3,9 @@
     let instructionsShown = false;
     
     function showInstructions() {
+        // Instructions popup removed per user request
+        return;
+        
         if (instructionsShown || localStorage.getItem('ui-instructions-shown')) return;
         
         const instructions = document.createElement('div');

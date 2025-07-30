@@ -260,32 +260,33 @@ class YouTubePreviewFallback {
         
         document.body.appendChild(this.modal);
         
-        // Show help on first load
-        this.showFirstTimeHelp();
+        // Help popup removed per user request
+        // this.showFirstTimeHelp();
     }
     
-    showFirstTimeHelp() {
-        if (localStorage.getItem('youtube-preview-help-shown')) return;
-        
-        const help = document.createElement('div');
-        help.className = 'preview-help';
-        help.innerHTML = `
-            <h3>🎵 Music Preview Available!</h3>
-            <p>Click on any song card to preview it on YouTube.</p>
-            <p><small>Songs with available previews will glow when you hover over them.</small></p>
-            <button onclick="this.parentElement.remove(); localStorage.setItem('youtube-preview-help-shown', 'true')">Got it!</button>
-        `;
-        
-        setTimeout(() => {
-            document.body.appendChild(help);
-            setTimeout(() => {
-                if (help.parentElement) {
-                    help.remove();
-                    localStorage.setItem('youtube-preview-help-shown', 'true');
-                }
-            }, 10000);
-        }, 2000);
-    }
+    // Method removed per user request - no first time help popup
+    // showFirstTimeHelp() {
+    //     if (localStorage.getItem('youtube-preview-help-shown')) return;
+    //     
+    //     const help = document.createElement('div');
+    //     help.className = 'preview-help';
+    //     help.innerHTML = `
+    //         <h3>🎵 Music Preview Available!</h3>
+    //         <p>Click on any song card to preview it on YouTube.</p>
+    //         <p><small>Songs with available previews will glow when you hover over them.</small></p>
+    //         <button onclick="this.parentElement.remove(); localStorage.setItem('youtube-preview-help-shown', 'true')">Got it!</button>
+    //     `;
+    //     
+    //     setTimeout(() => {
+    //         document.body.appendChild(help);
+    //         setTimeout(() => {
+    //             if (help.parentElement) {
+    //                 help.remove();
+    //                 localStorage.setItem('youtube-preview-help-shown', 'true');
+    //             }
+    //         }, 10000);
+    //     }, 2000);
+    // }
     
     attachGlobalListeners() {
         // Listen for clicks on preview buttons only

@@ -24,12 +24,13 @@ class KanyeRankerApp {
             throw error;
         }
         
-        try {
-            this.share = new KanyeRankerShare();
-            console.log('Share system initialized');
-        } catch (error) {
-            console.error('Failed to initialize share system:', error);
-        }
+        // Share system removed per user request
+        // try {
+        //     this.share = new KanyeRankerShare();
+        //     console.log('Share system initialized');
+        // } catch (error) {
+        //     console.error('Failed to initialize share system:', error);
+        // }
         
         this.songs = [];
         this.albums = new Map();
@@ -66,24 +67,24 @@ class KanyeRankerApp {
             this.attachEventListeners();
             console.log('Event listeners attached');
             
-            // Initialize share system
-            if (this.share) {
-                this.share.init(this);
-                console.log('Share system event listeners attached');
-            }
+            // Share system removed per user request
+            // if (this.share) {
+            //     this.share.init(this);
+            //     console.log('Share system event listeners attached');
+            // }
             
             // Initialize back button
             this.backButton = new BackButtonManager(this);
             console.log('Back button initialized');
             
-            // Check for shared results
-            if (this.share) {
-                const sharedSongIds = this.share.parseShareUrl();
-                if (sharedSongIds) {
-                    await this.share.displaySharedResults(sharedSongIds);
-                    return;
-                }
-            }
+            // Share functionality removed per user request
+            // if (this.share) {
+            //     const sharedSongIds = this.share.parseShareUrl();
+            //     if (sharedSongIds) {
+            //         await this.share.displaySharedResults(sharedSongIds);
+            //         return;
+            //     }
+            // }
             
             console.log('App initialization complete');
         } catch (error) {
