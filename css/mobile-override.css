@@ -77,19 +77,24 @@
         object-fit: cover !important;
     }
     
-    /* Create implicit wrapper for song content that's not album art */
-    #comparison-screen .song-card > *:not(.album-art-container) {
+    /* Song info wrapper - create vertical stack */
+    #comparison-screen .song-info {
         flex: 1 !important;
         min-width: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 0 !important;
     }
     
-    /* Song info section */
+    /* Song info section - each element on its own line */
     #comparison-screen .song-title {
         font-size: clamp(16px, 4.5vw, 20px) !important;
         font-weight: 700 !important;
-        margin: 0 0 8px 0 !important;
+        margin: 0 0 6px 0 !important;
         text-align: left !important;
         line-height: 1.2 !important;
+        display: block !important;
+        width: 100% !important;
     }
     
     #comparison-screen .album-name {
@@ -98,22 +103,28 @@
         margin: 0 0 4px 0 !important;
         text-align: left !important;
         opacity: 0.9 !important;
+        display: block !important;
+        width: 100% !important;
     }
     
     #comparison-screen .year {
         font-size: clamp(11px, 3vw, 14px) !important;
-        margin: 0 0 12px 0 !important;
+        margin: 0 0 10px 0 !important;
         text-align: left !important;
         opacity: 0.7 !important;
+        display: block !important;
+        width: 100% !important;
     }
     
-    /* Action buttons */
+    /* Action buttons on their own row */
     #comparison-screen .song-actions {
         display: flex !important;
         gap: 8px !important;
         margin: 0 !important;
         padding: 0 !important;
         background: transparent !important;
+        width: 100% !important;
+        flex-wrap: wrap !important;
     }
     
     #comparison-screen .song-actions .btn-small {
