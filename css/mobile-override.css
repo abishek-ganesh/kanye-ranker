@@ -49,9 +49,11 @@
         flex: 1 !important;
         max-height: calc(45vh - 50px) !important;
         min-height: 180px !important;
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: center !important;
+        display: grid !important;
+        grid-template-columns: min(30vw, 120px) 1fr !important;
+        grid-template-rows: auto auto auto auto !important;
+        grid-column-gap: 15px !important;
+        grid-row-gap: 2px !important;
         align-items: center !important;
         padding: 20px !important;
         position: relative !important;
@@ -60,7 +62,6 @@
         background: white !important;
         border: 2px solid #e0e0e0 !important;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
-        text-align: center !important;
     }
     
     /* Dark mode card styling */
@@ -70,16 +71,18 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
     }
     
-    /* Album art centered at top */
+    /* Album art on the left, spans all rows */
     #comparison-screen .album-art-container {
-        width: min(40vw, 150px) !important;
-        height: min(40vw, 150px) !important;
-        min-width: 100px !important;
-        min-height: 100px !important;
-        margin: 0 0 15px 0 !important;
+        grid-column: 1 !important;
+        grid-row: 1 / -1 !important;
+        width: min(30vw, 120px) !important;
+        height: min(30vw, 120px) !important;
+        min-width: 80px !important;
+        min-height: 80px !important;
+        margin: 0 !important;
         border-radius: 12px !important;
         overflow: hidden !important;
-        order: 1 !important;
+        align-self: center !important;
     }
     
     #comparison-screen .album-art {
@@ -88,50 +91,50 @@
         object-fit: cover !important;
     }
     
-    /* Song title - full width on its own line */
+    /* Song title - row 1, column 2 */
     #comparison-screen .song-title {
-        width: 100% !important;
-        font-size: clamp(18px, 5vw, 22px) !important;
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+        font-size: clamp(16px, 4.5vw, 20px) !important;
         font-weight: 700 !important;
-        margin: 0 0 6px 0 !important;
+        margin: 0 !important;
         line-height: 1.2 !important;
         color: #333 !important;
-        order: 2 !important;
-        text-align: center !important;
+        text-align: left !important;
     }
     
-    /* Album name - full width on its own line */
+    /* Album name - row 2, column 2 */
     #comparison-screen .album-name {
-        width: 100% !important;
-        font-size: clamp(14px, 4vw, 17px) !important;
+        grid-column: 2 !important;
+        grid-row: 2 !important;
+        font-size: clamp(13px, 3.5vw, 16px) !important;
         font-weight: 500 !important;
-        margin: 0 0 4px 0 !important;
+        margin: 0 !important;
         opacity: 0.9 !important;
         color: #555 !important;
-        order: 3 !important;
-        text-align: center !important;
+        text-align: left !important;
     }
     
-    /* Year - full width on its own line */
+    /* Year - row 3, column 2 */
     #comparison-screen .year {
-        width: 100% !important;
-        font-size: clamp(12px, 3.5vw, 15px) !important;
-        margin: 0 0 12px 0 !important;
+        grid-column: 2 !important;
+        grid-row: 3 !important;
+        font-size: clamp(11px, 3vw, 14px) !important;
+        margin: 0 !important;
         opacity: 0.7 !important;
         color: #666 !important;
-        order: 4 !important;
-        text-align: center !important;
+        text-align: left !important;
     }
     
-    /* Action buttons - centered on their own line */
+    /* Action buttons - row 4, column 2 */
     #comparison-screen .song-actions {
+        grid-column: 2 !important;
+        grid-row: 4 !important;
         display: flex !important;
-        gap: 10px !important;
+        gap: 8px !important;
         margin: 0 !important;
         padding: 0 !important;
         background: transparent !important;
-        order: 5 !important;
-        justify-content: center !important;
     }
     
     /* Dark mode text colors */
