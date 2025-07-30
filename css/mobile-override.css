@@ -1,6 +1,17 @@
 /* Mobile Override Styles - Ensure mobile layout works properly */
 
 @media screen and (max-width: 768px) {
+    /* Align back button with header */
+    #comparison-screen #back-button {
+        position: absolute !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+    }
+    
+    /* Ensure header is relative for back button positioning */
+    #comparison-screen .comparison-header {
+        position: relative !important;
+    }
     /* Ensure comparison screen is positioned for absolute back button */
     #comparison-screen {
         position: relative !important;
@@ -182,7 +193,14 @@
 /* Center-align album name in results */
 @media screen and (max-width: 768px) {
     #results-screen .album-name,
-    .results-list .album-name {
+    .results-list .album-name,
+    .result-album {
         text-align: center !important;
+        width: 100% !important;
+    }
+    
+    /* Ensure result info is full width for centering */
+    .result-info {
+        width: 100% !important;
     }
 }

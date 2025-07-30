@@ -135,6 +135,25 @@ class UI {
         console.log(`Screen "${screenName}" is now active`);
         console.log('Active class check:', this.screens[screenName].classList.contains('active'));
         
+        // Handle auto-scroll on mobile
+        if (window.innerWidth <= 768) {
+            setTimeout(() => {
+                if (screenName === 'comparison') {
+                    const firstCard = document.querySelector('#song-a');
+                    if (firstCard) {
+                        const header = document.querySelector('.comparison-header');
+                        const headerHeight = header ? header.offsetHeight : 0;
+                        window.scrollTo({ top: headerHeight, behavior: 'smooth' });
+                    }
+                } else if (screenName === 'results') {
+                    const hallOfFame = document.querySelector('.results-header h1');
+                    if (hallOfFame) {
+                        hallOfFame.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            }, 100);
+        }
+        
         // Handle back button visibility
         const backButton = document.getElementById('back-button');
         if (backButton) {
