@@ -156,11 +156,16 @@ class UI {
         // Handle back button visibility
         const backButton = document.getElementById('back-button');
         if (backButton) {
+            const isMobile = window.innerWidth <= 768;
             // Hide back button on landing and results screens
             if (screenName === 'landing' || screenName === 'results') {
                 backButton.classList.remove('visible');
-            } else if (screenName === 'comparison' && window.backButtonManager && window.backButtonManager.history.length > 0) {
-                backButton.classList.add('visible');
+            } else if (screenName === 'comparison' && window.backButtonManager) {
+                // On mobile, only show back button after at least 2 comparisons
+                const minHistory = isMobile ? 2 : 1;
+                if (window.backButtonManager.history.length >= minHistory) {
+                    backButton.classList.add('visible');
+                }
             }
         }
         console.log('Display style:', this.screens[screenName].style.display);

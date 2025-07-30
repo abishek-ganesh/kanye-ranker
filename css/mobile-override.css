@@ -1,6 +1,13 @@
 /* Mobile Override Styles - Ensure mobile layout works properly */
 
 @media screen and (max-width: 768px) {
+    /* Hide back button on landing screen and when it's active */
+    #landing-screen #back-button,
+    #landing-screen.active ~ #back-button,
+    body:has(#landing-screen.active) #back-button {
+        display: none !important;
+    }
+    
     /* Align back button with KANYE RANKER text */
     #comparison-screen #back-button {
         position: absolute !important;

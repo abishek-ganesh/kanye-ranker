@@ -101,8 +101,9 @@ class BackButtonManager {
         this.history.push(comparison);
         localStorage.setItem('comparison-history', JSON.stringify(this.history));
         
-        // Show back button after first comparison
-        if (this.history.length > 0) {
+        // Show back button after first comparison (but not on mobile for first comparison)
+        const isMobile = window.innerWidth <= 768;
+        if (this.history.length > 0 && (!isMobile || this.history.length > 1)) {
             document.getElementById('back-button').classList.add('visible');
         }
     }
@@ -147,11 +148,17 @@ class BackButtonManager {
         // Show the comparison again
         this.app.showNextComparison();
         
+        // Force enable comparison buttons after a short delay
+        setTimeout(() => {
+            this.app.ui.enableComparisonButtons();
+        }, 100);
+        
         // Update history storage
         localStorage.setItem('comparison-history', JSON.stringify(this.history));
         
-        // Hide back button if no more history
-        if (this.history.length === 0) {
+        // Hide back button if no more history (or on mobile for first comparison)
+        const isMobile = window.innerWidth <= 768;
+        if (this.history.length === 0 || (isMobile && this.history.length <= 1)) {
             document.getElementById('back-button').classList.remove('visible');
         }
     }
