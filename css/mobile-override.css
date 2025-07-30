@@ -38,9 +38,13 @@
         flex: 1 !important;
         max-height: calc(45vh - 50px) !important;
         min-height: 180px !important;
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: flex-start !important;
+        display: grid !important;
+        grid-template-columns: min(30vw, 120px) 1fr !important;
+        grid-template-rows: auto auto auto auto !important;
+        grid-column-gap: 15px !important;
+        grid-row-gap: 4px !important;
+        align-items: start !important;
+        align-content: center !important;
         padding: 20px !important;
         position: relative !important;
         width: 100% !important;
@@ -57,16 +61,15 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
     }
     
-    /* Album art on the left, dynamically sized */
+    /* Album art on the left - spans all rows */
     #comparison-screen .album-art-container {
-        position: relative !important;
+        grid-column: 1 !important;
+        grid-row: 1 / -1 !important;
         width: min(30vw, 120px) !important;
         height: min(30vw, 120px) !important;
         min-width: 80px !important;
         min-height: 80px !important;
         margin: 0 !important;
-        margin-right: 15px !important;
-        flex-shrink: 0 !important;
         border-radius: 12px !important;
         overflow: hidden !important;
         align-self: center !important;
@@ -78,45 +81,42 @@
         object-fit: cover !important;
     }
     
-    /* Song info wrapper - ensure all content is grouped */
-    #comparison-screen .song-info {
-        flex: 1 !important;
-        min-width: 0 !important;
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: center !important;
-        gap: 0 !important;
-        height: 100% !important;
-    }
-    
-    /* Song title - first row */
+    /* Song title - row 1, column 2 */
     #comparison-screen .song-title {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
         font-size: clamp(16px, 4.5vw, 20px) !important;
         font-weight: 700 !important;
-        margin: 0 0 4px 0 !important;
+        margin: 0 !important;
         line-height: 1.2 !important;
         color: #333 !important;
     }
     
-    /* Album name - second row */
+    /* Album name - row 2, column 2 */
     #comparison-screen .album-name {
+        grid-column: 2 !important;
+        grid-row: 2 !important;
         font-size: clamp(13px, 3.5vw, 16px) !important;
         font-weight: 500 !important;
-        margin: 0 0 2px 0 !important;
+        margin: 0 !important;
         opacity: 0.9 !important;
         color: #555 !important;
     }
     
-    /* Year - third row */
+    /* Year - row 3, column 2 */
     #comparison-screen .year {
+        grid-column: 2 !important;
+        grid-row: 3 !important;
         font-size: clamp(11px, 3vw, 14px) !important;
-        margin: 0 0 8px 0 !important;
+        margin: 0 !important;
         opacity: 0.7 !important;
         color: #666 !important;
     }
     
-    /* Action buttons - fourth row */
+    /* Action buttons - row 4, column 2 */
     #comparison-screen .song-actions {
+        grid-column: 2 !important;
+        grid-row: 4 !important;
         display: flex !important;
         gap: 8px !important;
         margin: 0 !important;
@@ -144,9 +144,15 @@
         font-weight: 600 !important;
     }
     
+    
     /* Hide elements we don't need */
     #comparison-screen .vs-divider,
     #comparison-screen .btn-choose {
+        display: none !important;
+    }
+    
+    /* Also hide choose button if it doesn't have btn-choose class */
+    #comparison-screen .song-card > button.btn {
         display: none !important;
     }
     
