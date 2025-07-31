@@ -20,7 +20,7 @@
 .share-btn svg {
     width: 20px;
     height: 20px;
-    fill: currentColor;
+    /* Removed fill: currentColor to preserve inline styles */
 }
 
 .share-btn:hover {
@@ -67,10 +67,7 @@ body:not(.dark-mode) #share-albums-twitter .btn-icon {
     color: white !important;
 }
 
-#share-songs-instagram:hover svg,
-#share-albums-instagram:hover svg {
-    fill: white !important;
-}
+/* Removed to preserve original Instagram color on hover */
 
 /* Facebook button */
 #share-songs-facebook,
@@ -85,10 +82,7 @@ body:not(.dark-mode) #share-albums-twitter .btn-icon {
     color: white !important;
 }
 
-#share-songs-facebook:hover svg,
-#share-albums-facebook:hover svg {
-    fill: white !important;
-}
+/* Removed to preserve original Facebook color on hover */
 
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
@@ -128,10 +122,7 @@ body:not(.dark-mode) #share-albums-twitter .btn-icon {
         color: white !important;
     }
     
-    #share-songs-facebook:hover svg,
-    #share-albums-facebook:hover svg {
-        fill: white !important;
-    }
+    /* Removed to preserve original Facebook color on hover */
 }
 
 body.dark-mode .share-btn {
@@ -170,10 +161,7 @@ body.dark-mode #share-albums-facebook:hover {
     color: white !important;
 }
 
-body.dark-mode #share-songs-facebook:hover svg,
-body.dark-mode #share-albums-facebook:hover svg {
-    fill: white !important;
-}
+/* Removed to preserve original Facebook color on hover */
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
