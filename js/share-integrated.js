@@ -184,18 +184,34 @@ console.log('[ShareIntegrated] Script file loaded - v2');
             }
             
             .action-row {
-                display: flex;
+                display: flex !important;
                 gap: 20px;
                 justify-content: center;
+                min-height: 300px !important;
             }
             
-            .top-row,
             .share-row {
+                display: flex !important;
+                gap: 20px;
+                justify-content: center;
+                min-height: 300px !important;
+            }
+            
+            .top-row {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 20px;
                 max-width: 100%;
                 width: 100%;
+            }
+            
+            .share-row {
+                display: flex !important;
+                flex-direction: row !important;
+                gap: 20px;
+                max-width: 100%;
+                width: 100%;
+                justify-content: center;
             }
             
             .action-section {
@@ -205,7 +221,8 @@ console.log('[ShareIntegrated] Script file loaded - v2');
                 padding: 25px;
                 flex: 1;
                 transition: all 0.3s ease;
-                min-height: 150px;
+                min-height: 250px !important;
+                display: block !important;
             }
             
             .action-section:hover {
@@ -376,23 +393,26 @@ console.log('[ShareIntegrated] Script file loaded - v2');
         // Create share row
         const shareRow = document.createElement('div');
         shareRow.className = 'action-row share-row';
+        shareRow.style.cssText = 'display: flex !important; flex-direction: row !important; gap: 20px !important; min-height: 300px !important; justify-content: center !important; width: 100% !important;';
         
         // Share Songs
         const shareSongsSection = document.createElement('div');
         shareSongsSection.className = 'action-section share-section';
+        shareSongsSection.style.cssText = 'min-height: 250px !important; display: block !important; visibility: visible !important; opacity: 1 !important;';
         shareSongsSection.innerHTML = '<h4 class="section-title">Share Top Songs</h4>';
         const songShareButtons = document.createElement('div');
         songShareButtons.id = 'song-share-buttons-container';
-        songShareButtons.style.cssText = 'display: flex !important; flex-direction: column !important; gap: 12px !important; visibility: visible !important; opacity: 1 !important;';
+        songShareButtons.style.cssText = 'display: flex !important; flex-direction: column !important; gap: 12px !important; visibility: visible !important; opacity: 1 !important; min-height: 200px !important;';
         shareSongsSection.appendChild(songShareButtons);
         
         // Share Albums
         const shareAlbumsSection = document.createElement('div');
         shareAlbumsSection.className = 'action-section share-section';
+        shareAlbumsSection.style.cssText = 'min-height: 250px !important; display: block !important; visibility: visible !important; opacity: 1 !important;';
         shareAlbumsSection.innerHTML = '<h4 class="section-title">Share Top Albums</h4>';
         const albumShareButtons = document.createElement('div');
         albumShareButtons.id = 'album-share-buttons-container';
-        albumShareButtons.style.cssText = 'display: flex !important; flex-direction: column !important; gap: 12px !important; visibility: visible !important; opacity: 1 !important;';
+        albumShareButtons.style.cssText = 'display: flex !important; flex-direction: column !important; gap: 12px !important; visibility: visible !important; opacity: 1 !important; min-height: 200px !important;';
         shareAlbumsSection.appendChild(albumShareButtons);
         
         shareRow.appendChild(shareSongsSection);
@@ -401,10 +421,8 @@ console.log('[ShareIntegrated] Script file loaded - v2');
         // Add to container
         shareContainer.appendChild(shareRow);
         
-        // Force container to be visible
-        shareContainer.style.display = 'block';
-        shareContainer.style.visibility = 'visible';
-        shareContainer.style.opacity = '1';
+        // Force container to be visible with proper height
+        shareContainer.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; min-height: 350px !important; padding: 20px !important; margin-top: 3rem !important;';
         
         // Create share buttons after a small delay
         setTimeout(() => {
@@ -456,7 +474,7 @@ console.log('[ShareIntegrated] Script file loaded - v2');
             button.className = 'btn btn-secondary btn-large share-btn';
             
             // Force button visibility with inline styles
-            button.style.cssText = 'display: inline-flex !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; min-height: 60px !important;';
+            button.style.cssText = 'display: inline-flex !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; height: 60px !important; min-height: 60px !important; align-items: center !important; justify-content: center !important; margin-bottom: 10px !important;';
             
             button.innerHTML = `
                 <span class="btn-icon">${btn.icon}</span>
@@ -609,6 +627,18 @@ console.log('[ShareIntegrated] Script file loaded - v2');
             height: rect.height,
             top: rect.top,
             visible: rect.width > 0 && rect.height > 0
+        });
+        
+        // Check buttons
+        const buttons = container.querySelectorAll('button');
+        console.log(`Found ${buttons.length} buttons:`);
+        buttons.forEach((btn, i) => {
+            const btnRect = btn.getBoundingClientRect();
+            console.log(`  Button ${i + 1} (${btn.id}):`, {
+                width: btnRect.width,
+                height: btnRect.height,
+                visible: btnRect.width > 0 && btnRect.height > 0
+            });
         });
         
         // Scroll to it
