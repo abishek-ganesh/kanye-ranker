@@ -390,26 +390,36 @@ console.log('[ShareIntegrated] Script file loaded - v2');
         // Clear any existing content
         shareContainer.innerHTML = '';
         
-        // Create share row
+        // Create share row - NO CLASSES
         const shareRow = document.createElement('div');
-        shareRow.className = 'action-row share-row';
-        shareRow.style.cssText = 'display: flex !important; flex-direction: row !important; gap: 20px !important; min-height: 300px !important; justify-content: center !important; width: 100% !important;';
+        // NO className assignment - classes are being overridden
+        shareRow.style.cssText = 'display: flex !important; flex-direction: row !important; gap: 20px !important; min-height: 300px !important; justify-content: center !important; width: 100% !important; visibility: visible !important; opacity: 1 !important;';
         
-        // Share Songs
+        // Share Songs - NO CLASSES
         const shareSongsSection = document.createElement('div');
-        shareSongsSection.className = 'action-section share-section';
-        shareSongsSection.style.cssText = 'min-height: 250px !important; display: block !important; visibility: visible !important; opacity: 1 !important;';
-        shareSongsSection.innerHTML = '<h4 class="section-title">Share Top Songs</h4>';
+        // NO className - this is being overridden by CSS
+        shareSongsSection.style.cssText = 'min-height: 250px !important; display: block !important; visibility: visible !important; opacity: 1 !important; background: #f0f0f0 !important; padding: 20px !important; border-radius: 10px !important; flex: 1 !important;';
+        
+        const songsTitle = document.createElement('h4');
+        songsTitle.textContent = 'Share Top Songs';
+        songsTitle.style.cssText = 'text-align: center !important; margin-bottom: 15px !important; display: block !important;';
+        shareSongsSection.appendChild(songsTitle);
+        
         const songShareButtons = document.createElement('div');
         songShareButtons.id = 'song-share-buttons-container';
         songShareButtons.style.cssText = 'display: flex !important; flex-direction: column !important; gap: 12px !important; visibility: visible !important; opacity: 1 !important; min-height: 200px !important;';
         shareSongsSection.appendChild(songShareButtons);
         
-        // Share Albums
+        // Share Albums - NO CLASSES
         const shareAlbumsSection = document.createElement('div');
-        shareAlbumsSection.className = 'action-section share-section';
-        shareAlbumsSection.style.cssText = 'min-height: 250px !important; display: block !important; visibility: visible !important; opacity: 1 !important;';
-        shareAlbumsSection.innerHTML = '<h4 class="section-title">Share Top Albums</h4>';
+        // NO className - this is being overridden by CSS
+        shareAlbumsSection.style.cssText = 'min-height: 250px !important; display: block !important; visibility: visible !important; opacity: 1 !important; background: #f0f0f0 !important; padding: 20px !important; border-radius: 10px !important; flex: 1 !important;';
+        
+        const albumsTitle = document.createElement('h4');
+        albumsTitle.textContent = 'Share Top Albums';
+        albumsTitle.style.cssText = 'text-align: center !important; margin-bottom: 15px !important; display: block !important;';
+        shareAlbumsSection.appendChild(albumsTitle);
+        
         const albumShareButtons = document.createElement('div');
         albumShareButtons.id = 'album-share-buttons-container';
         albumShareButtons.style.cssText = 'display: flex !important; flex-direction: column !important; gap: 12px !important; visibility: visible !important; opacity: 1 !important; min-height: 200px !important;';
@@ -500,7 +510,7 @@ console.log('[ShareIntegrated] Script file loaded - v2');
             `;
             
             // Simple text content instead of spans
-            button.textContent = `${btn.label}`;
+            button.textContent = btn.label;
             
             button.addEventListener('click', () => handleShare(btn.platform, shareType));
             container.appendChild(button);
