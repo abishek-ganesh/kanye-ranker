@@ -389,6 +389,11 @@ console.log('[ShareIntegrated] Script file loaded - v2');
         // Add to container
         shareContainer.appendChild(shareRow);
         
+        // Force container to be visible
+        shareContainer.style.display = 'block';
+        shareContainer.style.visibility = 'visible';
+        shareContainer.style.opacity = '1';
+        
         // Create share buttons after a small delay
         setTimeout(() => {
             createShareButtons('songs', songShareButtons);
@@ -577,5 +582,82 @@ console.log('[ShareIntegrated] Script file loaded - v2');
     
     // Also expose the createShareSections function for debugging
     window.forceCreateShareSections = createShareSections;
+    
+    // Force all share elements to be visible
+    window.forceShareVisible = function() {
+        const shareContainer = document.getElementById('share-sections-container');
+        if (!shareContainer) {
+            console.error('No share container found');
+            return;
+        }
+        
+        // Force visibility on container
+        shareContainer.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important; z-index: 1000 !important;';
+        
+        // Force visibility on all child elements
+        const allElements = shareContainer.querySelectorAll('*');
+        allElements.forEach(el => {
+            if (el.classList.contains('share-row') || el.classList.contains('action-row')) {
+                el.style.cssText += 'display: flex !important; visibility: visible !important; opacity: 1 !important;';
+            } else if (el.tagName === 'BUTTON') {
+                // Buttons already have inline styles
+            } else {
+                el.style.cssText += 'visibility: visible !important; opacity: 1 !important;';
+            }
+        });
+        
+        console.log('Forced visibility on all share elements');
+        
+        // Check if results screen is visible
+        const resultsScreen = document.getElementById('results-screen');
+        if (resultsScreen) {
+            const computed = getComputedStyle(resultsScreen);
+            console.log('Results screen display:', computed.display);
+            console.log('Results screen visibility:', computed.visibility);
+        }
+    };
+    
+    // Debug visibility issues
+    window.debugShareVisibility = function() {
+        const shareContainer = document.getElementById('share-sections-container');
+        if (!shareContainer) {
+            console.error('No share container found');
+            return;
+        }
+        
+        console.log('=== Checking visibility of share elements ===');
+        
+        // Check the share container and all parents
+        let element = shareContainer;
+        let level = 0;
+        
+        while (element && level < 10) {
+            const computed = getComputedStyle(element);
+            const rect = element.getBoundingClientRect();
+            
+            console.log(`Level ${level}: ${element.id || element.className || element.tagName}`);
+            console.log(`  Display: ${computed.display}`);
+            console.log(`  Visibility: ${computed.visibility}`);
+            console.log(`  Opacity: ${computed.opacity}`);
+            console.log(`  Position: ${computed.position}`);
+            console.log(`  Z-index: ${computed.zIndex}`);
+            console.log(`  Height: ${computed.height}`);
+            console.log(`  Overflow: ${computed.overflow}`);
+            console.log(`  Rect:`, rect);
+            console.log(`  Visible on screen: ${rect.width > 0 && rect.height > 0}`);
+            console.log('---');
+            
+            element = element.parentElement;
+            level++;
+        }
+        
+        // Check a specific button
+        const button = document.getElementById('share-songs-twitter');
+        if (button) {
+            const buttonRect = button.getBoundingClientRect();
+            console.log('Share button rect:', buttonRect);
+            console.log('Button visible:', buttonRect.width > 0 && buttonRect.height > 0);
+        }
+    };
     
 })();
