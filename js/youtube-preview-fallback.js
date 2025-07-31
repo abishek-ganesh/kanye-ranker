@@ -331,14 +331,19 @@ class YouTubePreviewFallback {
     
     markPreviewableSongs() {
         const songCards = document.querySelectorAll('.song-card');
-        console.log(`[Preview] Marking ${songCards.length} song cards`);
-        console.log(`[Preview] Video database has ${Object.keys(this.videoIds).length} videos`);
         
-        // Debug: Show some Vultures videos
-        const vultureVideos = Object.entries(this.videoIds)
-            .filter(([title]) => title.includes('ARNIVAL') || title.includes('arnival'))
-            .slice(0, 3);
-        console.log(`[Preview] Sample Vultures videos:`, vultureVideos);
+        // Only log debug info once per session
+        if (!this._hasLoggedDebugInfo) {
+            console.log(`[Preview] Marking ${songCards.length} song cards`);
+            console.log(`[Preview] Video database has ${Object.keys(this.videoIds).length} videos`);
+            
+            // Debug: Show some Vultures videos
+            const vultureVideos = Object.entries(this.videoIds)
+                .filter(([title]) => title.includes('ARNIVAL') || title.includes('arnival'))
+                .slice(0, 3);
+            console.log(`[Preview] Sample Vultures videos:`, vultureVideos);
+            this._hasLoggedDebugInfo = true;
+        }
         
         songCards.forEach((card, index) => {
             // Remove any previous preview-checked class
@@ -394,7 +399,10 @@ class YouTubePreviewFallback {
                     }
                 }
             } else {
-                console.log(`[Preview] No video for "${songTitle}" (card ${index})`);
+                // Only log missing videos if song title exists
+                if (songTitle && songTitle.trim()) {
+                    console.log(`[Preview] No video for "${songTitle}" (card ${index})`);
+                }
                 // Remove preview indicator if no video
                 const indicator = card.querySelector('.preview-indicator');
                 if (indicator) indicator.remove();
@@ -404,7 +412,9 @@ class YouTubePreviewFallback {
                 if (previewBtn) {
                     // Only update if currently showing as available
                     if (previewBtn.classList.contains('has-preview') || !previewBtn.textContent.includes('No Preview')) {
-                        console.log(`[Preview] Disabling preview button for "${songTitle}"`);
+                        if (songTitle && songTitle.trim()) {
+                            console.log(`[Preview] Disabling preview button for "${songTitle}"`);
+                        }
                         previewBtn.classList.remove('has-preview');
                         previewBtn.classList.add('disabled');
                         previewBtn.textContent = 'No Preview';
@@ -528,14 +538,26 @@ window.addEventListener('load', () => {
         characterData: true
     });
     
+    // Track last marked song titles to avoid repeated marking
+    let lastMarkedSongs = ['', ''];
+    
     // Also observe screen changes
     setInterval(() => {
         const comparisonScreen = document.getElementById('comparison-screen');
         if (comparisonScreen && comparisonScreen.classList.contains('active')) {
             const cards = document.querySelectorAll('.song-card');
-            if (cards.length === 2 && !cards[0].classList.contains('preview-checked')) {
-                cards.forEach(card => card.classList.add('preview-checked'));
-                window.youtubePreviewFallback.markPreviewableSongs();
+            if (cards.length === 2) {
+                // Check if songs have changed
+                const currentSongs = [
+                    cards[0].querySelector('.song-title')?.textContent || '',
+                    cards[1].querySelector('.song-title')?.textContent || ''
+                ];
+                
+                // Only mark if songs have changed
+                if (currentSongs[0] !== lastMarkedSongs[0] || currentSongs[1] !== lastMarkedSongs[1]) {
+                    lastMarkedSongs = currentSongs;
+                    window.youtubePreviewFallback.markPreviewableSongs();
+                }
             }
         }
     }, 1000);

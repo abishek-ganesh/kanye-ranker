@@ -1,0 +1,241 @@
+/* Share Section Styles */
+.share-section {
+    margin: 40px 0;
+    text-align: center;
+    padding: 20px;
+    background: var(--accent-white, #F5F5F5);
+    border-radius: 12px;
+}
+
+.share-section h3 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--text-primary);
+}
+
+/* Share format options */
+.share-options {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.share-format {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 25px;
+    background: var(--bg-secondary);
+    transition: all 0.3s ease;
+}
+
+.share-format:hover {
+    background: var(--bg-hover);
+}
+
+.share-format input[type="radio"] {
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.share-format span {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+/* Share buttons grid */
+.share-buttons,
+#share-buttons {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 15px;
+    max-width: 500px;
+    margin: 20px auto;
+    min-height: 100px !important; /* Ensure container has height */
+    padding: 10px; /* Add padding */
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative;
+    z-index: 50;
+    background-color: transparent; /* Ensure background is set */
+    overflow: visible !important;
+}
+
+/* Individual share button */
+.share-btn {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white !important;
+    min-height: 90px;
+    position: relative;
+    overflow: hidden;
+    font-family: inherit;
+    text-decoration: none;
+    background-color: #333 !important; /* Fallback color */
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 100;
+}
+
+.share-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.share-btn:active {
+    transform: translateY(-1px);
+}
+
+.share-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.share-name {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Platform-specific icon adjustments */
+.share-btn[data-platform="facebook"] .share-icon {
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    font-size: 36px;
+}
+
+/* Toast notifications */
+.share-toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #333;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    z-index: 10000;
+    opacity: 0;
+    transition: all 0.3s ease;
+    max-width: 90%;
+    text-align: center;
+}
+
+.share-toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.share-toast-success {
+    background: #4CAF50;
+}
+
+.share-toast-error {
+    background: #f44336;
+}
+
+.share-toast-info {
+    background: #2196F3;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .share-section {
+        margin: 30px 0;
+        padding: 15px;
+    }
+    
+    .share-options {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .share-format {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .share-buttons {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: 10px;
+        max-width: 100%;
+    }
+    
+    .share-btn {
+        min-height: 80px;
+        padding: 12px 8px;
+    }
+    
+    .share-icon {
+        font-size: 24px;
+        margin-bottom: 5px;
+    }
+    
+    .share-name {
+        font-size: 12px;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .share-format {
+        background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .share-format:hover {
+        background: rgba(255, 255, 255, 0.15);
+    }
+    
+    .share-toast {
+        background: #222;
+    }
+}
+
+/* Additional dark mode overrides */
+body.dark-mode .share-format {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .share-format:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Loading state for image generation */
+.share-btn.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.share-btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}

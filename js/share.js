@@ -1,116 +1,331 @@
-class KanyeRankerShare {
+/**
+ * ShareManager - Handles social sharing functionality for Kanye Ranker
+ * Supports Twitter/X, WhatsApp, Instagram, Facebook, and link copying
+ */
+class ShareManager {
     constructor() {
-        this.appUrl = window.location.origin + window.location.pathname;
+        this.isMobile = this.detectMobile();
+        this.canShare = navigator.share !== undefined;
+        this.platforms = {
+            twitter: {
+                name: 'Twitter',
+                icon: '𝕏',
+                color: '#000000',
+                action: 'tweet'
+            },
+            whatsapp: {
+                name: 'WhatsApp',
+                icon: '💬',
+                color: '#25D366',
+                action: 'message'
+            },
+            instagram: {
+                name: 'Instagram',
+                icon: '📷',
+                color: '#E4405F',
+                action: 'share',
+                mobileOnly: true
+            },
+            facebook: {
+                name: 'Facebook',
+                icon: 'f',
+                color: '#1877F2',
+                action: 'share'
+            },
+            copy: {
+                name: 'Copy Link',
+                icon: '🔗',
+                color: '#666666',
+                action: 'copy'
+            }
+        };
+        
+        // Add native share option for mobile
+        if (this.isMobile && this.canShare) {
+            this.platforms.native = {
+                name: 'Share',
+                icon: '📤',
+                color: '#007AFF',
+                action: 'native'
+            };
+        }
     }
     
+    /**
+     * Initialize the share manager with app reference
+     */
     init(app) {
         this.app = app;
-        this.initEventListeners();
+        console.log('ShareManager initialized with app reference');
+        // Will be called when results are shown
     }
     
-    initEventListeners() {
-        const shareTwitterBtn = document.getElementById('share-twitter');
-        const shareFacebookBtn = document.getElementById('share-facebook');
-        const shareWhatsappBtn = document.getElementById('share-whatsapp');
-        const shareInstagramBtn = document.getElementById('share-instagram');
-        const shareLinkBtn = document.getElementById('share-link');
-        
-        if (shareTwitterBtn) {
-            shareTwitterBtn.addEventListener('click', () => this.shareToTwitter());
-        }
-        
-        if (shareFacebookBtn) {
-            shareFacebookBtn.addEventListener('click', () => this.shareToFacebook());
-        }
-        
-        if (shareWhatsappBtn) {
-            shareWhatsappBtn.addEventListener('click', () => this.shareToWhatsApp());
-        }
-        
-        if (shareInstagramBtn) {
-            shareInstagramBtn.addEventListener('click', () => this.shareToInstagram());
-        }
-        
-        if (shareLinkBtn) {
-            shareLinkBtn.addEventListener('click', () => this.copyShareLink());
-        }
+    /**
+     * Detect if user is on mobile device
+     */
+    detectMobile() {
+        return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     }
     
-    getShareText() {
-        const topSongs = this.app.getTopSongs();
-        const topThree = topSongs.slice(0, 3);
-        
-        // Use Kanye-themed share messages if available
-        if (window.KanyeMessages) {
-            const shareMessage = KanyeMessages.getRandomMessage('share');
-            let text = shareMessage + "\n\n";
-            topThree.forEach((song, index) => {
-                text += `${index + 1}. ${song.title}\n`;
-            });
-            text += "\nFind yours at";
-            return text;
+    /**
+     * Render share buttons in the results screen
+     */
+    renderShareButtons() {
+        console.log('renderShareButtons called');
+        const container = document.getElementById('share-buttons');
+        if (!container) {
+            console.error('Share buttons container not found');
+            return;
         }
         
-        // Fallback message
-        let text = "My Top 3 Kanye Songs:\n";
-        topThree.forEach((song, index) => {
-            text += `${index + 1}. ${song.title}\n`;
+        // Clear container and ensure it's visible
+        container.innerHTML = '';
+        container.style.display = 'grid';
+        
+        // Create buttons for each platform
+        Object.entries(this.platforms).forEach(([key, platform]) => {
+            // Skip mobile-only platforms on desktop
+            if (platform.mobileOnly && !this.isMobile) return;
+            
+            const button = document.createElement('button');
+            button.className = 'share-btn';
+            button.setAttribute('data-platform', key);
+            button.setAttribute('type', 'button'); // Ensure it's a button
+            button.setAttribute('aria-label', `Share on ${platform.name}`);
+            
+            // Create icon and name spans
+            const icon = document.createElement('span');
+            icon.className = 'share-icon';
+            icon.textContent = platform.icon;
+            icon.setAttribute('aria-hidden', 'true');
+            
+            const name = document.createElement('span');
+            name.className = 'share-name';
+            name.textContent = platform.name;
+            
+            button.appendChild(icon);
+            button.appendChild(name);
+            
+            button.addEventListener('click', () => this.share(key));
+            container.appendChild(button);
         });
-        text += "\nFind your top Kanye songs at";
         
-        return text;
+        console.log(`Rendered ${container.children.length} share buttons`);
+        
+        // Force container to be visible after rendering
+        container.style.display = 'grid';
+        container.style.visibility = 'visible';
+        container.style.opacity = '1';
+        
+        // Check final state
+        const styles = window.getComputedStyle(container);
+        console.log('Container final computed styles:', {
+            display: styles.display,
+            visibility: styles.visibility,
+            opacity: styles.opacity,
+            children: container.children.length
+        });
+        
+        // Also add event listeners to format radio buttons
+        const formatInputs = document.querySelectorAll('input[name="shareFormat"]');
+        formatInputs.forEach(input => {
+            input.addEventListener('change', () => {
+                console.log('Share format changed to:', input.value);
+            });
+        });
     }
     
-    getShareUrl() {
-        const topSongs = this.app.getTopSongs();
-        const songIds = topSongs.map(song => song.id).slice(0, 10);
-        const encoded = btoa(JSON.stringify(songIds));
-        return `${this.appUrl}#results=${encoded}`;
+    /**
+     * Get the selected share format (songs or albums)
+     */
+    getShareFormat() {
+        const formatInput = document.querySelector('input[name="shareFormat"]:checked');
+        return formatInput ? formatInput.value : 'songs';
     }
     
-    shareToTwitter() {
+    /**
+     * Main share method - routes to platform-specific methods
+     */
+    async share(platform) {
         // Track analytics
         if (window.analytics) {
-            window.analytics.trackShareClicked('twitter');
+            window.analytics.trackShareClicked(platform);
         }
         
-        const text = this.getShareText();
-        const url = this.getShareUrl();
-        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+        const format = this.getShareFormat();
+        const url = this.generateShareUrl();
+        
+        switch(platform) {
+            case 'twitter':
+                this.shareToTwitter(this.generateShareText('twitter', format), url);
+                break;
+            case 'whatsapp':
+                this.shareToWhatsApp(this.generateShareText('whatsapp', format), url);
+                break;
+            case 'instagram':
+                await this.shareToInstagram(format);
+                break;
+            case 'facebook':
+                this.shareToFacebook(url);
+                break;
+            case 'copy':
+                await this.copyLink(url);
+                break;
+            case 'native':
+                await this.nativeShare(format);
+                break;
+        }
+    }
+    
+    /**
+     * Generate shareable URL
+     */
+    generateShareUrl() {
+        return window.location.origin + window.location.pathname;
+    }
+    
+    /**
+     * Generate share text based on platform and format
+     */
+    generateShareText(platform, format) {
+        if (format === 'songs') {
+            return this.generateSongShareText(platform);
+        } else {
+            return this.generateAlbumShareText(platform);
+        }
+    }
+    
+    /**
+     * Generate song share text
+     */
+    generateSongShareText(platform) {
+        const topSongs = this.app.getTopSongs().slice(0, 10);
+        
+        switch(platform) {
+            case 'twitter':
+                // Twitter has character limit, so just top 3
+                const top3 = topSongs.slice(0, 3);
+                let tweetText = "My top 3 Kanye songs:\n";
+                top3.forEach((song, index) => {
+                    tweetText += `${index + 1}. ${song.title}\n`;
+                });
+                tweetText += "\nFind yours at";
+                return tweetText;
+                
+            case 'whatsapp':
+                // WhatsApp can handle longer text
+                let waText = "🎵 MY TOP 10 KANYE SONGS 🎵\n\n";
+                topSongs.forEach((song, index) => {
+                    const album = this.app.albums.get(song.albumId);
+                    waText += `${index + 1}. ${song.title}`;
+                    if (album) {
+                        waText += ` (${album.name})`;
+                    }
+                    waText += '\n';
+                });
+                waText += "\n🔥 Create your ranking at";
+                return waText;
+                
+            default:
+                return "Check out my top Kanye songs!";
+        }
+    }
+    
+    /**
+     * Generate album share text
+     */
+    generateAlbumShareText(platform) {
+        const topAlbums = this.app.getTopAlbums().slice(0, 5);
+        
+        switch(platform) {
+            case 'twitter':
+                let tweetText = "My top Kanye albums:\n";
+                topAlbums.slice(0, 3).forEach((albumData, index) => {
+                    tweetText += `${index + 1}. ${albumData.album.name}\n`;
+                });
+                tweetText += "\nRank yours at";
+                return tweetText;
+                
+            case 'whatsapp':
+                let waText = "💿 MY TOP KANYE ALBUMS 💿\n\n";
+                topAlbums.forEach((albumData, index) => {
+                    waText += `${index + 1}. ${albumData.album.name} (${albumData.album.year})\n`;
+                });
+                waText += "\n🎤 Make your ranking at";
+                return waText;
+                
+            default:
+                return "Check out my top Kanye albums!";
+        }
+    }
+    
+    /**
+     * Share to Twitter/X
+     */
+    shareToTwitter(text, url) {
+        const tweetText = text.substring(0, 250); // Leave room for URL
+        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(url)}`;
         window.open(twitterUrl, '_blank', 'width=550,height=420');
     }
     
-    shareToFacebook() {
-        // Track analytics
-        if (window.analytics) {
-            window.analytics.trackShareClicked('facebook');
-        }
-        
-        const url = this.getShareUrl();
-        const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-        window.open(facebookUrl, '_blank', 'width=550,height=420');
-    }
-    
-    shareToWhatsApp() {
-        // Track analytics
-        if (window.analytics) {
-            window.analytics.trackShareClicked('whatsapp');
-        }
-        
-        const text = this.getShareText();
-        const url = this.getShareUrl();
-        const whatsappText = `${text} ${url}`;
-        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(whatsappText)}`;
+    /**
+     * Share to WhatsApp
+     */
+    shareToWhatsApp(text, url) {
+        const message = `${text} ${url}`;
+        const whatsappUrl = this.isMobile 
+            ? `whatsapp://send?text=${encodeURIComponent(message)}`
+            : `https://wa.me/?text=${encodeURIComponent(message)}`;
         window.open(whatsappUrl, '_blank');
     }
     
-    async copyShareLink() {
-        // Track analytics
-        if (window.analytics) {
-            window.analytics.trackShareClicked('copy_link');
+    /**
+     * Share to Instagram (mobile only)
+     */
+    async shareToInstagram(format) {
+        if (!this.isMobile) {
+            this.showToast('Instagram sharing is only available on mobile devices', 'info');
+            return;
         }
         
-        const url = this.getShareUrl();
+        try {
+            // Generate square image
+            const imageBlob = await this.generateSquareImage(format);
+            
+            // Use Web Share API if available
+            if (this.canShare && navigator.canShare({ files: [new File([imageBlob], 'kanye-ranking.png', { type: 'image/png' })] })) {
+                const file = new File([imageBlob], 'kanye-ranking.png', { type: 'image/png' });
+                
+                await navigator.share({
+                    files: [file]
+                });
+                
+                this.showToast('Select Instagram to share your ranking!');
+            } else {
+                // Fallback: download image
+                this.downloadImage(imageBlob, 'kanye-ranking-square.png');
+                this.showToast('Image downloaded! Open Instagram and share from your gallery.', 'info');
+            }
+        } catch (error) {
+            if (error.name !== 'AbortError') {
+                console.error('Instagram share error:', error);
+                this.showToast('Failed to share to Instagram', 'error');
+            }
+        }
+    }
+    
+    /**
+     * Share to Facebook
+     */
+    shareToFacebook(url) {
+        const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+        window.open(fbUrl, '_blank', 'width=550,height=420');
+    }
+    
+    /**
+     * Copy link to clipboard
+     */
+    async copyLink(url) {
         try {
             await navigator.clipboard.writeText(url);
             this.showToast('Link copied to clipboard!');
@@ -120,79 +335,87 @@ class KanyeRankerShare {
         }
     }
     
-    async shareToInstagram() {
-        // Track analytics
-        if (window.analytics) {
-            window.analytics.trackShareClicked('instagram');
-        }
-        
-        // Check if we're on mobile
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        
-        if (!isMobile) {
-            this.showToast('Instagram Stories can only be shared from mobile devices. Please open this site on your phone.', 'info');
-            return;
-        }
-        
-        // Check if Web Share API is available
-        if (!navigator.share || !navigator.canShare) {
-            this.showToast('Your browser doesn\'t support sharing to Instagram. Try using Safari on iOS or Chrome on Android.', 'error');
+    /**
+     * Native share (mobile)
+     */
+    async nativeShare(format) {
+        if (!this.canShare) {
+            this.showToast('Sharing not supported on this device', 'error');
             return;
         }
         
         try {
-            // Generate the image
-            const exporter = new KanyeRankerExport();
-            const canvas = document.getElementById('export-canvas');
-            const topSongs = this.app.getTopSongs();
-            const albumsMap = this.app.albums;
-            
-            // Generate the image on canvas (skip automatic download)
-            await exporter.generateSongsImage(topSongs, albumsMap, canvas, true);
-            
-            // Convert canvas to blob
-            const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-            
-            // Create a File object from the blob
-            const file = new File([blob], 'kanye-ranker-top10.png', {
-                type: 'image/png',
-                lastModified: new Date().getTime()
-            });
-            
-            // Prepare share data with only files (no text or title)
             const shareData = {
-                files: [file]
+                title: 'My Kanye Ranking',
+                text: this.generateShareText('native', format),
+                url: this.generateShareUrl()
             };
             
-            // Check if we can share files
-            if (navigator.canShare(shareData)) {
-                await navigator.share(shareData);
-                this.showToast('Image shared successfully!');
-            } else {
-                throw new Error('Cannot share files on this device');
-            }
-        } catch (err) {
-            console.error('Failed to share to Instagram:', err);
-            
-            // If sharing failed, fall back to downloading the image
-            if (err.name !== 'AbortError') { // User didn't cancel
-                this.showToast('Unable to share directly. The image has been downloaded - you can manually share it to Instagram.', 'info');
-                // The image is already downloaded by generateSongsImage
+            await navigator.share(shareData);
+        } catch (error) {
+            if (error.name !== 'AbortError') {
+                console.error('Native share error:', error);
+                this.showToast('Failed to share', 'error');
             }
         }
     }
     
+    /**
+     * Generate square image for Instagram
+     */
+    async generateSquareImage(format) {
+        const canvas = document.createElement('canvas');
+        const exporter = new window.KanyeRankerExport();
+        
+        if (format === 'songs') {
+            const topSongs = this.app.getTopSongs();
+            await exporter.generateSquareImage(topSongs, this.app.albums, canvas);
+        } else {
+            const topAlbums = this.app.getTopAlbums();
+            await exporter.generateSquareAlbumsImage(topAlbums, canvas);
+        }
+        
+        return new Promise(resolve => {
+            canvas.toBlob(blob => resolve(blob), 'image/png');
+        });
+    }
+    
+    /**
+     * Download image blob
+     */
+    downloadImage(blob, filename) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+    
+    /**
+     * Show toast notification
+     */
     showToast(message, type = 'success') {
+        // Remove any existing toasts
+        const existingToast = document.querySelector('.share-toast');
+        if (existingToast) {
+            existingToast.remove();
+        }
+        
         const toast = document.createElement('div');
-        toast.className = `toast toast-${type}`;
+        toast.className = `share-toast share-toast-${type}`;
         toast.textContent = message;
         
         document.body.appendChild(toast);
         
+        // Trigger animation
         setTimeout(() => {
             toast.classList.add('show');
         }, 10);
         
+        // Remove after 3 seconds
         setTimeout(() => {
             toast.classList.remove('show');
             setTimeout(() => {
@@ -200,63 +423,7 @@ class KanyeRankerShare {
             }, 300);
         }, 3000);
     }
-    
-    async generateShareImage() {
-        const exporter = new KanyeRankerExport();
-        const canvas = document.getElementById('export-canvas');
-        const topSongs = this.app.getTopSongs();
-        const albumsMap = this.app.albums;
-        
-        await exporter.generateSongsImage(topSongs, albumsMap, canvas);
-    }
-    
-    parseShareUrl() {
-        const hash = window.location.hash;
-        if (hash.startsWith('#results=')) {
-            try {
-                const encoded = hash.substring(9);
-                const songIds = JSON.parse(atob(encoded));
-                return songIds;
-            } catch (err) {
-                console.error('Failed to parse share URL:', err);
-                return null;
-            }
-        }
-        return null;
-    }
-    
-    async displaySharedResults(songIds) {
-        if (!songIds || !Array.isArray(songIds)) return;
-        
-        const songs = [];
-        for (const id of songIds) {
-            const song = this.app.songs.find(s => s.id === id);
-            if (song) {
-                songs.push({
-                    ...song,
-                    rating: 1500 + (10 - songs.length) * 50
-                });
-            }
-        }
-        
-        if (songs.length > 0) {
-            const albumStats = this.app.calculateAlbumStats(songs);
-            const topAlbums = Array.from(albumStats.values())
-                .sort((a, b) => b.averageRating - a.averageRating)
-                .slice(0, 5);
-            
-            this.app.ui.displayResults(songs, topAlbums, this.app.albums);
-            this.app.ui.showScreen('results');
-            
-            const sharedNotice = document.createElement('div');
-            sharedNotice.className = 'shared-notice';
-            sharedNotice.textContent = 'Viewing shared results';
-            document.getElementById('results-screen').insertBefore(
-                sharedNotice,
-                document.getElementById('results-screen').firstChild
-            );
-        }
-    }
 }
 
-window.KanyeRankerShare = KanyeRankerShare;
+// Make ShareManager available globally
+window.ShareManager = ShareManager;

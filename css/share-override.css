@@ -1,0 +1,108 @@
+/* Emergency override styles to ensure share buttons are visible */
+
+/* Force share section visibility */
+#results-screen .share-section {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 100 !important;
+}
+
+/* Force share buttons container visibility */
+#share-buttons {
+    display: grid !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 100 !important;
+    min-height: 100px !important;
+    padding: 10px !important;
+    margin: 20px auto !important;
+    max-width: 500px !important;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)) !important;
+    gap: 15px !important;
+}
+
+/* Force individual button visibility */
+#share-buttons .share-btn,
+#share-buttons button {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    min-height: 90px !important;
+    min-width: 90px !important;
+    padding: 15px !important;
+    margin: 0 !important;
+    border: none !important;
+    border-radius: 12px !important;
+    cursor: pointer !important;
+    font-family: inherit !important;
+    text-decoration: none !important;
+    box-sizing: border-box !important;
+}
+
+/* Force text visibility */
+#share-buttons .share-icon,
+#share-buttons .share-name {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    color: white !important;
+}
+
+#share-buttons .share-icon {
+    font-size: 28px !important;
+    margin-bottom: 8px !important;
+    line-height: 1 !important;
+}
+
+#share-buttons .share-name {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px !important;
+    line-height: 1 !important;
+}
+
+/* Platform-specific colors with important */
+#share-buttons .share-btn[data-platform="twitter"] {
+    background-color: #000000 !important;
+}
+
+#share-buttons .share-btn[data-platform="whatsapp"] {
+    background-color: #25D366 !important;
+}
+
+#share-buttons .share-btn[data-platform="instagram"] {
+    background-color: #E4405F !important;
+}
+
+#share-buttons .share-btn[data-platform="facebook"] {
+    background-color: #1877F2 !important;
+}
+
+#share-buttons .share-btn[data-platform="copy"] {
+    background-color: #666666 !important;
+}
+
+#share-buttons .share-btn[data-platform="native"] {
+    background-color: #007AFF !important;
+}
+
+/* Hover effects */
+#share-buttons .share-btn:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Remove any potential interference from other styles */
+#share-buttons * {
+    all: unset;
+    display: revert;
+    visibility: visible !important;
+    opacity: 1 !important;
+}

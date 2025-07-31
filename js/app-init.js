@@ -5,7 +5,7 @@ window.addEventListener('load', async function() {
     console.log('Window load event fired');
     console.log('%cKanye Ranker', 'font-size: 24px; font-weight: bold; color: #D4AF37;');
     console.log('%cCreated by Abishek Ganesh', 'font-size: 14px; color: #666;');
-    console.log('%chttps://www.linkedin.com/in/abishekganesh', 'font-size: 12px; color: #0066CC;');
+    console.log('%chttps://www.linkedin.com/in/abishek-ganesh', 'font-size: 12px; color: #0066CC;');
     
     // Wait for lyrics and videos to load first
     const loadPromises = [];

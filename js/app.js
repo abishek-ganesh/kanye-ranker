@@ -24,13 +24,13 @@ class KanyeRankerApp {
             throw error;
         }
         
-        // Share system removed per user request
-        // try {
-        //     this.share = new KanyeRankerShare();
-        //     console.log('Share system initialized');
-        // } catch (error) {
-        //     console.error('Failed to initialize share system:', error);
-        // }
+        // Initialize share system
+        try {
+            this.shareManager = new ShareManager();
+            console.log('ShareManager initialized');
+        } catch (error) {
+            console.error('Failed to initialize ShareManager:', error);
+        }
         
         this.songs = [];
         this.albums = new Map();
@@ -76,11 +76,11 @@ class KanyeRankerApp {
             this.attachEventListeners();
             console.log('Event listeners attached');
             
-            // Share system removed per user request
-            // if (this.share) {
-            //     this.share.init(this);
-            //     console.log('Share system event listeners attached');
-            // }
+            // Initialize share system
+            if (this.shareManager) {
+                this.shareManager.init(this);
+                console.log('ShareManager initialized with app reference');
+            }
             
             // Initialize back button
             this.backButton = new BackButtonManager(this);
@@ -1786,6 +1786,13 @@ class KanyeRankerApp {
         
         if (topSongs[0].spotifyId) {
             setTimeout(() => this.ui.playPreview(topSongs[0].spotifyId), 1000);
+        }
+        
+        // Render share buttons after a short delay to ensure DOM is ready
+        if (this.shareManager) {
+            setTimeout(() => {
+                this.shareManager.renderShareButtons();
+            }, 100);
         }
         
         // Session saving removed - no clearing needed

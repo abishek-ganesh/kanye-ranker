@@ -59,7 +59,7 @@ npx http-server -p 8000
 
 ## Credits
 
-Created by [Abishek Ganesh](https://www.linkedin.com/in/abishekganesh)
+Created by [Abishek Ganesh](https://www.linkedin.com/in/abishek-ganesh)
 
 ## License
 
