@@ -1,24 +1,25 @@
 /* Share Section Styles */
 .share-section {
-    margin: 40px 0;
+    margin: 40px auto;
     text-align: center;
-    padding: 20px;
-    background: var(--accent-white, #F5F5F5);
+    padding: 30px 20px;
+    background: #f5f5f5;
     border-radius: 12px;
+    max-width: 600px;
 }
 
 .share-section h3 {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 700;
-    margin-bottom: 20px;
-    color: var(--text-primary);
+    margin-bottom: 25px;
+    color: #000;
 }
 
-/* Share format options */
+/* Share format radio buttons */
 .share-options {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 30px;
     margin-bottom: 30px;
 }
 
@@ -26,216 +27,196 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    padding: 10px 20px;
+    padding: 12px 24px;
     border-radius: 25px;
-    background: var(--bg-secondary);
+    background: #fff;
     transition: all 0.3s ease;
+    border: 2px solid transparent;
 }
 
 .share-format:hover {
-    background: var(--bg-hover);
+    background: #e8e8e8;
 }
 
 .share-format input[type="radio"] {
-    margin-right: 8px;
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
     cursor: pointer;
 }
 
-.share-format span {
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--text-primary);
+.share-format input[type="radio"]:checked {
+    accent-color: #000;
 }
 
-/* Share buttons grid */
-.share-buttons,
+.share-format input[type="radio"]:checked + span {
+    font-weight: 700;
+}
+
+.share-format span {
+    font-size: 18px;
+    font-weight: 500;
+    color: #000;
+}
+
+/* Share buttons container */
 #share-buttons {
-    display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: 15px;
-    max-width: 500px;
-    margin: 20px auto;
-    min-height: 100px !important; /* Ensure container has height */
-    padding: 10px; /* Add padding */
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 25px;
+    min-height: 50px;
     visibility: visible !important;
     opacity: 1 !important;
-    position: relative;
-    z-index: 50;
-    background-color: transparent; /* Ensure background is set */
-    overflow: visible !important;
+}
+
+/* Force visibility on results screen */
+#results-screen #share-buttons {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Override any mobile rules */
+@media screen and (max-width: 768px) {
+    #share-buttons {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
 }
 
 /* Individual share button */
 .share-btn {
     display: flex !important;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 15px;
+    gap: 6px;
+    padding: 14px 24px;
     border: none;
-    border-radius: 12px;
+    border-radius: 10px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    color: white !important;
-    min-height: 90px;
-    position: relative;
-    overflow: hidden;
-    font-family: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    transition: all 0.2s ease;
     text-decoration: none;
-    background-color: #333 !important; /* Fallback color */
-    visibility: visible !important;
-    opacity: 1 !important;
-    z-index: 100;
+    min-width: 120px;
+    justify-content: center;
 }
 
 .share-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .share-btn:active {
-    transform: translateY(-1px);
-}
-
-.share-icon {
-    font-size: 28px;
-    margin-bottom: 8px;
-    display: block;
-}
-
-.share-name {
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-}
-
-/* Platform-specific icon adjustments */
-.share-btn[data-platform="facebook"] .share-icon {
-    font-family: Arial, sans-serif;
-    font-weight: bold;
-    font-size: 36px;
-}
-
-/* Toast notifications */
-.share-toast {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%) translateY(100px);
-    background: #333;
-    color: white;
-    padding: 15px 25px;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 500;
-    z-index: 10000;
-    opacity: 0;
-    transition: all 0.3s ease;
-    max-width: 90%;
-    text-align: center;
-}
-
-.share-toast.show {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
-}
-
-.share-toast-success {
-    background: #4CAF50;
-}
-
-.share-toast-error {
-    background: #f44336;
-}
-
-.share-toast-info {
-    background: #2196F3;
+    transform: translateY(0);
 }
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
     .share-section {
-        margin: 30px 0;
-        padding: 15px;
+        margin: 30px 10px;
+        padding: 25px 15px;
+    }
+    
+    .share-section h3 {
+        font-size: 24px;
+        margin-bottom: 20px;
     }
     
     .share-options {
         flex-direction: column;
-        gap: 10px;
+        gap: 15px;
+        margin-bottom: 25px;
     }
     
     .share-format {
         width: 100%;
         justify-content: center;
+        padding: 14px 20px;
     }
     
-    .share-buttons {
-        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    #share-buttons {
         gap: 10px;
-        max-width: 100%;
     }
     
     .share-btn {
-        min-height: 80px;
-        padding: 12px 8px;
+        min-width: calc(50% - 5px);
+        padding: 12px 16px;
+        font-size: 15px;
     }
-    
-    .share-icon {
-        font-size: 24px;
-        margin-bottom: 5px;
-    }
-    
-    .share-name {
-        font-size: 12px;
+}
+
+/* Smaller mobile screens */
+@media (max-width: 400px) {
+    .share-btn {
+        min-width: 100%;
     }
 }
 
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
+    .share-section {
+        background: #1a1a1a;
+    }
+    
+    .share-section h3 {
+        color: #fff;
+    }
+    
     .share-format {
-        background: rgba(255, 255, 255, 0.1);
+        background: #2a2a2a;
+        color: #fff;
     }
     
     .share-format:hover {
-        background: rgba(255, 255, 255, 0.15);
+        background: #333;
     }
     
-    .share-toast {
-        background: #222;
+    .share-format span {
+        color: #fff;
+    }
+    
+    /* Ensure share buttons are visible in dark mode */
+    #share-buttons {
+        background: transparent !important;
+    }
+    
+    #share-buttons .share-btn {
+        opacity: 1 !important;
+        visibility: visible !important;
     }
 }
 
-/* Additional dark mode overrides */
+/* Dark mode class support */
+body.dark-mode .share-section {
+    background: #1a1a1a;
+}
+
+body.dark-mode .share-section h3 {
+    color: #fff;
+}
+
 body.dark-mode .share-format {
-    background: rgba(255, 255, 255, 0.1);
+    background: #2a2a2a;
 }
 
 body.dark-mode .share-format:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: #333;
 }
 
-/* Loading state for image generation */
-.share-btn.loading {
-    pointer-events: none;
-    opacity: 0.7;
+body.dark-mode .share-format span {
+    color: #fff;
 }
 
-.share-btn.loading::after {
-    content: '';
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    border-top-color: white;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+/* Ensure buttons are visible in dark mode */
+body.dark-mode #share-buttons {
+    background: transparent !important;
 }
 
-@keyframes spin {
-    to {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
+body.dark-mode #share-buttons .share-btn {
+    opacity: 1 !important;
+    visibility: visible !important;
 }

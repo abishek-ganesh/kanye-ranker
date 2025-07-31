@@ -24,13 +24,7 @@ class KanyeRankerApp {
             throw error;
         }
         
-        // Initialize share system
-        try {
-            this.shareManager = new ShareManager();
-            console.log('ShareManager initialized');
-        } catch (error) {
-            console.error('Failed to initialize ShareManager:', error);
-        }
+        // ShareManager removed - using share-simple.js instead
         
         this.songs = [];
         this.albums = new Map();
@@ -77,10 +71,6 @@ class KanyeRankerApp {
             console.log('Event listeners attached');
             
             // Initialize share system
-            if (this.shareManager) {
-                this.shareManager.init(this);
-                console.log('ShareManager initialized with app reference');
-            }
             
             // Initialize back button
             this.backButton = new BackButtonManager(this);
@@ -1788,12 +1778,7 @@ class KanyeRankerApp {
             setTimeout(() => this.ui.playPreview(topSongs[0].spotifyId), 1000);
         }
         
-        // Render share buttons after a short delay to ensure DOM is ready
-        if (this.shareManager) {
-            setTimeout(() => {
-                this.shareManager.renderShareButtons();
-            }, 100);
-        }
+        // Share buttons are now handled by share-simple.js which watches for results screen
         
         // Session saving removed - no clearing needed
     }
