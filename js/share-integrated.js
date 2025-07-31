@@ -678,10 +678,14 @@
             let shareText = '';
             if (shareType === 'songs') {
                 const top5 = topSongs.slice(0, 5);
-                shareText = `My top 5 Kanye songs:\n${top5.map((s, i) => `${i+1}. ${s.title}`).join('\n')}\n\n🌊 Think you know Ye better? Prove it at kanyeranker.com`;
+                shareText = `My top 5 Kanye songs:\n${top5.map((s, i) => {
+                    // Censor the title if needed
+                    const displayTitle = s.title === "Niggas in Paris" ? "N****s in Paris" : s.title;
+                    return `${i+1}. ${displayTitle}`;
+                }).join('\n')}\n\nWhat are yours? Find out for free at kanyeranker.com`;
             } else {
                 const top5 = topAlbums.slice(0, 5);
-                shareText = `My top 5 Kanye albums:\n${top5.map((a, i) => `${i+1}. ${a.album.name}`).join('\n')}\n\n🎵 What's your Kanye era? Find out at kanyeranker.com`;
+                shareText = `My top 5 Kanye albums:\n${top5.map((a, i) => `${i+1}. ${a.album.name}`).join('\n')}\n\nWhat's your Kanye era? Find out for free at kanyeranker.com`;
             }
             
             // Open share URL based on platform
