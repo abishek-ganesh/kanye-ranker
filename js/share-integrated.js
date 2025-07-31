@@ -471,17 +471,42 @@ console.log('[ShareIntegrated] Script file loaded - v2');
         shareButtons.forEach(btn => {
             const button = document.createElement('button');
             button.id = btn.id;
-            button.className = 'btn btn-secondary btn-large share-btn';
+            // NO CLASSES - pure inline styles only
             
-            // Force button visibility with inline styles
-            button.style.cssText = 'display: inline-flex !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; height: 60px !important; min-height: 60px !important; align-items: center !important; justify-content: center !important; margin-bottom: 10px !important;';
-            
-            button.innerHTML = `
-                <span class="btn-icon">${btn.icon}</span>
-                <span class="btn-label">${btn.label}</span>
+            // Nuclear option - strip all CSS dependencies
+            button.style.cssText = `
+                display: inline-flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                width: 300px !important;
+                height: 60px !important;
+                min-height: 60px !important;
+                min-width: 300px !important;
+                align-items: center !important;
+                justify-content: center !important;
+                margin: 5px 0 !important;
+                padding: 15px 20px !important;
+                background: white !important;
+                border: 2px solid #000 !important;
+                color: #000 !important;
+                font-size: 14px !important;
+                font-weight: bold !important;
+                cursor: pointer !important;
+                border-radius: 8px !important;
+                text-align: center !important;
+                box-sizing: border-box !important;
+                position: relative !important;
+                z-index: 999 !important;
             `;
+            
+            // Simple text content instead of spans
+            button.textContent = `${btn.label}`;
+            
             button.addEventListener('click', () => handleShare(btn.platform, shareType));
             container.appendChild(button);
+            
+            // Debug: Check if button was actually added
+            console.log(`[ShareIntegrated] Added button ${btn.id} to container, innerHTML: "${button.textContent}"`);
         });
     }
     
@@ -612,6 +637,125 @@ console.log('[ShareIntegrated] Script file loaded - v2');
     
     // Also expose the createShareSections function for debugging
     window.forceCreateShareSections = createShareSections;
+    
+    // Nuclear option - inject raw HTML
+    window.injectRawShareButtons = function() {
+        const container = document.getElementById('share-sections-container');
+        if (!container) {
+            console.log('No container found');
+            return;
+        }
+        
+        container.innerHTML = `
+            <div style="display: flex; gap: 20px; padding: 20px; justify-content: center;">
+                <div style="background: #f0f0f0; padding: 20px; border-radius: 10px; min-width: 300px;">
+                    <h4 style="text-align: center; margin-bottom: 15px;">Share Top Songs</h4>
+                    <button onclick="alert('Twitter clicked')" style="
+                        width: 280px;
+                        height: 50px;
+                        background: white;
+                        border: 2px solid black;
+                        margin: 5px 0;
+                        cursor: pointer;
+                        font-size: 14px;
+                        display: block;
+                    ">SHARE ON X</button>
+                    <button onclick="alert('Instagram clicked')" style="
+                        width: 280px;
+                        height: 50px;
+                        background: white;
+                        border: 2px solid black;
+                        margin: 5px 0;
+                        cursor: pointer;
+                        font-size: 14px;
+                        display: block;
+                    ">SHARE ON INSTAGRAM</button>
+                    <button onclick="alert('Facebook clicked')" style="
+                        width: 280px;
+                        height: 50px;
+                        background: white;
+                        border: 2px solid black;
+                        margin: 5px 0;
+                        cursor: pointer;
+                        font-size: 14px;
+                        display: block;
+                    ">SHARE ON FACEBOOK</button>
+                </div>
+                <div style="background: #f0f0f0; padding: 20px; border-radius: 10px; min-width: 300px;">
+                    <h4 style="text-align: center; margin-bottom: 15px;">Share Top Albums</h4>
+                    <button onclick="alert('Albums Twitter clicked')" style="
+                        width: 280px;
+                        height: 50px;
+                        background: white;
+                        border: 2px solid black;
+                        margin: 5px 0;
+                        cursor: pointer;
+                        font-size: 14px;
+                        display: block;
+                    ">SHARE ON X</button>
+                    <button onclick="alert('Albums Instagram clicked')" style="
+                        width: 280px;
+                        height: 50px;
+                        background: white;
+                        border: 2px solid black;
+                        margin: 5px 0;
+                        cursor: pointer;
+                        font-size: 14px;
+                        display: block;
+                    ">SHARE ON INSTAGRAM</button>
+                    <button onclick="alert('Albums Facebook clicked')" style="
+                        width: 280px;
+                        height: 50px;
+                        background: white;
+                        border: 2px solid black;
+                        margin: 5px 0;
+                        cursor: pointer;
+                        font-size: 14px;
+                        display: block;
+                    ">SHARE ON FACEBOOK</button>
+                </div>
+            </div>
+        `;
+        
+        console.log('Raw HTML injected');
+    };
+    
+    // Test button creation
+    window.createTestButton = function() {
+        const container = document.getElementById('share-sections-container');
+        if (!container) {
+            console.log('No container found');
+            return;
+        }
+        
+        // Create a super simple test button
+        const testBtn = document.createElement('button');
+        testBtn.id = 'test-button';
+        testBtn.style.cssText = `
+            width: 200px !important;
+            height: 50px !important;
+            background: red !important;
+            color: white !important;
+            border: none !important;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            margin: 10px !important;
+            font-size: 16px !important;
+            z-index: 9999 !important;
+            position: relative !important;
+        `;
+        testBtn.textContent = 'TEST BUTTON';
+        
+        container.appendChild(testBtn);
+        console.log('Test button created');
+        
+        // Check its dimensions
+        setTimeout(() => {
+            const rect = testBtn.getBoundingClientRect();
+            console.log('Test button rect:', rect);
+        }, 100);
+    };
     
     // Simple visibility test
     window.testShareVisibility = function() {
