@@ -1,6 +1,8 @@
 // Integrated share functionality that generates images and shares with actual rankings
+console.log('[ShareIntegrated] Script file loaded - v2');
+
 (function() {
-    console.log('[ShareIntegrated] Script loaded - v1');
+    console.log('[ShareIntegrated] IIFE executing - v2');
     
     // Initialize when DOM is ready
     if (document.readyState === 'loading') {
@@ -15,8 +17,18 @@
         // Try to reorganize immediately if results screen is active
         const resultsScreen = document.getElementById('results-screen');
         if (resultsScreen && resultsScreen.classList.contains('active')) {
-            console.log('[ShareIntegrated] Results screen is active, reorganizing...');
-            setTimeout(reorganizeButtons, 100);
+            console.log('[ShareIntegrated] Results screen is active on init');
+            
+            const container = resultsScreen.querySelector('.download-buttons');
+            const shareContainer = document.getElementById('share-sections-container');
+            
+            if (container) {
+                console.log('[ShareIntegrated] Found download buttons, reorganizing...');
+                setTimeout(reorganizeButtons, 100);
+            } else if (shareContainer) {
+                console.log('[ShareIntegrated] No download buttons, creating share sections...');
+                setTimeout(createShareSections, 100);
+            }
         }
         
         // Watch for results screen changes
@@ -24,10 +36,19 @@
             for (let mutation of mutations) {
                 if (mutation.target.id === 'results-screen' && 
                     mutation.target.classList.contains('active')) {
+                    console.log('[ShareIntegrated] Results screen activated');
+                    
                     // Check if we haven't already reorganized
                     const container = mutation.target.querySelector('.download-buttons');
+                    const shareContainer = document.getElementById('share-sections-container');
+                    
                     if (container && !container.classList.contains('action-container')) {
+                        console.log('[ShareIntegrated] Found download-buttons, reorganizing...');
                         setTimeout(reorganizeButtons, 200);
+                    } else if (!container && shareContainer) {
+                        // No download buttons but share container exists
+                        console.log('[ShareIntegrated] No download-buttons, creating share sections only...');
+                        setTimeout(createShareSections, 200);
                     }
                     break;
                 }
@@ -150,7 +171,11 @@
             }
             
             /* Share sections container at bottom */
-            .share-sections-container {
+            .share-sections-container,
+            #share-sections-container {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
                 margin-top: 3rem;
                 padding: 20px;
                 max-width: 1200px;
@@ -323,6 +348,10 @@
     
     function createShareSections() {
         console.log('[ShareIntegrated] Creating share sections...');
+        
+        // Ensure styles are loaded
+        addGridStyles();
+        
         const shareContainer = document.getElementById('share-sections-container');
         if (!shareContainer) {
             console.error('[ShareIntegrated] share-sections-container not found!');
@@ -364,6 +393,13 @@
         setTimeout(() => {
             createShareButtons('songs', songShareButtons);
             createShareButtons('albums', albumShareButtons);
+            
+            // Debug: Check final state
+            console.log('[ShareIntegrated] Share sections created. Checking visibility...');
+            console.log('Share container display:', getComputedStyle(shareContainer).display);
+            console.log('Share row display:', getComputedStyle(shareRow).display);
+            console.log('Songs section display:', getComputedStyle(shareSongsSection).display);
+            console.log('Albums section display:', getComputedStyle(shareAlbumsSection).display);
         }, 50);
     }
     
@@ -512,12 +548,34 @@
     // Expose debug function globally
     window.debugShareInit = function() {
         console.log('Manually triggering share initialization...');
+        
+        // Check all relevant elements
+        const resultsScreen = document.getElementById('results-screen');
         const container = document.querySelector('.download-buttons');
+        const shareContainer = document.getElementById('share-sections-container');
+        
+        console.log('Results screen:', resultsScreen);
+        console.log('Results screen active:', resultsScreen?.classList.contains('active'));
+        console.log('Download buttons container:', container);
+        console.log('Share sections container:', shareContainer);
+        
+        // Check if buttons exist in results screen
+        const buttonsInResults = resultsScreen?.querySelector('.download-buttons');
+        console.log('Buttons in results screen:', buttonsInResults);
+        
         if (container) {
             reorganizeButtons();
         } else {
             console.error('No download-buttons container found');
+            // Try to create share sections directly
+            if (shareContainer) {
+                console.log('Creating share sections directly...');
+                createShareSections();
+            }
         }
     };
+    
+    // Also expose the createShareSections function for debugging
+    window.forceCreateShareSections = createShareSections;
     
 })();
