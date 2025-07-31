@@ -1,222 +1,184 @@
-/* Share Section Styles */
-.share-section {
-    margin: 40px auto;
-    text-align: center;
-    padding: 30px 20px;
-    background: #f5f5f5;
-    border-radius: 12px;
-    max-width: 600px;
-}
+/* Integrated Share Button Styles */
 
-.share-section h3 {
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 25px;
-    color: #000;
-}
-
-/* Share format radio buttons */
-.share-options {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    margin-bottom: 30px;
-}
-
-.share-format {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    padding: 12px 24px;
-    border-radius: 25px;
-    background: #fff;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-}
-
-.share-format:hover {
-    background: #e8e8e8;
-}
-
-.share-format input[type="radio"] {
-    margin-right: 10px;
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-}
-
-.share-format input[type="radio"]:checked {
-    accent-color: #000;
-}
-
-.share-format input[type="radio"]:checked + span {
-    font-weight: 700;
-}
-
-.share-format span {
-    font-size: 18px;
-    font-weight: 500;
-    color: #000;
-}
-
-/* Share buttons container */
-#share-buttons {
-    display: flex !important;
-    flex-wrap: wrap;
-    gap: 12px;
-    justify-content: center;
-    margin-top: 25px;
-    min-height: 50px;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-
-/* Force visibility on results screen */
-#results-screen #share-buttons {
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-
-/* Override any mobile rules */
-@media screen and (max-width: 768px) {
-    #share-buttons {
-        display: flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-}
-
-/* Individual share button */
+/* Share buttons within action-container */
 .share-btn {
-    display: flex !important;
+    background: transparent !important;
+    border: 2px solid var(--text-color, #000) !important;
+    color: var(--text-color, #000) !important;
+    transition: all 0.3s ease;
+    display: inline-flex !important;
     align-items: center;
-    gap: 6px;
-    padding: 14px 24px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    color: white;
-    transition: all 0.2s ease;
-    text-decoration: none;
-    min-width: 120px;
+    gap: 8px;
+}
+
+.share-btn .btn-icon {
+    display: flex;
+    align-items: center;
     justify-content: center;
+}
+
+.share-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
 }
 
 .share-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.share-btn:active {
-    transform: translateY(0);
+/* Twitter/X button */
+#share-songs-twitter,
+#share-albums-twitter {
+    border-color: #000 !important;
+    color: #000 !important;
 }
 
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-    .share-section {
-        margin: 30px 10px;
-        padding: 25px 15px;
-    }
-    
-    .share-section h3 {
-        font-size: 24px;
-        margin-bottom: 20px;
-    }
-    
-    .share-options {
-        flex-direction: column;
-        gap: 15px;
-        margin-bottom: 25px;
-    }
-    
-    .share-format {
-        width: 100%;
-        justify-content: center;
-        padding: 14px 20px;
-    }
-    
-    #share-buttons {
-        gap: 10px;
-    }
-    
-    .share-btn {
-        min-width: calc(50% - 5px);
-        padding: 12px 16px;
-        font-size: 15px;
-    }
+/* Light mode specific fix for X button */
+body:not(.dark-mode) #share-songs-twitter,
+body:not(.dark-mode) #share-albums-twitter {
+    border-color: #000 !important;
+    color: #000 !important;
 }
 
-/* Smaller mobile screens */
-@media (max-width: 400px) {
-    .share-btn {
-        min-width: 100%;
-    }
+body:not(.dark-mode) #share-songs-twitter .btn-icon,
+body:not(.dark-mode) #share-albums-twitter .btn-icon {
+    color: #000 !important;
+}
+
+#share-songs-twitter:hover,
+#share-albums-twitter:hover {
+    background: #000 !important;
+    color: white !important;
+}
+
+/* Instagram button */
+#share-songs-instagram,
+#share-albums-instagram {
+    border-color: #E4405F !important;
+    color: #E4405F !important;
+}
+
+#share-songs-instagram:hover,
+#share-albums-instagram:hover {
+    background: linear-gradient(45deg, #F58529, #DD2A7B, #8134AF, #515BD4) !important;
+    border-color: #DD2A7B !important;
+    color: white !important;
+}
+
+#share-songs-instagram:hover svg,
+#share-albums-instagram:hover svg {
+    fill: white !important;
+}
+
+/* Facebook button */
+#share-songs-facebook,
+#share-albums-facebook {
+    border-color: #1877F2 !important;
+    color: #1877F2 !important;
+}
+
+#share-songs-facebook:hover,
+#share-albums-facebook:hover {
+    background: #1877F2 !important;
+    color: white !important;
+}
+
+#share-songs-facebook:hover svg,
+#share-albums-facebook:hover svg {
+    fill: white !important;
 }
 
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
-    .share-section {
-        background: #1a1a1a;
+    .share-btn {
+        border-color: #888 !important;
+        color: #ccc !important;
     }
     
-    .share-section h3 {
-        color: #fff;
+    #share-songs-twitter,
+    #share-albums-twitter {
+        border-color: #fff !important;
+        color: #fff !important;
     }
     
-    .share-format {
-        background: #2a2a2a;
-        color: #fff;
+    #share-songs-twitter:hover,
+    #share-albums-twitter:hover {
+        background: #fff !important;
+        color: #000 !important;
     }
     
-    .share-format:hover {
-        background: #333;
+    #share-songs-instagram,
+    #share-albums-instagram {
+        border-color: #E4405F !important;
+        color: #E4405F !important;
     }
     
-    .share-format span {
-        color: #fff;
+    #share-songs-facebook,
+    #share-albums-facebook {
+        border-color: #4B9BFF !important;
+        color: #4B9BFF !important;
     }
     
-    /* Ensure share buttons are visible in dark mode */
-    #share-buttons {
-        background: transparent !important;
+    #share-songs-facebook:hover,
+    #share-albums-facebook:hover {
+        background: #1877F2 !important;
+        border-color: #1877F2 !important;
+        color: white !important;
     }
     
-    #share-buttons .share-btn {
-        opacity: 1 !important;
-        visibility: visible !important;
+    #share-songs-facebook:hover svg,
+    #share-albums-facebook:hover svg {
+        fill: white !important;
     }
 }
 
-/* Dark mode class support */
-body.dark-mode .share-section {
-    background: #1a1a1a;
+body.dark-mode .share-btn {
+    border-color: #888 !important;
+    color: #ccc !important;
 }
 
-body.dark-mode .share-section h3 {
-    color: #fff;
+body.dark-mode #share-songs-twitter,
+body.dark-mode #share-albums-twitter {
+    border-color: #fff !important;
+    color: #fff !important;
 }
 
-body.dark-mode .share-format {
-    background: #2a2a2a;
+body.dark-mode #share-songs-twitter:hover,
+body.dark-mode #share-albums-twitter:hover {
+    background: #fff !important;
+    color: #000 !important;
 }
 
-body.dark-mode .share-format:hover {
-    background: #333;
+body.dark-mode #share-songs-instagram,
+body.dark-mode #share-albums-instagram {
+    border-color: #E4405F !important;
+    color: #E4405F !important;
 }
 
-body.dark-mode .share-format span {
-    color: #fff;
+body.dark-mode #share-songs-facebook,
+body.dark-mode #share-albums-facebook {
+    border-color: #4B9BFF !important;
+    color: #4B9BFF !important;
 }
 
-/* Ensure buttons are visible in dark mode */
-body.dark-mode #share-buttons {
-    background: transparent !important;
+body.dark-mode #share-songs-facebook:hover,
+body.dark-mode #share-albums-facebook:hover {
+    background: #1877F2 !important;
+    border-color: #1877F2 !important;
+    color: white !important;
 }
 
-body.dark-mode #share-buttons .share-btn {
-    opacity: 1 !important;
-    visibility: visible !important;
+body.dark-mode #share-songs-facebook:hover svg,
+body.dark-mode #share-albums-facebook:hover svg {
+    fill: white !important;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .share-btn {
+        flex: 1 1 100%;
+        margin: 5px 0;
+    }
 }

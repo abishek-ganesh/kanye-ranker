@@ -991,9 +991,14 @@ class KanyeRankerExport {
     }
     
     async drawSquareSongList(topSongs, albumsMap) {
-        const startY = 220;
-        const itemHeight = 65; // Smaller height for square format
-        const padding = 60;
+        // Calculate spacing to use full canvas height
+        const headerEnd = 200;
+        const footerStart = 980;
+        const availableHeight = footerStart - headerEnd;
+        const padding = 50;
+        const itemsPerColumn = 5;
+        const itemHeight = availableHeight / itemsPerColumn; // ~156 pixels per item
+        const startY = headerEnd + (itemHeight / 2) - 30; // Center first item
         
         // Get colors and fonts based on top album
         let primaryColor = '#D4AF37';
@@ -1022,20 +1027,34 @@ class KanyeRankerExport {
             const x = padding + (column * columnWidth);
             const y = startY + (row * itemHeight);
             
+            // Album art thumbnail - bigger for more impact
+            const albumArtSize = 70;
+            const albumArtX = x;
+            const albumArtY = y - 35; // Center vertically
+            
+            if (album && album.coverArt) {
+                await this.drawAlbumArt(album.coverArt, albumArtX, albumArtY, albumArtSize);
+            } else {
+                // Placeholder for missing album art
+                this.ctx.fillStyle = '#333333';
+                this.ctx.fillRect(albumArtX, albumArtY, albumArtSize, albumArtSize);
+            }
+            
             // Rank number
             this.ctx.fillStyle = primaryColor;
-            this.ctx.font = `bold 32px ${bodyFont}`;
+            this.ctx.font = `bold 36px ${bodyFont}`;
             this.ctx.textAlign = 'left';
-            this.ctx.fillText(`${i + 1}.`, x, y + 25);
+            const rankX = albumArtX + albumArtSize + 20;
+            this.ctx.fillText(`${i + 1}.`, rankX, y + 5);
             
             // Song title
             this.ctx.fillStyle = textColor;
-            this.ctx.font = `bold 24px ${bodyFont}`;
-            const titleX = x + 45;
-            const maxTitleWidth = columnWidth - 60;
+            this.ctx.font = `bold 26px ${bodyFont}`;
+            const titleX = rankX + 50;
+            const maxTitleWidth = columnWidth - (titleX - x) - 20;
             const displayTitle = song.title === "Niggas in Paris" ? "N****s in Paris" : song.title;
             const title = this.truncateText(displayTitle, maxTitleWidth);
-            this.ctx.fillText(title, titleX, y + 20);
+            this.ctx.fillText(title, titleX, y);
             
             // Album name (smaller)
             if (this.currentAlbumId === 'wtt') {
@@ -1046,12 +1065,12 @@ class KanyeRankerExport {
             this.ctx.font = `18px ${bodyFont}`;
             const albumText = album ? this.formatAlbumName(album.name) : 'Unknown';
             const truncatedAlbum = this.truncateText(albumText, maxTitleWidth);
-            this.ctx.fillText(truncatedAlbum, titleX, y + 40);
+            this.ctx.fillText(truncatedAlbum, titleX, y + 25);
         }
     }
     
     drawSquareFooter(albumId = null) {
-        const footerY = this.canvas.height - 100;
+        const footerY = this.canvas.height - 80; // Position footer properly
         
         // Get album colors and fonts
         let primaryColor = '#D4AF37';
@@ -1069,15 +1088,15 @@ class KanyeRankerExport {
         this.ctx.strokeStyle = primaryColor;
         this.ctx.lineWidth = 2;
         this.ctx.beginPath();
-        this.ctx.moveTo(100, footerY - 30);
-        this.ctx.lineTo(this.canvas.width - 100, footerY - 30);
+        this.ctx.moveTo(100, footerY);
+        this.ctx.lineTo(this.canvas.width - 100, footerY);
         this.ctx.stroke();
         
         // Website URL
         this.ctx.fillStyle = primaryColor;
         this.ctx.font = `bold 36px ${bodyFont}`;
         this.ctx.textAlign = 'center';
-        this.ctx.fillText('kanyeranker.com', this.canvas.width / 2, footerY + 10);
+        this.ctx.fillText('kanyeranker.com', this.canvas.width / 2, footerY + 35);
         
         // Date
         const date = new Date().toLocaleDateString('en-US', { 
@@ -1087,7 +1106,7 @@ class KanyeRankerExport {
         });
         this.ctx.fillStyle = textColor;
         this.ctx.font = `20px ${bodyFont}`;
-        this.ctx.fillText(date, this.canvas.width / 2, footerY + 40);
+        this.ctx.fillText(date, this.canvas.width / 2, footerY + 65);
     }
     
     /**
