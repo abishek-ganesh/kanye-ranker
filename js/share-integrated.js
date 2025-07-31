@@ -1,5 +1,7 @@
 // Integrated share functionality that generates images and shares with actual rankings
 (function() {
+    console.log('[ShareIntegrated] Script loaded - v1');
+    
     // Initialize when DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
@@ -8,9 +10,12 @@
     }
     
     function init() {
+        console.log('[ShareIntegrated] Initializing...');
+        
         // Try to reorganize immediately if results screen is active
         const resultsScreen = document.getElementById('results-screen');
         if (resultsScreen && resultsScreen.classList.contains('active')) {
+            console.log('[ShareIntegrated] Results screen is active, reorganizing...');
             setTimeout(reorganizeButtons, 100);
         }
         
@@ -317,8 +322,12 @@
     }
     
     function createShareSections() {
+        console.log('[ShareIntegrated] Creating share sections...');
         const shareContainer = document.getElementById('share-sections-container');
-        if (!shareContainer) return;
+        if (!shareContainer) {
+            console.error('[ShareIntegrated] share-sections-container not found!');
+            return;
+        }
         
         // Clear any existing content
         shareContainer.innerHTML = '';
@@ -499,5 +508,16 @@
             }
         }
     }
+    
+    // Expose debug function globally
+    window.debugShareInit = function() {
+        console.log('Manually triggering share initialization...');
+        const container = document.querySelector('.download-buttons');
+        if (container) {
+            reorganizeButtons();
+        } else {
+            console.error('No download-buttons container found');
+        }
+    };
     
 })();
