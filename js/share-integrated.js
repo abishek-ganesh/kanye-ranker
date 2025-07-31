@@ -352,10 +352,22 @@ console.log('[ShareIntegrated] Script file loaded - v2');
         // Ensure styles are loaded
         addGridStyles();
         
-        const shareContainer = document.getElementById('share-sections-container');
+        let shareContainer = document.getElementById('share-sections-container');
+        
+        // If container doesn't exist, create it after top-albums
         if (!shareContainer) {
-            console.error('[ShareIntegrated] share-sections-container not found!');
-            return;
+            console.log('[ShareIntegrated] Container not found, creating after top-albums...');
+            const topAlbums = document.getElementById('top-albums');
+            if (topAlbums && topAlbums.parentElement) {
+                shareContainer = document.createElement('div');
+                shareContainer.id = 'share-sections-container';
+                shareContainer.className = 'share-sections-container';
+                topAlbums.parentElement.insertBefore(shareContainer, topAlbums.nextSibling);
+                console.log('[ShareIntegrated] Created share container after albums');
+            } else {
+                console.error('[ShareIntegrated] Could not find insertion point');
+                return;
+            }
         }
         
         // Clear any existing content
@@ -582,6 +594,27 @@ console.log('[ShareIntegrated] Script file loaded - v2');
     
     // Also expose the createShareSections function for debugging
     window.forceCreateShareSections = createShareSections;
+    
+    // Simple visibility test
+    window.testShareVisibility = function() {
+        const container = document.getElementById('share-sections-container');
+        if (!container) {
+            console.log('❌ No share container found');
+            return;
+        }
+        
+        const rect = container.getBoundingClientRect();
+        console.log('Share container dimensions:', {
+            width: rect.width,
+            height: rect.height,
+            top: rect.top,
+            visible: rect.width > 0 && rect.height > 0
+        });
+        
+        // Scroll to it
+        container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        console.log('Scrolled to share container');
+    };
     
     // Force all share elements to be visible
     window.forceShareVisible = function() {
