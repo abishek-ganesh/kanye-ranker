@@ -20,11 +20,11 @@
                 type: "humorous"
             },
             {
-                quote: "Nothing in life is promised except death.",
+                quote: "I hate when I'm on a plane and I wake up with a water bottle next to me like oh great now I gotta be responsible for this water bottle.",
                 type: "philosophical"
             },
             {
-                quote: "If you have the opportunity to play this game called life, you have to appreciate every moment.",
+                quote: "People will have a problem with whatever you do. At the end of the day, nobody can determine what you need to do in order to be successful and why would you listen to someone who is not successful tell you what you need to do?",
                 type: "inspirational"
             },
             {
@@ -40,7 +40,11 @@
                 type: "inspirational"
             },
             {
-                quote: "I feel like I'm too busy writing history to read it.",
+                quote: "If you're a Kanye West fan, you're not a fan of me; you're a fan of yourself. You will believe in yourself. I'm just the espresso. I'm just the shot in the morning to get you going. Make you believe that you can overcome that situation that you're dealing with all the time.",
+                type: "inspirational"
+            },
+            {
+                quote: "Look at Gaga she's the creative director of Polaroid. I like some of the Gaga songs but what the f*** does she know about cameras?",
                 type: "confident"
             }
         ],
@@ -58,7 +62,7 @@
                 type: "inspirational"
             },
             {
-                quote: "I'm a creative genius and there's no other way to word it.",
+                quote: "Everybody want to know what I'd do if I didn't win. I guess we'll never know.",
                 type: "confident"
             },
             {
@@ -66,7 +70,7 @@
                 type: "honest"
             },
             {
-                quote: "The time is now to express yourself.",
+                quote: "If I got any cooler I would freeze to death.",
                 type: "inspirational"
             },
             {
@@ -74,15 +78,15 @@
                 type: "spiritual"
             },
             {
-                quote: "One of my biggest Achilles heels has been my ego.",
+                quote: "People talk so much s*** about me in barbershops, they forget to get their hair cut",
                 type: "honest"
             },
             {
-                quote: "Keep your nose out the sky, keep your heart to God, and keep your face to the rising sun.",
+                quote: "I no longer have a manager. I can’t be managed.",
                 type: "inspirational"
             },
             {
-                quote: "Believe in your flyness, conquer your shyness.",
+                quote: "I need a room full of mirrors so I can be surrounded by winners.",
                 type: "inspirational"
             }
         ]
