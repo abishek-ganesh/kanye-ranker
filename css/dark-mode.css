@@ -284,7 +284,12 @@ body.dark-mode {
     border-color: #ffffff !important;
 }
 
-/* Theme Toggle */
+/* Theme Toggle - Hidden (replaced by settings menu) */
+.theme-toggle {
+    display: none !important;
+}
+
+/* Original theme toggle styles (kept for reference)
 .theme-toggle {
     position: fixed;
     bottom: 20px;

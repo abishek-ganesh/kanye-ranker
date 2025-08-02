@@ -12,17 +12,7 @@ class ThemeManager {
             this.enableDarkMode();
         }
         
-        // Create theme toggle button
-        this.createToggleButton();
-    }
-    
-    createToggleButton() {
-        const toggleBtn = document.createElement('button');
-        toggleBtn.className = 'theme-toggle';
-        toggleBtn.innerHTML = this.isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode';
-        toggleBtn.onclick = () => this.toggleTheme();
-        
-        document.body.appendChild(toggleBtn);
+        // No longer create separate toggle button - it's in settings menu now
     }
     
     toggleTheme() {
@@ -32,11 +22,7 @@ class ThemeManager {
             this.enableDarkMode();
         }
         
-        // Update button text
-        const toggleBtn = document.querySelector('.theme-toggle');
-        if (toggleBtn) {
-            toggleBtn.innerHTML = this.isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode';
-        }
+        // No longer need to update separate button text
     }
     
     enableDarkMode() {

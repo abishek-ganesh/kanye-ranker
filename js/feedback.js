@@ -79,6 +79,10 @@ class FeedbackManager {
         });
     }
     
+    open() {
+        this.openModal();
+    }
+    
     openModal() {
         this.modal.classList.add('show');
         this.messageInput.focus();
