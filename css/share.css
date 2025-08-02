@@ -189,6 +189,14 @@ body.dark-mode #share-albums-facebook:hover {
     -webkit-tap-highlight-color: transparent;
 }
 
+/* Hide overlay elements during screenshot */
+@media screen and (display-mode: standalone) {
+    .story-preview-instruction,
+    .story-preview-close-hint {
+        display: none !important;
+    }
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -226,6 +234,7 @@ body.dark-mode #share-albums-facebook:hover {
     z-index: 10001;
     animation: pulse 2s ease-in-out infinite;
     pointer-events: none;
+    transition: opacity 0.2s ease;
 }
 
 @keyframes pulse {
@@ -250,6 +259,7 @@ body.dark-mode #share-albums-facebook:hover {
     font-weight: 400;
     z-index: 10001;
     pointer-events: none;
+    transition: opacity 0.2s ease;
 }
 
 /* Platform shortcuts after screenshot */

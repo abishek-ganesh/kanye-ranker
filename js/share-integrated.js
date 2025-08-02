@@ -450,13 +450,13 @@
         `;
         
         if (hasWebShare && isMobile) {
-            subtitle.textContent = 'Share to any app or directly to social platforms';
+            subtitle.textContent = 'Download and let the kids know what good music really is';
         } else if (hasWebShare && !isMobile) {
-            subtitle.textContent = 'Share to installed apps or click a platform below';
+            subtitle.textContent = 'Name one genius that ain\'t crazy... now share yours';
         } else if (hasClipboard && !isMobile) {
-            subtitle.textContent = 'Copy your ranking image or share to social platforms';
+            subtitle.textContent = 'Copy that, Yeezy taught me';
         } else {
-            subtitle.textContent = 'Download your ranking image to share on social media';
+            subtitle.textContent = 'Download and let the kids know what good music really is';
         }
         
         shareSongsSection.appendChild(subtitle);
@@ -555,13 +555,13 @@
         `;
         
         if (hasWebShare && isMobile) {
-            subtitle.textContent = 'Share to any app or directly to social platforms';
+            subtitle.textContent = '🌊 Drop the wave on any app you want 🌊';
         } else if (hasWebShare && !isMobile) {
-            subtitle.textContent = 'Share to installed apps or click a platform below';
+            subtitle.textContent = 'Name one genius that ain\'t crazy... now share yours';
         } else if (hasClipboard && !isMobile) {
-            subtitle.textContent = 'Copy your album ranking or share to social platforms';
+            subtitle.textContent = 'Copy that, Yeezy taught me';
         } else {
-            subtitle.textContent = 'Download your album ranking to share on social media';
+            subtitle.textContent = 'Download and let the kids know what good music really is';
         }
         
         shareAlbumsSection.appendChild(subtitle);
@@ -657,9 +657,10 @@
                 icon: `<svg width="20" height="20" viewBox="0 0 24 24" style="fill: currentColor;"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>`,
                 label: 'Share with Friends',
                 platform: 'native',
-                color: '#007AFF',
-                hoverColor: '#0055CC',
-                isPrimary: true
+                color: 'var(--text-color, #007AFF)',
+                hoverColor: 'var(--primary-color, #0055CC)',
+                isPrimary: true,
+                useThemeColors: true
             });
         }
         
@@ -670,9 +671,10 @@
                 icon: '📱',
                 label: 'Screenshot for Stories',
                 platform: 'stories',
-                color: '#9C27B0',
-                hoverColor: '#7B1FA2',
-                isPrimary: true
+                color: 'var(--text-color, #9C27B0)',
+                hoverColor: 'var(--primary-color, #7B1FA2)',
+                isPrimary: true,
+                useThemeColors: true
             });
         }
         
@@ -766,8 +768,9 @@
             
             // Special handling for X/Twitter button in dark mode
             const isTwitter = btn.platform === 'twitter';
-            const borderColor = isTwitter ? 'var(--text-color, #000000)' : btn.color;
-            const textColor = isPrimary ? '#ffffff' : (isTwitter ? 'var(--text-color, #000000)' : btn.color);
+            const useTheme = btn.useThemeColors;
+            const borderColor = useTheme ? btn.color : (isTwitter ? 'var(--text-color, #000000)' : btn.color);
+            const textColor = isPrimary && !useTheme ? '#ffffff' : (isTwitter ? 'var(--text-color, #000000)' : btn.color);
             
             button.style.cssText = `
                 display: flex !important;
@@ -777,7 +780,7 @@
                 width: 100% !important;
                 height: ${baseHeight} !important;
                 padding: 0 20px !important;
-                background: ${isPrimary ? btn.color : 'var(--background-color)'} !important;
+                background: ${isPrimary && !useTheme ? btn.color : 'transparent'} !important;
                 border: 2px solid ${borderColor} !important;
                 border-radius: 12px !important;
                 color: ${textColor} !important;
@@ -797,7 +800,7 @@
             
             // Create icon element
             const iconElement = document.createElement('span');
-            const iconColor = isPrimary ? '#ffffff' : (isTwitter ? 'var(--text-color, #000000)' : btn.color);
+            const iconColor = isPrimary && !useTheme ? '#ffffff' : (isTwitter ? 'var(--text-color, #000000)' : btn.color);
             iconElement.style.cssText = `
                 display: flex !important;
                 align-items: center !important;
@@ -812,7 +815,7 @@
             // Create label element
             const labelElement = document.createElement('span');
             labelElement.textContent = btn.label;
-            const labelColor = isPrimary ? '#ffffff' : (isTwitter ? 'var(--text-color, #000000)' : btn.color);
+            const labelColor = isPrimary && !useTheme ? '#ffffff' : (isTwitter ? 'var(--text-color, #000000)' : btn.color);
             labelElement.style.cssText = `
                 font-weight: 600 !important;
                 color: ${labelColor} !important;
@@ -844,7 +847,7 @@
             
             // Hover effects
             button.addEventListener('mouseenter', () => {
-                if (isPrimary) {
+                if (isPrimary && !useTheme) {
                     button.style.background = btn.hoverColor + ' !important';
                     button.style.borderColor = btn.hoverColor + ' !important';
                 } else {
@@ -854,7 +857,7 @@
             });
             
             button.addEventListener('mouseleave', () => {
-                if (isPrimary) {
+                if (isPrimary && !useTheme) {
                     button.style.background = btn.color + ' !important';
                     button.style.borderColor = btn.color + ' !important';
                 } else {
@@ -1145,12 +1148,18 @@
             
             // Detect screenshot taken via Page Visibility API
             let screenshotTaken = false;
+            let hideTimeout = null;
+            
             const handleVisibilityChange = () => {
                 if (document.hidden) {
-                    // User likely taking screenshot
+                    // User likely taking screenshot - immediately hide text
+                    instruction.style.opacity = '0';
+                    closeHint.style.opacity = '0';
                     screenshotTaken = true;
                 } else if (!document.hidden && screenshotTaken) {
                     // User returned after taking screenshot
+                    instruction.style.opacity = '1';
+                    closeHint.style.opacity = '1';
                     instruction.innerHTML = '✅ Screenshot taken! Open your favorite app';
                     platformShortcuts.style.display = 'flex';
                     closeHint.textContent = 'Tap anywhere to close';
@@ -1164,11 +1173,28 @@
                 }
             };
             
+            // Also hide on blur (when user switches apps)
+            const handleBlur = () => {
+                instruction.style.opacity = '0';
+                closeHint.style.opacity = '0';
+            };
+            
+            const handleFocus = () => {
+                if (!screenshotTaken) {
+                    instruction.style.opacity = '1';
+                    closeHint.style.opacity = '1';
+                }
+            };
+            
             document.addEventListener('visibilitychange', handleVisibilityChange);
+            window.addEventListener('blur', handleBlur);
+            window.addEventListener('focus', handleFocus);
             
             // Close on tap/click
             previewOverlay.addEventListener('click', () => {
                 document.removeEventListener('visibilitychange', handleVisibilityChange);
+                window.removeEventListener('blur', handleBlur);
+                window.removeEventListener('focus', handleFocus);
                 previewOverlay.remove();
             });
             
@@ -1179,7 +1205,7 @@
             
         } catch (error) {
             console.error('[StoryPreview] Error:', error);
-            alert('Failed to generate story preview. Please try again.');
+            // Don't show alert - the preview likely still worked
             
             // Hide loading overlay
             const overlay = document.getElementById('overlay');
