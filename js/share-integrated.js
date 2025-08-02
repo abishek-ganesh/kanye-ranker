@@ -584,13 +584,13 @@
         `;
         
         if (hasWebShare && isMobile) {
-            subtitle.textContent = '🌊 Drop the wave on any app you want 🌊';
+            subtitle.textContent = 'Download and let the kids know what GOOD Music really is';
         } else if (hasWebShare && !isMobile) {
             subtitle.textContent = 'Name one genius that ain\'t crazy... now share yours';
         } else if (hasClipboard && !isMobile) {
             subtitle.textContent = 'Copy that, Yeezy taught me';
         } else {
-            subtitle.textContent = 'Download and let the kids know what good music really is';
+            subtitle.textContent = 'Download and let the kids know what GOOD Music really is';
         }
         
         shareAlbumsSection.appendChild(subtitle);
