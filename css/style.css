@@ -954,7 +954,7 @@ body {
     .result-album {
         font-size: 0.875rem;
         margin-bottom: 0.5rem;
-        text-align: left;
+        text-align: center;
     }
     
     .result-actions {
