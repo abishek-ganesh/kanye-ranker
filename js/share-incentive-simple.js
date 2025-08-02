@@ -26,7 +26,7 @@
                 if (mutation.target.id === 'results-screen' && 
                     mutation.target.classList.contains('active')) {
                     setTimeout(injectInsights, 300);
-                    setTimeout(injectAlbumInsights, 400);
+                    setTimeout(injectAlbumInsights, 800); // Increased delay to ensure albums are rendered
                     break;
                 }
             }
@@ -42,7 +42,7 @@
             // Check if already active
             if (resultsScreen.classList.contains('active')) {
                 setTimeout(injectInsights, 300);
-                setTimeout(injectAlbumInsights, 400);
+                setTimeout(injectAlbumInsights, 800); // Increased delay to ensure albums are rendered
             }
         }
     }
@@ -455,6 +455,9 @@
         hasShared: () => hasShared,
         trackShare: trackShare,
         showInsights: () => showInsights(true),
+        showAlbumInsights: () => {
+            injectAlbumInsights();
+        },
         reset: () => {
             localStorage.removeItem(SHARE_STORAGE_KEY);
             hasShared = false;

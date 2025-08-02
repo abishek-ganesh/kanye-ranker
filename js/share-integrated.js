@@ -650,7 +650,7 @@
         
         let shareButtons = [];
         
-        // Add native share button if available
+        // Add native share button if available (both desktop and mobile)
         if (hasWebShare) {
             shareButtons.push({
                 id: `share-${shareType}-native`,
@@ -664,7 +664,7 @@
             });
         }
         
-        // Add mobile-only "Screenshot for Stories" button
+        // Add mobile-only "Screenshot for Stories" button AFTER "Share with Friends"
         if (isMobile) {
             shareButtons.push({
                 id: `share-${shareType}-stories`,
@@ -883,6 +883,20 @@
             return;
         }
         
+        // Open window immediately for social platforms to avoid popup blockers on mobile
+        let shareWindow = null;
+        const isMobileBrowser = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        if (isMobileBrowser && (platform === 'x' || platform === 'twitter' || platform === 'reddit' || platform === 'facebook')) {
+            shareWindow = window.open('', '_blank');
+            if (shareWindow) {
+                shareWindow.document.write('<html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body style="margin:20px;font-family:system-ui,sans-serif;text-align:center;padding-top:50px;"><h2>Preparing your share...</h2><p>Please wait while we generate your ranking image.</p><p style="color:#666;font-size:14px;">This window will redirect automatically.</p></body></html>');
+            } else {
+                // If popup was blocked, warn the user
+                alert('Please allow popups for this site to share on social media.');
+                return;
+            }
+        }
+        
         try {
             // Get overlay elements
             const overlay = document.getElementById('overlay');
@@ -1016,8 +1030,10 @@
                     break;
                 case 'reddit':
                     const redditTitle = shareType === 'songs' ? 'My Top 10 Kanye Songs' : 'My Top 5 Kanye Albums';
-                    // Reddit accepts text parameter for the post body
-                    targetUrl = `https://reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(redditTitle)}&text=${encodeURIComponent(shareText)}`;
+                    // Use www.reddit.com for better mobile compatibility
+                    // Reddit doesn't support 'text' parameter, combine title and text
+                    const redditFullText = `${redditTitle}\n\n${shareText}`;
+                    targetUrl = `https://www.reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(redditFullText)}`;
                     break;
                 case 'instagram':
                     // Instagram doesn't have a web share URL, so we'll just show instructions
@@ -1029,22 +1045,30 @@
             }
             
             if (targetUrl) {
-                // Small delay to ensure download completes
-                setTimeout(() => {
-                    window.open(targetUrl, '_blank');
-                }, 500);
+                // For mobile with pre-opened window, navigate immediately
+                if (shareWindow) {
+                    shareWindow.location.href = targetUrl;
+                } else {
+                    // Desktop or fallback: Small delay to ensure download completes
+                    setTimeout(() => {
+                        window.open(targetUrl, '_blank');
+                    }, 500);
+                }
             }
             
             // Show success message with platform-specific instructions
-            setTimeout(() => {
-                if (platform === 'x' || platform === 'twitter') {
-                    alert(`Image downloaded! 📸\n\nA new X/Twitter tab is opening. Please attach the downloaded image to your post.\n\nThe text has been pre-filled for you!`);
-                } else if (platform === 'facebook') {
-                    alert(`Image downloaded! 📸\n\nA new Facebook tab is opening. Please:\n1. Attach the downloaded image\n2. Copy and paste this text:\n\n${shareText}`);
-                } else if (platform === 'reddit') {
-                    alert(`Image downloaded! 📸\n\nA new Reddit tab is opening. Please:\n1. Attach the downloaded image\n2. Copy and paste this text:\n\n${shareText}`);
-                }
-            }, 800);
+            // Only show alerts on desktop or if mobile share window wasn't pre-opened
+            if (!shareWindow) {
+                setTimeout(() => {
+                    if (platform === 'x' || platform === 'twitter') {
+                        alert(`Image downloaded! 📸\n\nA new X/Twitter tab is opening. Please attach the downloaded image to your post.\n\nThe text has been pre-filled for you!`);
+                    } else if (platform === 'facebook') {
+                        alert(`Image downloaded! 📸\n\nA new Facebook tab is opening. Please:\n1. Attach the downloaded image\n2. Copy and paste this text:\n\n${shareText}`);
+                    } else if (platform === 'reddit') {
+                        alert(`Image downloaded! 📸\n\nA new Reddit tab is opening. Please:\n1. Attach the downloaded image\n2. Copy and paste this text:\n\n${shareText}`);
+                    }
+                }, 800);
+            }
             
         } catch (error) {
             console.error('[ShareIntegrated] Error:', error);
@@ -1103,10 +1127,10 @@
             img.src = canvas.toDataURL('image/png');
             img.className = 'story-preview-image';
             
-            // Create instruction banner
-            const instruction = document.createElement('div');
-            instruction.className = 'story-preview-instruction';
-            instruction.innerHTML = '📸 Take a screenshot now';
+            // Remove instruction banner - we don't want any text over the screenshot
+            // const instruction = document.createElement('div');
+            // instruction.className = 'story-preview-instruction';
+            // instruction.innerHTML = '📸 Take a screenshot now';
             
             // Create close hint
             const closeHint = document.createElement('div');
@@ -1137,8 +1161,8 @@
                 platformShortcuts.appendChild(btn);
             });
             
-            // Assemble overlay
-            previewOverlay.appendChild(instruction);
+            // Assemble overlay (without instruction banner)
+            // previewOverlay.appendChild(instruction); // Removed
             previewOverlay.appendChild(img);
             previewOverlay.appendChild(closeHint);
             previewOverlay.appendChild(platformShortcuts);
@@ -1153,14 +1177,14 @@
             const handleVisibilityChange = () => {
                 if (document.hidden) {
                     // User likely taking screenshot - immediately hide text
-                    instruction.style.opacity = '0';
+                    // instruction.style.opacity = '0'; // Removed
                     closeHint.style.opacity = '0';
                     screenshotTaken = true;
                 } else if (!document.hidden && screenshotTaken) {
                     // User returned after taking screenshot
-                    instruction.style.opacity = '1';
+                    // instruction.style.opacity = '1'; // Removed
                     closeHint.style.opacity = '1';
-                    instruction.innerHTML = '✅ Screenshot taken! Open your favorite app';
+                    // instruction.innerHTML = '✅ Screenshot taken! Open your favorite app'; // Removed
                     platformShortcuts.style.display = 'flex';
                     closeHint.textContent = 'Tap anywhere to close';
                     
@@ -1181,7 +1205,7 @@
             
             const handleFocus = () => {
                 if (!screenshotTaken) {
-                    instruction.style.opacity = '1';
+                    // instruction.style.opacity = '1'; // Removed
                     closeHint.style.opacity = '1';
                 }
             };
