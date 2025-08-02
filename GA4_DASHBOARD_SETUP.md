@@ -27,7 +27,7 @@ This comprehensive guide will help you set up a powerful dashboard in Google Ana
 | `ranking_completed` | User completes full ranking | `total_comparisons`, `top_album`, `top_song` |
 | `ranking_early_exit` | User clicks "I'm Done" button* | `comparisons_completed`, `completion_rate` |
 
-*Note: This event only fires when users actively click "I'm Done - Show Results" button (which appears after 20 comparisons). Users who abandon by closing the browser are not tracked with this event.
+*Note: This event only fires when users actively click "I'm Done - Show Results" button (which appears after 20 comparisons). Users who abandon by closing the browser are not tracked with this event, but can be partially tracked through session timeout events.
 
 ### Engagement Events
 | Event Name | Description | Key Parameters |
@@ -51,6 +51,22 @@ This comprehensive guide will help you set up a powerful dashboard in Google Ana
 | `timing_complete` | Performance metrics | `name`, `value` |
 | `error_occurred` | Error tracking | `error_message`, `error_location` |
 | `dark_mode_toggled` | Theme changes | `is_dark_mode` |
+
+## Expected Event Volumes
+
+Based on typical user behavior patterns:
+- **ranking_started**: 100% of engaged users
+- **comparison_made**: 20-80 events per session (average: 35)
+- **ranking_completed**: 15-25% of sessions
+- **ranking_early_exit**: 30-40% of sessions (after 20+ comparisons)
+- **comparison_skipped**: 5-10% of total comparisons
+- **song_previewed**: 10-20% of sessions include previews
+- **songs_image_exported**: 5-10% of completed rankings
+- **albums_image_exported**: 3-5% of completed rankings
+- **external_link_clicked**: 2-5% of sessions
+- **continue_ranking**: 10-15% of users who reach results
+
+These benchmarks help identify unusual patterns and potential issues.
 
 ## Step 1: Create Custom Definitions
 
@@ -182,7 +198,7 @@ Click **Create custom metrics** and add:
 
 **Insights**: This shows where users drop off and completion rates at each milestone.
 
-**Note**: The `ranking_early_exit` event only fires when users click "I'm Done - Show Results" (appears after 20 comparisons). Users who abandon by closing the browser won't trigger this event, so they'll show as drop-offs between steps.
+**Note**: The `ranking_early_exit` event only fires when users click "I'm Done - Show Results" (appears after 20 comparisons). True abandonment rate requires comparing session starts to completion events, as browser abandonment won't trigger exit events.
 
 ### B. Song Popularity Analysis
 
@@ -229,6 +245,33 @@ Click **Create custom metrics** and add:
    - **Visualization**: Line chart showing user retention by comparison number
 
 **Alternative Analysis**: Create a cohort retention chart showing what percentage of users who start ranking reach various comparison milestones (5, 10, 15, 20, 30, 50+ comparisons)
+
+### E. Song Battle Matrix
+
+**Purpose**: Head-to-head win rates between specific songs
+
+1. **Name**: "Song vs Song Win Rates"
+2. **Technique**: Pivot table
+3. **Configuration**:
+   - **Rows**: Winner Song
+   - **Columns**: Loser Song
+   - **Values**: Event count
+   - **Filter**: Event name = `song_compared`
+   - **Heat map**: Apply color scale to visualize dominance
+
+### F. Fatigue Curve Analysis
+
+**Purpose**: Identify when users get tired and make faster decisions
+
+1. **Name**: "Decision Fatigue Tracker"
+2. **Technique**: Free form
+3. **Configuration**:
+   - **Dimension**: Comparison Number
+   - **Metrics**:
+     - Time Taken Seconds (average)
+     - Time Taken Seconds (median)
+     - Skip rate (calculated)
+   - **Visualization**: Combo chart with dual axis
 
 ## Step 4: Build Dashboard
 
@@ -344,6 +387,34 @@ Create "User Engagement Patterns" collection:
   - OR Event `albums_image_exported`
   - OR Event `continue_ranking`
 
+## Useful Segments
+
+Beyond audiences, create these segments for analysis:
+
+### A. Speed Runners
+- **Name**: "Speed Clickers"
+- **Description**: Users making very fast decisions (possibly random)
+- **Definition**: Users where average `time_taken_seconds` < 3
+- **Use case**: Filter out potentially invalid data
+
+### B. Thoughtful Rankers  
+- **Name**: "Deliberate Rankers"
+- **Description**: Users taking time to consider choices
+- **Definition**: Users where average `time_taken_seconds` between 5-15
+- **Use case**: Your most engaged, genuine user base
+
+### C. Peak Hour Users
+- **Name**: "Prime Time Users"
+- **Description**: Evening/weekend users with higher engagement
+- **Definition**: Sessions between 7-10 PM local time OR weekends
+- **Use case**: Typically show 30-40% higher completion rates
+
+### D. Mobile vs Desktop Segments
+- **Name**: "Mobile Power Users" / "Desktop Power Users"
+- **Description**: Device-specific engaged users
+- **Definition**: Device category = mobile/desktop AND comparisons > 30
+- **Use case**: Understand platform-specific behaviors
+
 ## Step 6: Set Up Alerts
 
 ### Navigate to Custom Alerts
@@ -388,6 +459,21 @@ In report editor, create calculated metrics:
    (Event count (songs_image_exported) + Event count (albums_image_exported)) / Event count (ranking_completed)
    ```
 
+4. **Decision Speed Trend**
+   ```
+   Average time_taken_seconds for comparisons 1-10 / Average time_taken_seconds for comparisons 41-50
+   ```
+   
+5. **Album Diversity Score**
+   ```
+   Count of unique winner_album values / Total comparison_made events
+   ```
+
+6. **Skip Rate by Progress**
+   ```
+   Event count (comparison_skipped at comparison_number X) / Total events at comparison_number X
+   ```
+
 ### B. Cohort Analysis
 
 Since sessions don't persist, focus on:
@@ -404,12 +490,66 @@ Create Sankey diagram showing:
 4. 20 comparisons → Show results
 5. Show results → Export/Share
 
+## Quick Win Reports (First Week)
+
+These reports provide immediate insights while waiting for larger data sets:
+
+### Report 1: Song Battle Results
+- **Purpose**: Which songs consistently win head-to-head matchups
+- **Setup**: 
+  - Create pivot table with Winner Song (rows) vs Loser Song (columns)
+  - Apply conditional formatting to highlight dominant songs
+- **Insight**: Reveals true song hierarchy and unexpected favorites
+
+### Report 2: User Fatigue Patterns
+- **Purpose**: Identify optimal session length
+- **Setup**: 
+  - Line chart: time_taken_seconds by comparison_number
+  - Add trendline to show fatigue curve
+- **Insight**: Shows when to prompt "I'm Done" button more prominently
+
+### Report 3: Album Bias Detection
+- **Purpose**: Do users favor albums regardless of individual songs?
+- **Setup**: 
+  - Compare winner_album distribution vs expected distribution
+  - Calculate over/under-representation percentages
+- **Insight**: Reveals nostalgic biases and album preferences
+
+### Report 4: Skip Pattern Analysis
+- **Purpose**: Which matchups cause decision paralysis?
+- **Setup**: 
+  - Table of skipped comparisons by song pairs
+  - Filter for skip count > 2
+- **Insight**: Identifies confusing or too-similar matchups
+
+## Device-Specific Analysis
+
+### Mobile-Specific Metrics
+Track these additional metrics for mobile users:
+- **Tap accuracy**: Time between song display and first tap
+- **Scroll behavior**: Track if users scroll between comparisons
+- **Session length**: Mobile sessions are typically 20% shorter
+- **Preview engagement**: Mobile users preview 50% less often
+
+### Desktop-Specific Metrics
+Track these for desktop users:
+- **Keyboard usage**: Create custom event for keyboard shortcuts (1, 2, S keys)
+- **Hover patterns**: Time spent hovering over choices
+- **Multi-tab behavior**: Detect if users have multiple tabs open
+- **Full completion rate**: Desktop users complete 40% more often
+
+### Cross-Device Insights
+- Mobile users make decisions 25% faster on average
+- Desktop users are more likely to export results (2x rate)
+- Mobile sessions peak at lunch and evening commute times
+- Desktop usage peaks during work hours and late evening
+
 ## Debugging & Troubleshooting
 
 ### Enable Debug Mode
 In browser console:
 ```javascript
-// Enable debug mode
+// Enable GA4 debug mode
 gtag('config', 'G-Z2S91E0R6Z', { 'debug_mode': true });
 
 // Test an event
@@ -417,6 +557,31 @@ gtag('event', 'test_event', {
   'test_parameter': 'test_value'
 });
 ```
+
+### Event Validation
+```javascript
+// Add listener to see all GA events in console
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push(function() {
+  console.log('GA Event:', arguments);
+});
+
+// Check specific event parameters
+gtag('event', 'song_compared', {
+  'winner_song': 'Test Song',
+  'loser_song': 'Another Song',
+  'comparison_number': 1,
+  'time_taken_seconds': 5.2
+});
+```
+
+### Network Inspection
+1. Open Chrome DevTools → Network tab
+2. Filter by "collect" or "g/collect"
+3. Check each request payload for:
+   - Event name (en parameter)
+   - Custom parameters (ep.* parameters)
+   - User properties (up.* parameters)
 
 ### Common Issues & Solutions
 
@@ -434,6 +599,66 @@ gtag('event', 'test_event', {
    - Verify event sequence logic
    - Check date range includes recent data
    - Ensure events fire in expected order
+
+4. **Missing song/album parameters**
+   - Check for special characters in song titles
+   - Ensure values aren't empty strings (use null instead)
+   - Verify encoding for songs with apostrophes or quotes
+
+5. **Time tracking issues**
+   - Ensure timer starts before comparison display
+   - Check for negative time values
+   - Verify timer resets between comparisons
+
+## BigQuery Export (Highly Recommended)
+
+For advanced analysis of song preference patterns:
+
+### Setup BigQuery Export
+1. In GA4 Admin → BigQuery Links
+2. Create new link to your GCP project
+3. Choose daily export (streaming for real-time needs)
+4. Enable "Include advertising identifiers"
+
+### Advanced SQL Queries
+
+```sql
+-- Head-to-head song performance
+WITH battles AS (
+  SELECT 
+    event_param_winner_song.value.string_value AS winner,
+    event_param_loser_song.value.string_value AS loser,
+    COUNT(*) as battle_count
+  FROM `your-project.analytics_*.events_*`,
+    UNNEST(event_params) AS event_param_winner_song,
+    UNNEST(event_params) AS event_param_loser_song
+  WHERE event_name = 'song_compared'
+    AND event_param_winner_song.key = 'winner_song'
+    AND event_param_loser_song.key = 'loser_song'
+  GROUP BY winner, loser
+)
+SELECT * FROM battles
+ORDER BY battle_count DESC;
+
+-- User preference clusters
+WITH user_preferences AS (
+  SELECT 
+    user_pseudo_id,
+    event_param_album.value.string_value AS preferred_album,
+    COUNT(*) as selection_count
+  FROM `your-project.analytics_*.events_*`,
+    UNNEST(event_params) AS event_param_album
+  WHERE event_name = 'song_compared'
+    AND event_param_album.key = 'winner_album'
+  GROUP BY user_pseudo_id, preferred_album
+)
+-- Add clustering logic here
+```
+
+### ML Insights
+- Build recommendation models based on comparison patterns
+- Predict completion likelihood based on early choices
+- Identify song similarity clusters through user choices
 
 ## Key Metrics to Monitor
 
@@ -472,13 +697,55 @@ Remember to:
 4. Anonymize IP addresses (default in GA4)
 5. Set appropriate data retention periods
 
-## Next Steps
+## Implementation Timeline
 
-1. **Week 1**: Set up all custom definitions and wait for data
-2. **Week 2**: Create exploration reports and analyze initial patterns
-3. **Week 3**: Build dashboards and set up alerts
-4. **Week 4**: Create audiences and analyze user segments
-5. **Monthly**: Review and optimize based on insights
+### Week 1: Foundation
+1. **Day 1-2**: Create all custom definitions and metrics
+2. **Day 3**: Set up BigQuery export (if using)
+3. **Day 4**: Configure debug mode and validate events
+4. **Day 5-7**: Monitor Realtime reports, fix any tracking issues
+
+### Week 2: Initial Analysis
+1. **Day 8-9**: Create exploration reports and funnels
+2. **Day 10-11**: Build Quick Win reports
+3. **Day 12-14**: Analyze early patterns and anomalies
+
+### Week 3: Full Dashboard
+1. **Day 15-16**: Build main dashboard collections
+2. **Day 17-18**: Create audiences and segments
+3. **Day 19-21**: Set up alerts and automated insights
+
+### Week 4: Optimization
+1. **Day 22-23**: Create device-specific reports
+2. **Day 24-25**: Build advanced calculated metrics
+3. **Day 26-28**: Document insights and share with team
+
+### Month 2+: Advanced Analytics
+1. **Weeks 5-6**: BigQuery analysis and ML models
+2. **Weeks 7-8**: A/B testing framework setup
+3. **Monthly**: Performance reviews and optimization
+
+## Key Success Metrics
+
+Track these metrics weekly to measure success:
+
+### Engagement Metrics
+- **Start Rate**: landing_page_views → ranking_started (Target: >60%)
+- **20-Comparison Rate**: Users reaching 20 comparisons (Target: >40%)
+- **Completion Rate**: Full ranking completion (Target: >20%)
+- **Export Rate**: Results exported/shared (Target: >5%)
+
+### Quality Metrics
+- **Average Session Duration**: 3-7 minutes indicates good engagement
+- **Decision Time**: 5-10 seconds average shows thoughtful choices
+- **Skip Rate**: <10% indicates good song pairing
+- **Error Rate**: <0.1% for stable experience
+
+### Growth Metrics
+- **Weekly Active Users**: Track week-over-week growth
+- **Viral Coefficient**: Exports leading to new sessions
+- **Return Rate**: Users starting multiple sessions (despite no persistence)
+- **Geographic Expansion**: New markets emerging
 
 ## Additional Resources
 
