@@ -4,7 +4,7 @@ Find your favorite Kanye West songs through an interactive ELO rating system.
 
 ## Features
 
-- **180+ Songs**: Complete discography from The College Dropout to Vultures 2
+- **200+ Songs**: Complete discography from The College Dropout to Vultures 2
 - **Smart Algorithm**: ELO rating system ensures accurate rankings with minimal comparisons
 - **Album Diversity**: Balanced representation across Kanye's entire career
 - **Visual Experience**: Album-specific colors and patterns for each era

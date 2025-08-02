@@ -9,6 +9,9 @@
     }
     
     function init() {
+        // Load styles immediately to prevent flash
+        addGridStyles();
+        
         // Try to reorganize immediately if results screen is active
         const resultsScreen = document.getElementById('results-screen');
         if (resultsScreen && resultsScreen.classList.contains('active')) {
@@ -16,9 +19,9 @@
             const shareContainer = document.getElementById('share-sections-container');
             
             if (container) {
-                setTimeout(reorganizeButtons, 100);
+                reorganizeButtons();
             } else if (shareContainer) {
-                setTimeout(createShareSections, 100);
+                createShareSections();
             }
         }
         
@@ -80,57 +83,52 @@
     
     function reorganizeButtonsInContainer(buttonsContainer) {
         // Check if we already reorganized
-        if (buttonsContainer.querySelector('.action-grid') || buttonsContainer.classList.contains('action-container')) {
+        if (buttonsContainer.classList.contains('reorganized')) {
             return;
         }
         
+        // Mark as reorganized immediately
+        buttonsContainer.classList.add('reorganized');
+        
         // Get existing buttons
-        const exportSongsBtn = document.getElementById('export-songs-image');
-        const exportAlbumsBtn = document.getElementById('export-albums-image');
         const continueBtn = document.getElementById('continue-ranking');
         const restartBtn = document.getElementById('restart');
         
         // Clear container
         buttonsContainer.innerHTML = '';
-        buttonsContainer.className = 'action-container';
+        buttonsContainer.className = 'action-container reorganized';
         
         // Create main grid layout
         const actionGrid = document.createElement('div');
         actionGrid.className = 'action-grid';
         
-        // Row 1: Save actions and What's Next side by side
-        const topRow = document.createElement('div');
-        topRow.className = 'action-row top-row';
+        // Simple button container without section title
+        const buttonContainer = document.createElement('div');
+        buttonContainer.style.cssText = `
+            display: flex !important;
+            gap: 15px !important;
+            justify-content: center !important;
+            padding: 20px !important;
+            max-width: 600px !important;
+            margin: 0 auto !important;
+        `;
         
-        // Save section
-        const saveSection = document.createElement('div');
-        saveSection.className = 'action-section save-section';
-        saveSection.innerHTML = '<h4 class="section-title">Save Rankings</h4>';
-        const saveButtons = document.createElement('div');
-        saveButtons.className = 'section-buttons';
-        saveButtons.appendChild(exportSongsBtn);
-        saveButtons.appendChild(exportAlbumsBtn);
-        saveSection.appendChild(saveButtons);
+        // Style the buttons to match
+        if (continueBtn) {
+            continueBtn.style.flex = '1';
+        }
+        if (restartBtn) {
+            restartBtn.style.flex = '1';
+        }
         
-        // What's Next section
-        const actionsSection = document.createElement('div');
-        actionsSection.className = 'action-section actions-section';
-        actionsSection.innerHTML = '<h4 class="section-title">What\'s Next?</h4>';
-        const actionButtons = document.createElement('div');
-        actionButtons.className = 'section-buttons';
-        actionButtons.appendChild(continueBtn);
-        actionButtons.appendChild(restartBtn);
-        actionsSection.appendChild(actionButtons);
+        buttonContainer.appendChild(continueBtn);
+        buttonContainer.appendChild(restartBtn);
         
-        topRow.appendChild(saveSection);
-        topRow.appendChild(actionsSection);
+        // Export buttons are no longer needed - removed to avoid duplication
         
         
-        // Add only the top row to grid (save and what's next)
-        actionGrid.appendChild(topRow);
-        
-        // Add grid to container
-        buttonsContainer.appendChild(actionGrid);
+        // Add button container directly
+        buttonsContainer.appendChild(buttonContainer);
         
         // Add styles
         addGridStyles();
@@ -145,6 +143,12 @@
         const style = document.createElement('style');
         style.id = 'share-grid-styles';
         style.textContent = `
+            /* Hide download buttons container initially to prevent flash */
+            .download-buttons:not(.reorganized) {
+                opacity: 0 !important;
+                visibility: hidden !important;
+            }
+            
             .action-container {
                 padding: 20px;
                 max-width: 1200px;
@@ -424,12 +428,40 @@
             font-weight: 800 !important;
             color: var(--text-color, #000) !important;
             text-align: center !important;
-            margin: 0 0 25px 0 !important;
+            margin: 0 0 10px 0 !important;
             text-transform: uppercase !important;
             letter-spacing: 1px !important;
             opacity: 0.8 !important;
         `;
         shareSongsSection.appendChild(songsTitle);
+        
+        // Add helpful subtitle based on device
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        const hasWebShare = navigator.canShare && navigator.canShare({ files: [new File([''], 'test.png', { type: 'image/png' })] });
+        const hasClipboard = navigator.clipboard && typeof ClipboardItem !== 'undefined';
+        
+        const subtitle = document.createElement('p');
+        subtitle.style.cssText = `
+            font-size: 0.85rem !important;
+            color: var(--text-secondary, #666) !important;
+            text-align: center !important;
+            margin: 0 0 20px 0 !important;
+            line-height: 1.4 !important;
+        `;
+        
+        if (hasWebShare && isMobile) {
+            subtitle.textContent = 'Share to any app or directly to social platforms';
+        } else if (hasWebShare && !isMobile) {
+            subtitle.textContent = 'Share to installed apps or click a platform below';
+        } else if (hasClipboard && !isMobile) {
+            subtitle.textContent = 'Copy your ranking image or share to social platforms';
+        } else {
+            subtitle.textContent = 'Download your ranking image to share on social media';
+        }
+        
+        shareSongsSection.appendChild(subtitle);
+        
+        // No save button needed - share functionality handles it
         
         const songShareButtons = document.createElement('div');
         songShareButtons.id = 'song-share-buttons-container';
@@ -501,12 +533,40 @@
             font-weight: 800 !important;
             color: var(--text-color, #000) !important;
             text-align: center !important;
-            margin: 0 0 25px 0 !important;
+            margin: 0 0 10px 0 !important;
             text-transform: uppercase !important;
             letter-spacing: 1px !important;
             opacity: 0.8 !important;
         `;
         shareAlbumsSection.appendChild(albumsTitle);
+        
+        // Add helpful subtitle based on device
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        const hasWebShare = navigator.canShare && navigator.canShare({ files: [new File([''], 'test.png', { type: 'image/png' })] });
+        const hasClipboard = navigator.clipboard && typeof ClipboardItem !== 'undefined';
+        
+        const subtitle = document.createElement('p');
+        subtitle.style.cssText = `
+            font-size: 0.85rem !important;
+            color: var(--text-secondary, #666) !important;
+            text-align: center !important;
+            margin: 0 0 20px 0 !important;
+            line-height: 1.4 !important;
+        `;
+        
+        if (hasWebShare && isMobile) {
+            subtitle.textContent = 'Share to any app or directly to social platforms';
+        } else if (hasWebShare && !isMobile) {
+            subtitle.textContent = 'Share to installed apps or click a platform below';
+        } else if (hasClipboard && !isMobile) {
+            subtitle.textContent = 'Copy your album ranking or share to social platforms';
+        } else {
+            subtitle.textContent = 'Download your album ranking to share on social media';
+        }
+        
+        shareAlbumsSection.appendChild(subtitle);
+        
+        // No save button needed - share functionality handles it
         
         const albumShareButtons = document.createElement('div');
         albumShareButtons.id = 'album-share-buttons-container';
@@ -525,6 +585,54 @@
         setTimeout(() => {
             createShareButtons('albums', albumShareButtons);
         }, 50);
+        
+        // Add duplicate action buttons at the bottom
+        setTimeout(() => {
+            createBottomActionButtons();
+        }, 100);
+    }
+    
+    function createBottomActionButtons() {
+        // Find the results screen
+        const resultsScreen = document.getElementById('results-screen');
+        if (!resultsScreen) return;
+        
+        // Check if bottom buttons already exist
+        if (document.getElementById('bottom-action-buttons')) return;
+        
+        // Create bottom action container
+        const bottomContainer = document.createElement('div');
+        bottomContainer.id = 'bottom-action-buttons';
+        bottomContainer.style.cssText = `
+            margin: 4rem auto 2rem !important;
+            padding: 0 20px !important;
+            max-width: 600px !important;
+            display: flex !important;
+            gap: 15px !important;
+        `;
+        
+        // Clone the original buttons
+        const continueBtn = document.getElementById('continue-ranking');
+        const restartBtn = document.getElementById('restart');
+        
+        if (continueBtn) {
+            const continueClone = continueBtn.cloneNode(true);
+            continueClone.id = 'continue-ranking-bottom';
+            continueClone.style.flex = '1';
+            continueClone.addEventListener('click', () => continueBtn.click());
+            bottomContainer.appendChild(continueClone);
+        }
+        
+        if (restartBtn) {
+            const restartClone = restartBtn.cloneNode(true);
+            restartClone.id = 'restart-bottom';
+            restartClone.style.flex = '1';
+            restartClone.addEventListener('click', () => restartBtn.click());
+            bottomContainer.appendChild(restartClone);
+        }
+        
+        // Append to the end of results screen
+        resultsScreen.appendChild(bottomContainer);
     }
     
     function createShareButtons(shareType, container) {
@@ -535,51 +643,132 @@
         // Clear any existing buttons to prevent duplicates
         container.innerHTML = '';
         
-        const shareButtons = [
+        // Check device capabilities
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        const hasWebShare = navigator.canShare && navigator.canShare({ files: [new File([''], 'test.png', { type: 'image/png' })] });
+        const hasClipboard = navigator.clipboard && typeof ClipboardItem !== 'undefined';
+        
+        let shareButtons = [];
+        
+        // Add native share button if available
+        if (hasWebShare) {
+            shareButtons.push({
+                id: `share-${shareType}-native`,
+                icon: `<svg width="20" height="20" viewBox="0 0 24 24" style="fill: currentColor;"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>`,
+                label: 'Share with Friends',
+                platform: 'native',
+                color: '#007AFF',
+                hoverColor: '#0055CC',
+                isPrimary: true
+            });
+        }
+        
+        // Add separator marker if we have native share or copy
+        if (shareButtons.length > 0) {
+            shareButtons.push({ isSeparator: true });
+        }
+        
+        // Always add platform buttons
+        const platformButtons = [
             {
                 id: `share-${shareType}-twitter`,
                 icon: '𝕏',
-                label: 'Share on X',
+                label: 'X',
                 platform: 'twitter',
                 color: '#000000',
                 hoverColor: '#333333'
             },
             {
+                id: `share-${shareType}-facebook`,
+                icon: `<svg width="20" height="20" viewBox="0 0 24 24" style="fill: #1877F2 !important;"><path style="fill: #1877F2 !important;" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>`,
+                label: 'Facebook',
+                platform: 'facebook',
+                color: '#1877F2',
+                hoverColor: '#166FE5'
+            },
+            {
                 id: `share-${shareType}-instagram`,
                 icon: `<svg width="20" height="20" viewBox="0 0 24 24" style="fill: #E4405F !important;"><path style="fill: #E4405F !important;" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.405a1.44 1.44 0 112.881.001 1.44 1.44 0 01-2.881-.001z"/></svg>`,
-                label: 'Share on Instagram',
+                label: 'Instagram',
                 platform: 'instagram',
                 color: '#E4405F',
                 hoverColor: '#C13584'
             },
             {
-                id: `share-${shareType}-facebook`,
-                icon: `<svg width="20" height="20" viewBox="0 0 24 24" style="fill: #1877F2 !important;"><path style="fill: #1877F2 !important;" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>`,
-                label: 'Share on Facebook',
-                platform: 'facebook',
-                color: '#1877F2',
-                hoverColor: '#166FE5'
+                id: `share-${shareType}-reddit`,
+                icon: `<svg width="20" height="20" viewBox="0 0 24 24" style="fill: #FF4500 !important;"><path style="fill: #FF4500 !important;" d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>`,
+                label: 'Reddit',
+                platform: 'reddit', 
+                color: '#FF4500',
+                hoverColor: '#CC3700'
             }
         ];
         
-        shareButtons.forEach(btn => {
+        shareButtons = shareButtons.concat(platformButtons);
+        
+        shareButtons.forEach((btn, index) => {
+            // Handle separator
+            if (btn.isSeparator) {
+                const separator = document.createElement('div');
+                separator.style.cssText = `
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    gap: 15px !important;
+                    margin: 20px 0 !important;
+                    font-size: 0.8rem !important;
+                    color: var(--text-secondary, #666) !important;
+                    text-transform: uppercase !important;
+                    letter-spacing: 1px !important;
+                    opacity: 0.6 !important;
+                `;
+                
+                const line1 = document.createElement('div');
+                line1.style.cssText = `
+                    flex: 1 !important;
+                    height: 1px !important;
+                    background: var(--border-color, rgba(0, 0, 0, 0.1)) !important;
+                `;
+                
+                const text = document.createElement('span');
+                text.textContent = 'or share directly to';
+                
+                const line2 = document.createElement('div');
+                line2.style.cssText = line1.style.cssText;
+                
+                separator.appendChild(line1);
+                separator.appendChild(text);
+                separator.appendChild(line2);
+                container.appendChild(separator);
+                return;
+            }
+            
             const button = document.createElement('button');
             button.id = btn.id;
             
-            // Simple button styling - no dynamic colors
+            // Different styling for primary vs secondary buttons
+            const isPrimary = btn.isPrimary || false;
+            const baseHeight = isPrimary ? '70px' : '60px';
+            const fontSize = isPrimary ? '1.05rem' : '0.95rem';
+            
+            // Special handling for X/Twitter button in dark mode
+            const isTwitter = btn.platform === 'twitter';
+            const borderColor = isTwitter ? 'var(--text-color, #000000)' : btn.color;
+            const textColor = isPrimary ? '#ffffff' : (isTwitter ? 'var(--text-color, #000000)' : btn.color);
+            
             button.style.cssText = `
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
                 gap: 12px !important;
                 width: 100% !important;
-                height: 60px !important;
+                height: ${baseHeight} !important;
                 padding: 0 20px !important;
-                background: var(--background-color) !important;
-                border: 2px solid ${btn.color} !important;
+                background: ${isPrimary ? btn.color : 'var(--background-color)'} !important;
+                border: 2px solid ${borderColor} !important;
                 border-radius: 12px !important;
-                color: ${btn.color} !important;
-                font-size: 0.95rem !important;
+                color: ${textColor} !important;
+                font-size: ${fontSize} !important;
                 font-weight: 600 !important;
                 font-family: inherit !important;
                 cursor: pointer !important;
@@ -590,10 +779,12 @@
                 overflow: hidden !important;
                 text-transform: none !important;
                 letter-spacing: 0 !important;
+                margin-bottom: ${index < shareButtons.length - 3 ? '15px' : '0'} !important;
             `;
             
             // Create icon element
             const iconElement = document.createElement('span');
+            const iconColor = isPrimary ? '#ffffff' : (isTwitter ? 'var(--text-color, #000000)' : btn.color);
             iconElement.style.cssText = `
                 display: flex !important;
                 align-items: center !important;
@@ -601,34 +792,65 @@
                 font-size: ${btn.platform === 'twitter' ? '18px' : '20px'} !important;
                 font-weight: ${btn.platform === 'twitter' ? 'bold' : 'normal'} !important;
                 line-height: 1 !important;
-                color: ${btn.color} !important;
+                color: ${iconColor} !important;
             `;
             iconElement.innerHTML = btn.icon;
             
             // Create label element
             const labelElement = document.createElement('span');
             labelElement.textContent = btn.label;
+            const labelColor = isPrimary ? '#ffffff' : (isTwitter ? 'var(--text-color, #000000)' : btn.color);
             labelElement.style.cssText = `
                 font-weight: 600 !important;
-                color: ${btn.color} !important;
+                color: ${labelColor} !important;
             `;
             
             button.appendChild(iconElement);
             button.appendChild(labelElement);
             
-            // Simple hover effect - just lift the button with shadow
+            // Platform button container for last 4 buttons
+            if (index >= shareButtons.length - 4) {
+                if (!container.querySelector('.platform-buttons')) {
+                    const platformContainer = document.createElement('div');
+                    platformContainer.className = 'platform-buttons';
+                    platformContainer.style.cssText = `
+                        display: grid !important;
+                        grid-template-columns: 1fr 1fr !important;
+                        gap: 10px !important;
+                        margin-top: 10px !important;
+                    `;
+                    container.appendChild(platformContainer);
+                }
+                const platformContainer = container.querySelector('.platform-buttons');
+                button.style.width = '100% !important';
+                button.style.marginBottom = '0 !important';
+                platformContainer.appendChild(button);
+            } else {
+                container.appendChild(button);
+            }
+            
+            // Hover effects
             button.addEventListener('mouseenter', () => {
-                button.style.transform = 'translateY(-2px)';
-                button.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.15)';
+                if (isPrimary) {
+                    button.style.background = btn.hoverColor + ' !important';
+                    button.style.borderColor = btn.hoverColor + ' !important';
+                } else {
+                    button.style.transform = 'translateY(-2px)';
+                    button.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.15)';
+                }
             });
             
             button.addEventListener('mouseleave', () => {
-                button.style.transform = 'translateY(0)';
-                button.style.boxShadow = 'none';
+                if (isPrimary) {
+                    button.style.background = btn.color + ' !important';
+                    button.style.borderColor = btn.color + ' !important';
+                } else {
+                    button.style.transform = 'translateY(0)';
+                    button.style.boxShadow = 'none';
+                }
             });
             
             button.addEventListener('click', () => handleShare(btn.platform, shareType));
-            container.appendChild(button);
         });
     }
     
@@ -640,10 +862,15 @@
         }
         
         try {
-            // Show loading
+            // Get overlay elements
             const overlay = document.getElementById('overlay');
             const message = document.getElementById('overlay-message');
-            if (overlay && message) {
+            
+            // Check if this is a native share on mobile - if so, don't show loading overlay
+            const isNativeShare = platform === 'native' || (navigator.canShare && navigator.canShare({ files: [new File([''], 'test.png', { type: 'image/png' })] }));
+            
+            // Only show loading for non-native shares (downloads)
+            if (!isNativeShare && overlay && message) {
                 message.textContent = 'Generating your ranking image...';
                 overlay.style.display = 'flex';
             }
@@ -666,7 +893,79 @@
             // Convert to blob
             const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
             
-            // Download the image
+            // Generate personalized share text with top 5 and hype message
+            let shareText = '';
+            if (shareType === 'songs') {
+                const top10 = topSongs.slice(0, 10);
+                shareText = `My Top 10 Kanye songs are:\n${top10.map((s, i) => {
+                    // Censor the title if needed
+                    const displayTitle = s.title === "Niggas in Paris" ? "N****s in Paris" : s.title;
+                    return `${i+1}. ${displayTitle}`;
+                }).join('\n')}\n\nWhat are yours? Find out for free at kanyeranker.com`;
+            } else {
+                const top5 = topAlbums.slice(0, 5);
+                shareText = `My Top 5 Kanye albums are:\n${top5.map((a, i) => `${i+1}. ${a.album.name}`).join('\n')}\n\nWhat's your Kanye era? Find out for free at kanyeranker.com`;
+            }
+            
+            // Check if Web Share API is available (mobile)
+            const file = new File([blob], `kanye-ranking-${shareType}.png`, { type: 'image/png' });
+            const shareUrl = 'https://kanyeranker.com';
+            
+            // Only use Web Share API for the native share button
+            if (platform === 'native' && navigator.canShare && navigator.canShare({ files: [file] })) {
+                // Mobile: Use Web Share API
+                const shareData = {
+                    text: shareText,
+                    files: [file]
+                };
+                
+                // Try to share via Web Share API
+                try {
+                    await navigator.share(shareData);
+                    // Successfully shared - hide overlay before returning
+                    if (overlay) {
+                        overlay.style.display = 'none';
+                    }
+                    return;
+                } catch (err) {
+                    if (err.name === 'AbortError') {
+                        // User cancelled share - hide overlay before returning
+                        if (overlay) {
+                            overlay.style.display = 'none';
+                        }
+                        return;
+                    }
+                    // Fall back to platform-specific handling
+                    console.log('Web Share failed, falling back to platform-specific');
+                }
+            }
+            
+            // Desktop or fallback: Platform-specific handling
+            if (platform === 'copy') {
+                // Copy to clipboard (desktop only)
+                if (navigator.clipboard && typeof ClipboardItem !== 'undefined') {
+                    try {
+                        const item = new ClipboardItem({ 'image/png': blob });
+                        await navigator.clipboard.write([item]);
+                        // Show success message
+                        if (window.kanyeApp.ui && window.kanyeApp.ui.showSuccess) {
+                            window.kanyeApp.ui.showSuccess('Image copied to clipboard! Paste it into your favorite social app.');
+                        } else {
+                            alert('Image copied to clipboard! Paste it into your favorite social app.');
+                        }
+                        // Hide overlay before returning
+                        if (overlay) {
+                            overlay.style.display = 'none';
+                        }
+                        return;
+                    } catch (err) {
+                        console.error('Clipboard copy failed:', err);
+                        // Fall back to download
+                    }
+                }
+            }
+            
+            // Fallback: Download the image
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -674,22 +973,7 @@
             a.click();
             URL.revokeObjectURL(url);
             
-            // Generate personalized share text with top 5 and hype message
-            let shareText = '';
-            if (shareType === 'songs') {
-                const top5 = topSongs.slice(0, 5);
-                shareText = `My top 5 Kanye songs:\n${top5.map((s, i) => {
-                    // Censor the title if needed
-                    const displayTitle = s.title === "Niggas in Paris" ? "N****s in Paris" : s.title;
-                    return `${i+1}. ${displayTitle}`;
-                }).join('\n')}\n\nWhat are yours? Find out for free at kanyeranker.com`;
-            } else {
-                const top5 = topAlbums.slice(0, 5);
-                shareText = `My top 5 Kanye albums:\n${top5.map((a, i) => `${i+1}. ${a.album.name}`).join('\n')}\n\nWhat's your Kanye era? Find out for free at kanyeranker.com`;
-            }
-            
             // Open share URL based on platform
-            const shareUrl = 'https://kanyeranker.com';
             let targetUrl = '';
             
             switch(platform) {
@@ -699,9 +983,17 @@
                 case 'facebook':
                     targetUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
                     break;
+                case 'reddit':
+                    const redditTitle = shareType === 'songs' ? 'My Top 10 Kanye Songs' : 'My Top 5 Kanye Albums';
+                    // Reddit accepts text parameter for the post body
+                    targetUrl = `https://reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(redditTitle)}&text=${encodeURIComponent(shareText)}`;
+                    break;
                 case 'instagram':
                     // Instagram doesn't have a web share URL, so we'll just show instructions
                     alert('Image downloaded! 📸\n\nOpen Instagram and share from your gallery.\n\nSuggested caption:\n\n' + shareText);
+                    break;
+                case 'native':
+                    // Native share already handled above
                     break;
             }
             
@@ -712,12 +1004,16 @@
                 }, 500);
             }
             
-            // Show success message
+            // Show success message with platform-specific instructions
             setTimeout(() => {
-                if (platform !== 'instagram') {
-                    alert('Image downloaded! You can now attach it to your post.');
+                if (platform === 'twitter') {
+                    alert(`Image downloaded! 📸\n\nA new X/Twitter tab is opening. Please attach the downloaded image to your post.\n\nThe text has been pre-filled for you!`);
+                } else if (platform === 'facebook') {
+                    alert(`Image downloaded! 📸\n\nA new Facebook tab is opening. Please:\n1. Attach the downloaded image\n2. Copy and paste this text:\n\n${shareText}`);
+                } else if (platform === 'reddit') {
+                    alert(`Image downloaded! 📸\n\nA new Reddit tab is opening. Please:\n1. Attach the downloaded image\n2. Copy and paste this text:\n\n${shareText}`);
                 }
-            }, 1000);
+            }, 800);
             
         } catch (error) {
             console.error('[ShareIntegrated] Error:', error);
