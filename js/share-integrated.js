@@ -358,6 +358,30 @@
                     width: 100%;
                     min-width: unset;
                 }
+                
+                /* Mobile share button container */
+                .mobile-share-container {
+                    display: flex !important;
+                    flex-direction: column !important;
+                    gap: 15px !important;
+                }
+                
+                /* Native buttons container on mobile */
+                .native-buttons-container {
+                    display: flex !important;
+                    flex-direction: column !important;
+                    gap: 15px !important;
+                    margin-bottom: 20px !important;
+                    width: 100% !important;
+                }
+                
+                /* Ensure platform buttons grid stays 2x2 on mobile */
+                .platform-buttons {
+                    display: grid !important;
+                    grid-template-columns: 1fr 1fr !important;
+                    gap: 10px !important;
+                    margin-top: 0 !important;
+                }
             }
         `;
         document.head.appendChild(style);
@@ -472,6 +496,11 @@
             visibility: visible !important;
             opacity: 1 !important;
         `;
+        
+        // Add mobile-specific class for better debugging
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            songShareButtons.classList.add('mobile-share-container');
+        }
         shareSongsSection.appendChild(songShareButtons);
         
         shareSongsContainer.appendChild(shareSongsSection);
@@ -577,6 +606,11 @@
             visibility: visible !important;
             opacity: 1 !important;
         `;
+        
+        // Add mobile-specific class for better debugging
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            albumShareButtons.classList.add('mobile-share-container');
+        }
         shareAlbumsSection.appendChild(albumShareButtons);
         
         shareContainer.appendChild(shareAlbumsSection);
@@ -867,7 +901,7 @@
             // Count the social media platform buttons (X, Facebook, Instagram, Reddit)
             const isSocialButton = socialPlatforms.includes(btn.platform);
             
-            console.log(`[ShareIntegrated] Rendering button: ${btn.label}, platform: ${btn.platform}, isSocial: ${isSocialButton}`);
+            console.log(`[ShareIntegrated] Rendering button: ${btn.label}, platform: ${btn.platform}, isSocial: ${isSocialButton}, isPrimary: ${btn.isPrimary}`);
             
             if (isSocialButton) {
                 if (!container.querySelector('.platform-buttons')) {
@@ -889,8 +923,33 @@
                 console.log(`[ShareIntegrated] Added ${btn.label} to platform grid`);
             } else {
                 // Native share and Screenshot buttons go above the grid
-                container.appendChild(button);
-                console.log(`[ShareIntegrated] Added ${btn.label} directly to container`);
+                // Create a dedicated container for native buttons on mobile if needed
+                let nativeButtonsContainer = container.querySelector('.native-buttons-container');
+                if (!nativeButtonsContainer) {
+                    nativeButtonsContainer = document.createElement('div');
+                    nativeButtonsContainer.className = 'native-buttons-container';
+                    nativeButtonsContainer.style.cssText = `
+                        display: flex !important;
+                        flex-direction: column !important;
+                        gap: 15px !important;
+                        margin-bottom: 20px !important;
+                        width: 100% !important;
+                    `;
+                    // Insert before platform buttons container if it exists
+                    const platformContainer = container.querySelector('.platform-buttons');
+                    if (platformContainer) {
+                        container.insertBefore(nativeButtonsContainer, platformContainer);
+                    } else {
+                        container.appendChild(nativeButtonsContainer);
+                    }
+                    console.log('[ShareIntegrated] Created native-buttons-container');
+                }
+                
+                // Ensure the button takes full width
+                button.style.width = '100% !important';
+                button.style.marginBottom = '0 !important';
+                nativeButtonsContainer.appendChild(button);
+                console.log(`[ShareIntegrated] Added ${btn.label} to native buttons container`);
             }
             
             // Hover effects
@@ -920,10 +979,28 @@
         // Final check - log what buttons actually exist in the container
         setTimeout(() => {
             const allButtons = container.querySelectorAll('button');
+            const nativeContainer = container.querySelector('.native-buttons-container');
+            const platformContainer = container.querySelector('.platform-buttons');
+            
             console.log(`[ShareIntegrated] Final button count in ${shareType} container:`, allButtons.length);
-            allButtons.forEach(btn => {
-                console.log(`  - ${btn.id}: ${btn.textContent.trim()}`);
-            });
+            console.log(`[ShareIntegrated] Native container exists:`, !!nativeContainer);
+            console.log(`[ShareIntegrated] Platform container exists:`, !!platformContainer);
+            
+            if (nativeContainer) {
+                const nativeButtons = nativeContainer.querySelectorAll('button');
+                console.log(`[ShareIntegrated] Native buttons (${nativeButtons.length}):`);
+                nativeButtons.forEach(btn => {
+                    console.log(`  - ${btn.id}: ${btn.textContent.trim()}`);
+                });
+            }
+            
+            if (platformContainer) {
+                const platformButtons = platformContainer.querySelectorAll('button');
+                console.log(`[ShareIntegrated] Platform buttons (${platformButtons.length}):`);
+                platformButtons.forEach(btn => {
+                    console.log(`  - ${btn.id}: ${btn.textContent.trim()}`);
+                });
+            }
         }, 100);
     }
     
