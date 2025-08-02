@@ -71,9 +71,22 @@
         }
     }
     
+    // Reset insights data (important for continue ranking)
+    function resetInsightsData() {
+        underratedPick = null;
+        justMissedPick = null;
+        eraPreference = null;
+        kanyeTimeline = null;
+        hiddenAlbumGem = null;
+        albumJustMissed = null;
+    }
+    
     // Inject insights section after top songs
     function injectInsights() {
         if (!window.kanyeApp) return;
+        
+        // Reset previous data to ensure fresh calculations
+        resetInsightsData();
         
         // Get songs data
         const topSongs = window.kanyeApp.getTopSongs(10);
@@ -161,8 +174,11 @@
         const topSongsDiv = document.getElementById('top-songs');
         if (!topSongsDiv) return;
         
-        // Check if already exists
-        if (document.getElementById('ranking-insights')) return;
+        // Remove existing insights if they exist (for refresh after continue ranking)
+        const existingInsights = document.getElementById('ranking-insights');
+        if (existingInsights) {
+            existingInsights.remove();
+        }
         
         // Create insights section
         const insights = document.createElement('div');
@@ -289,6 +305,11 @@
     function injectAlbumInsights() {
         if (!window.kanyeApp) return;
         
+        // Reset album-specific data
+        kanyeTimeline = null;
+        hiddenAlbumGem = null;
+        albumJustMissed = null;
+        
         const topAlbums = window.kanyeApp.getTopAlbums();
         const topSongs = window.kanyeApp.getTopSongs(20);
         
@@ -363,8 +384,11 @@
         const topAlbumsDiv = document.getElementById('top-albums');
         if (!topAlbumsDiv) return;
         
-        // Check if already exists
-        if (document.getElementById('album-insights')) return;
+        // Remove existing insights if they exist (for refresh after continue ranking)
+        const existingInsights = document.getElementById('album-insights');
+        if (existingInsights) {
+            existingInsights.remove();
+        }
         
         // Create insights section
         const insights = document.createElement('div');

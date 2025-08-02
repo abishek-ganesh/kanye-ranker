@@ -1,0 +1,67 @@
+/* Fix for Results Page Button Movement - Prevent jumping on click */
+
+/* Base rule: These buttons should NEVER move */
+#continue-ranking,
+#restart {
+    /* Only allow color transitions, nothing else */
+    transition: background-color 0.2s ease, 
+                color 0.2s ease, 
+                border-color 0.2s ease !important;
+    -webkit-transition: background-color 0.2s ease, 
+                        color 0.2s ease, 
+                        border-color 0.2s ease !important;
+    
+    /* No transforms or animations ever */
+    transform: none !important;
+    -webkit-transform: none !important;
+    animation: none !important;
+    -webkit-animation: none !important;
+    
+    /* Ensure no movement on hover or active states */
+    position: relative !important;
+}
+
+/* Override any hover transforms */
+#continue-ranking:hover,
+#restart:hover,
+.btn-secondary.btn-large:hover {
+    transform: none !important;
+    -webkit-transform: none !important;
+}
+
+/* Override any active/focus transforms */
+#continue-ranking:active,
+#restart:active,
+#continue-ranking:focus,
+#restart:focus,
+.btn-secondary.btn-large:active,
+.btn-secondary.btn-large:focus {
+    transform: none !important;
+    -webkit-transform: none !important;
+}
+
+/* Ensure proper button spacing in results */
+.results-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 15px !important;
+}
+
+/* Mobile specific - prevent any tap animations */
+@media (max-width: 768px) {
+    #continue-ranking,
+    #restart {
+        -webkit-tap-highlight-color: transparent !important;
+        -webkit-touch-callout: none !important;
+        -webkit-user-select: none !important;
+        user-select: none !important;
+    }
+}
+
+/* Dark mode compatibility */
+.dark-mode #continue-ranking:hover,
+.dark-mode #restart:hover {
+    transform: none !important;
+    -webkit-transform: none !important;
+}
