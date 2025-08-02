@@ -113,7 +113,9 @@ class BackButtonManager {
         if (saved) {
             this.history = JSON.parse(saved);
             // Only show back button if we have history AND we're not on the landing screen
-            if (this.history.length > 0 && !document.getElementById('landing-screen').classList.contains('active')) {
+            // AND follow mobile rules (hide on first comparison for mobile)
+            const isMobile = window.innerWidth <= 768;
+            if (this.history.length > 0 && !document.getElementById('landing-screen').classList.contains('active') && (!isMobile || this.history.length > 1)) {
                 document.getElementById('back-button').classList.add('visible');
             }
         }
