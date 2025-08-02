@@ -648,10 +648,19 @@
         const hasWebShare = navigator.canShare && navigator.canShare({ files: [new File([''], 'test.png', { type: 'image/png' })] });
         const hasClipboard = navigator.clipboard && typeof ClipboardItem !== 'undefined';
         
+        console.log('[ShareIntegrated] Device capabilities:', { 
+            isMobile, 
+            hasWebShare, 
+            hasClipboard,
+            userAgent: navigator.userAgent,
+            shareType
+        });
+        
         let shareButtons = [];
         
-        // Add native share button if available (both desktop and mobile)
-        if (hasWebShare) {
+        // Add native share button - always show on mobile, desktop only if Web Share API available
+        if (hasWebShare || isMobile) {
+            console.log('[ShareIntegrated] Adding Share with Friends button');
             shareButtons.push({
                 id: `share-${shareType}-native`,
                 icon: `<svg width="20" height="20" viewBox="0 0 24 24" style="fill: currentColor;"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>`,
@@ -688,6 +697,7 @@
         
         // X/Twitter - desktop only
         if (!isMobile) {
+            console.log('[ShareIntegrated] Adding X/Twitter button for desktop');
             platformButtons.push({
                 id: `share-${shareType}-twitter`,
                 icon: '𝕏',
@@ -696,6 +706,8 @@
                 color: '#000000',
                 hoverColor: '#333333'
             });
+        } else {
+            console.log('[ShareIntegrated] Skipping X/Twitter button on mobile');
         }
         
         // Facebook - always show
@@ -710,6 +722,7 @@
         
         // Instagram - mobile only
         if (isMobile) {
+            console.log('[ShareIntegrated] Adding Instagram button for mobile');
             platformButtons.push({
                 id: `share-${shareType}-instagram`,
                 icon: `<svg width="20" height="20" viewBox="0 0 24 24" style="fill: #E4405F !important;"><path style="fill: #E4405F !important;" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.405a1.44 1.44 0 112.881.001 1.44 1.44 0 01-2.881-.001z"/></svg>`,
@@ -741,6 +754,8 @@
         });
         
         shareButtons = shareButtons.concat(platformButtons);
+        
+        console.log('[ShareIntegrated] Total buttons for', shareType + ':', shareButtons.filter(b => !b.isSeparator).map(b => b.label).join(', '));
         
         // Define social platforms for use in styles
         const socialPlatforms = ['twitter', 'facebook', 'instagram', 'reddit', 'copy-text'];
@@ -852,6 +867,8 @@
             // Count the social media platform buttons (X, Facebook, Instagram, Reddit)
             const isSocialButton = socialPlatforms.includes(btn.platform);
             
+            console.log(`[ShareIntegrated] Rendering button: ${btn.label}, platform: ${btn.platform}, isSocial: ${isSocialButton}`);
+            
             if (isSocialButton) {
                 if (!container.querySelector('.platform-buttons')) {
                     const platformContainer = document.createElement('div');
@@ -863,14 +880,17 @@
                         margin-top: 10px !important;
                     `;
                     container.appendChild(platformContainer);
+                    console.log('[ShareIntegrated] Created platform-buttons container');
                 }
                 const platformContainer = container.querySelector('.platform-buttons');
                 button.style.width = '100% !important';
                 button.style.marginBottom = '0 !important';
                 platformContainer.appendChild(button);
+                console.log(`[ShareIntegrated] Added ${btn.label} to platform grid`);
             } else {
                 // Native share and Screenshot buttons go above the grid
                 container.appendChild(button);
+                console.log(`[ShareIntegrated] Added ${btn.label} directly to container`);
             }
             
             // Hover effects
@@ -896,6 +916,15 @@
             
             button.addEventListener('click', () => handleShare(btn.platform, shareType));
         });
+        
+        // Final check - log what buttons actually exist in the container
+        setTimeout(() => {
+            const allButtons = container.querySelectorAll('button');
+            console.log(`[ShareIntegrated] Final button count in ${shareType} container:`, allButtons.length);
+            allButtons.forEach(btn => {
+                console.log(`  - ${btn.id}: ${btn.textContent.trim()}`);
+            });
+        }, 100);
     }
     
     async function handleShare(platform, shareType) {
@@ -955,7 +984,8 @@
         
         // Open window immediately for social platforms to avoid popup blockers on mobile
         let shareWindow = null;
-        const isMobileBrowser = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        const isMobileBrowser = isMobile; // Use same variable
         if (isMobileBrowser && (platform === 'x' || platform === 'twitter' || platform === 'reddit' || platform === 'facebook')) {
             shareWindow = window.open('', '_blank');
             if (shareWindow) {
@@ -1019,32 +1049,48 @@
             const file = new File([blob], `kanye-ranking-${shareType}.png`, { type: 'image/png' });
             const shareUrl = 'https://kanyeranker.com';
             
-            // Only use Web Share API for the native share button
-            if (platform === 'native' && navigator.canShare && navigator.canShare({ files: [file] })) {
-                // Mobile: Use Web Share API
-                const shareData = {
-                    text: shareText,
-                    files: [file]
-                };
-                
-                // Try to share via Web Share API
-                try {
-                    await navigator.share(shareData);
-                    // Successfully shared - hide overlay before returning
-                    if (overlay) {
-                        overlay.style.display = 'none';
-                    }
-                    return;
-                } catch (err) {
-                    if (err.name === 'AbortError') {
-                        // User cancelled share - hide overlay before returning
+            // Handle native share button
+            if (platform === 'native') {
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    // Try Web Share API
+                    const shareData = {
+                        text: shareText,
+                        files: [file]
+                    };
+                    
+                    try {
+                        await navigator.share(shareData);
+                        // Successfully shared - hide overlay before returning
                         if (overlay) {
                             overlay.style.display = 'none';
                         }
                         return;
+                    } catch (err) {
+                        if (err.name === 'AbortError') {
+                            // User cancelled share - hide overlay before returning
+                            if (overlay) {
+                                overlay.style.display = 'none';
+                            }
+                            return;
+                        }
+                        // Fall back to download
+                        console.log('Web Share failed, falling back to download');
                     }
-                    // Fall back to platform-specific handling
-                    console.log('Web Share failed, falling back to platform-specific');
+                } else if (isMobile) {
+                    // Mobile without Web Share API - download and show instructions
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `kanye-ranking-${shareType}.png`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    
+                    if (overlay) {
+                        overlay.style.display = 'none';
+                    }
+                    
+                    alert('Image downloaded! 📸\n\nFind it in your Downloads/Photos and share it to your favorite app.');
+                    return;
                 }
             }
             
@@ -1087,13 +1133,8 @@
             switch(platform) {
                 case 'x':
                 case 'twitter':
-                    // Use x.com for mobile browsers to avoid about:blank issues
-                    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-                    if (isMobile) {
-                        targetUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
-                    } else {
-                        targetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
-                    }
+                    // Always use twitter.com since we only show this on desktop
+                    targetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
                     break;
                 case 'facebook':
                     targetUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
