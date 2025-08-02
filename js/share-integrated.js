@@ -901,7 +901,9 @@
                     // Censor the title if needed
                     const displayTitle = s.title === "Niggas in Paris" ? "N****s in Paris" : s.title;
                     return `${i+1}. ${displayTitle}`;
-                }).join('\n')}\n\nWhat are yours? Find out for free at kanyeranker.com`;
+                }).join('\n')}\n\n`;
+                
+                shareText += `What are yours? Find out for free at kanyeranker.com`;
             } else {
                 const top5 = topAlbums.slice(0, 5);
                 shareText = `My Top 5 Kanye albums are:\n${top5.map((a, i) => `${i+1}. ${a.album.name}`).join('\n')}\n\nWhat's your Kanye era? Find out for free at kanyeranker.com`;
@@ -977,8 +979,15 @@
             let targetUrl = '';
             
             switch(platform) {
+                case 'x':
                 case 'twitter':
-                    targetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
+                    // Use x.com for mobile browsers to avoid about:blank issues
+                    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                    if (isMobile) {
+                        targetUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
+                    } else {
+                        targetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
+                    }
                     break;
                 case 'facebook':
                     targetUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
@@ -1006,7 +1015,7 @@
             
             // Show success message with platform-specific instructions
             setTimeout(() => {
-                if (platform === 'twitter') {
+                if (platform === 'x' || platform === 'twitter') {
                     alert(`Image downloaded! 📸\n\nA new X/Twitter tab is opening. Please attach the downloaded image to your post.\n\nThe text has been pre-filled for you!`);
                 } else if (platform === 'facebook') {
                     alert(`Image downloaded! 📸\n\nA new Facebook tab is opening. Please:\n1. Attach the downloaded image\n2. Copy and paste this text:\n\n${shareText}`);
@@ -1026,5 +1035,8 @@
             }
         }
     }
+    
+    // Export handleShare for share incentive system
+    window.handleShare = handleShare;
     
 })();

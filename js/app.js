@@ -1932,14 +1932,14 @@ class KanyeRankerApp {
         });
     }
     
-    getTopSongs() {
+    getTopSongs(limit = 20) {
         return this.songs
             .map(song => ({
                 ...song,
                 rating: this.songRatings.get(song.id)
             }))
             .sort((a, b) => b.rating - a.rating)
-            .slice(0, 10);
+            .slice(0, Math.min(limit, this.songs.length));
     }
     
     calculateAlbumStats(songs) {
@@ -1998,7 +1998,7 @@ class KanyeRankerApp {
                 averageRating: stats.totalRating / stats.songCount
             }))
             .sort((a, b) => b.averageRating - a.averageRating)
-            .slice(0, 5);
+            .slice(0, 10);
     }
     
     continueRanking() {

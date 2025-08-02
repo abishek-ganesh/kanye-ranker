@@ -1,0 +1,221 @@
+/* Simplified Share Incentive System - Insights Styling */
+
+/* Compact Ranking Insights Section */
+.ranking-insights-compact {
+    background: var(--accent-white, #f8f8f8);
+    color: var(--text-color, #000);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-top: 1.5rem;
+    border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
+    transition: all 0.3s ease;
+}
+
+/* Dark mode compact insights */
+body.dark-mode .ranking-insights-compact {
+    background: #2a2a2a;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Compact insight item */
+.insight-compact {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0.75rem 0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.insight-compact:first-child {
+    margin-top: 0;
+}
+
+.insight-compact:last-child {
+    margin-bottom: 0;
+}
+
+/* Insight label */
+.insight-label {
+    font-weight: 600;
+    color: var(--text-secondary, #666);
+}
+
+body.dark-mode .insight-label {
+    color: #999;
+}
+
+/* Insight value (song name) */
+.insight-value {
+    font-weight: 800;
+    color: var(--primary-color, #000);
+}
+
+body.dark-mode .insight-value {
+    color: var(--accent-yellow, #FFD700);
+}
+
+/* Insight detail (rankings) */
+.insight-detail {
+    font-size: 0.85rem;
+    color: var(--text-secondary, #666);
+    opacity: 0.8;
+}
+
+body.dark-mode .insight-detail {
+    color: #999;
+}
+
+/* Original full insights section (kept for future use) */
+.ranking-insights {
+    background: var(--accent-yellow, #FFD700);
+    color: #000;
+    padding: 2rem;
+    border-radius: 20px;
+    margin-top: 2rem;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+/* Dark mode insights */
+body.dark-mode .ranking-insights {
+    background: #333;
+    color: var(--accent-yellow, #FFD700);
+}
+
+/* Reveal animation */
+.ranking-insights.reveal-animation {
+    animation: revealInsights 0.6s ease;
+}
+
+@keyframes revealInsights {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Insights heading */
+.ranking-insights h3 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    margin: 0 0 1rem 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Insight item */
+.insight-item {
+    font-size: 1.05rem;
+    margin: 0.5rem 0;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+/* Highlighted song */
+.insight-song {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--primary-color, #000);
+}
+
+body.dark-mode .insight-song {
+    color: var(--accent-yellow, #FFD700);
+}
+
+/* Subtext */
+.insight-subtext {
+    font-size: 0.9rem;
+    margin-top: 1rem;
+    opacity: 0.8;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+/* Success Toast */
+.share-success-toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--primary-color, #000);
+    color: white;
+    padding: 1.5rem 2.5rem;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    z-index: 1000;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    animation: toastAppear 0.4s ease;
+    transition: opacity 0.3s ease;
+}
+
+@keyframes toastAppear {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -40%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .ranking-insights-compact {
+        padding: 1.2rem;
+        margin-top: 1.2rem;
+    }
+    
+    .insight-compact {
+        font-size: 0.9rem;
+    }
+    
+    .insight-detail {
+        font-size: 0.8rem;
+        width: 100%;
+        margin-top: 0.2rem;
+    }
+    
+    .ranking-insights {
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    
+    .ranking-insights-compact {
+        padding: 1.2rem;
+        margin-top: 1.2rem;
+    }
+    
+    .ranking-insights h3 {
+        font-size: 1.1rem;
+    }
+    
+    .insight-item {
+        font-size: 0.95rem;
+    }
+    
+    .insight-song {
+        font-size: 1.05rem;
+    }
+    
+    .insight-subtext {
+        font-size: 0.85rem;
+    }
+    
+    .share-success-toast {
+        padding: 1.2rem 2rem;
+        font-size: 1rem;
+        width: 90%;
+        max-width: 350px;
+    }
+}
