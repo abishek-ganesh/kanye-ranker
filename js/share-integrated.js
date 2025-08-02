@@ -683,43 +683,67 @@
             shareButtons.push({ isSeparator: true });
         }
         
-        // Always add platform buttons
-        const platformButtons = [
-            {
+        // Add platform buttons conditionally based on device
+        let platformButtons = [];
+        
+        // X/Twitter - desktop only
+        if (!isMobile) {
+            platformButtons.push({
                 id: `share-${shareType}-twitter`,
                 icon: '𝕏',
                 label: 'X',
                 platform: 'twitter',
                 color: '#000000',
                 hoverColor: '#333333'
-            },
-            {
-                id: `share-${shareType}-facebook`,
-                icon: `<svg width="20" height="20" viewBox="0 0 24 24" style="fill: #1877F2 !important;"><path style="fill: #1877F2 !important;" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>`,
-                label: 'Facebook',
-                platform: 'facebook',
-                color: '#1877F2',
-                hoverColor: '#166FE5'
-            },
-            {
+            });
+        }
+        
+        // Facebook - always show
+        platformButtons.push({
+            id: `share-${shareType}-facebook`,
+            icon: `<svg width="20" height="20" viewBox="0 0 24 24" style="fill: #1877F2 !important;"><path style="fill: #1877F2 !important;" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>`,
+            label: 'Facebook',
+            platform: 'facebook',
+            color: '#1877F2',
+            hoverColor: '#166FE5'
+        });
+        
+        // Instagram - mobile only
+        if (isMobile) {
+            platformButtons.push({
                 id: `share-${shareType}-instagram`,
                 icon: `<svg width="20" height="20" viewBox="0 0 24 24" style="fill: #E4405F !important;"><path style="fill: #E4405F !important;" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.405a1.44 1.44 0 112.881.001 1.44 1.44 0 01-2.881-.001z"/></svg>`,
                 label: 'Instagram',
                 platform: 'instagram',
                 color: '#E4405F',
                 hoverColor: '#C13584'
-            },
-            {
-                id: `share-${shareType}-reddit`,
-                icon: `<svg width="20" height="20" viewBox="0 0 24 24" style="fill: #FF4500 !important;"><path style="fill: #FF4500 !important;" d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>`,
-                label: 'Reddit',
-                platform: 'reddit', 
-                color: '#FF4500',
-                hoverColor: '#CC3700'
-            }
-        ];
+            });
+        }
+        
+        // Reddit - always show
+        platformButtons.push({
+            id: `share-${shareType}-reddit`,
+            icon: `<svg width="20" height="20" viewBox="0 0 24 24" style="fill: #FF4500 !important;"><path style="fill: #FF4500 !important;" d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>`,
+            label: 'Reddit',
+            platform: 'reddit', 
+            color: '#FF4500',
+            hoverColor: '#CC3700'
+        });
+        
+        // Copy Text button - fills the 4th spot in the grid
+        platformButtons.push({
+            id: `share-${shareType}-copy-text`,
+            icon: `<svg width="20" height="20" viewBox="0 0 24 24" style="fill: #6B46C1 !important;"><path style="fill: #6B46C1 !important;" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>`,
+            label: 'Copy Text',
+            platform: 'copy-text',
+            color: '#6B46C1',
+            hoverColor: '#553C9A'
+        });
         
         shareButtons = shareButtons.concat(platformButtons);
+        
+        // Define social platforms for use in styles
+        const socialPlatforms = ['twitter', 'facebook', 'instagram', 'reddit', 'copy-text'];
         
         shareButtons.forEach((btn, index) => {
             // Handle separator
@@ -795,7 +819,7 @@
                 overflow: hidden !important;
                 text-transform: none !important;
                 letter-spacing: 0 !important;
-                margin-bottom: ${index < shareButtons.length - 3 ? '15px' : '0'} !important;
+                margin-bottom: ${!socialPlatforms.includes(btn.platform) ? '15px' : '0'} !important;
             `;
             
             // Create icon element
@@ -824,8 +848,11 @@
             button.appendChild(iconElement);
             button.appendChild(labelElement);
             
-            // Platform button container for last 4 buttons
-            if (index >= shareButtons.length - 4) {
+            // Platform button container for social media buttons only
+            // Count the social media platform buttons (X, Facebook, Instagram, Reddit)
+            const isSocialButton = socialPlatforms.includes(btn.platform);
+            
+            if (isSocialButton) {
                 if (!container.querySelector('.platform-buttons')) {
                     const platformContainer = document.createElement('div');
                     platformContainer.className = 'platform-buttons';
@@ -842,6 +869,7 @@
                 button.style.marginBottom = '0 !important';
                 platformContainer.appendChild(button);
             } else {
+                // Native share and Screenshot buttons go above the grid
                 container.appendChild(button);
             }
             
@@ -880,6 +908,48 @@
         // Handle stories screenshot mode
         if (platform === 'stories') {
             showStoryPreview(shareType);
+            return;
+        }
+        
+        // Handle copy text without generating image
+        if (platform === 'copy-text') {
+            const topSongs = window.kanyeApp.getTopSongs();
+            const topAlbums = window.kanyeApp.getTopAlbums();
+            
+            let shareText = '';
+            if (shareType === 'songs') {
+                const top10 = topSongs.slice(0, 10);
+                shareText = `My Top 10 Kanye songs are:\n${top10.map((s, i) => {
+                    // Censor the title if needed
+                    const displayTitle = s.title === "Niggas in Paris" ? "N****s in Paris" : s.title;
+                    return `${i+1}. ${displayTitle}`;
+                }).join('\n')}\n\n`;
+                
+                shareText += `What are yours? Find out for free at kanyeranker.com`;
+            } else {
+                const top5 = topAlbums.slice(0, 5);
+                shareText = `My Top 5 Kanye albums are:\n${top5.map((a, i) => `${i+1}. ${a.album.name}`).join('\n')}\n\nWhat's your Kanye era? Find out for free at kanyeranker.com`;
+            }
+            
+            try {
+                await navigator.clipboard.writeText(shareText);
+                alert('✅ Copied to clipboard!\n\nYour ranking text is ready to paste anywhere.');
+            } catch (err) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = shareText;
+                textArea.style.position = 'fixed';
+                textArea.style.opacity = '0';
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    alert('✅ Copied to clipboard!\n\nYour ranking text is ready to paste anywhere.');
+                } catch (err) {
+                    alert('Failed to copy text. Please try again.');
+                }
+                document.body.removeChild(textArea);
+            }
             return;
         }
         
