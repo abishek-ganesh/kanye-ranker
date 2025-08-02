@@ -663,6 +663,19 @@
             });
         }
         
+        // Add mobile-only "Screenshot for Stories" button
+        if (isMobile) {
+            shareButtons.push({
+                id: `share-${shareType}-stories`,
+                icon: '📱',
+                label: 'Screenshot for Stories',
+                platform: 'stories',
+                color: '#9C27B0',
+                hoverColor: '#7B1FA2',
+                isPrimary: true
+            });
+        }
+        
         // Add separator marker if we have native share or copy
         if (shareButtons.length > 0) {
             shareButtons.push({ isSeparator: true });
@@ -861,6 +874,12 @@
             return;
         }
         
+        // Handle stories screenshot mode
+        if (platform === 'stories') {
+            showStoryPreview(shareType);
+            return;
+        }
+        
         try {
             // Get overlay elements
             const overlay = document.getElementById('overlay');
@@ -1038,5 +1057,136 @@
     
     // Export handleShare for share incentive system
     window.handleShare = handleShare;
+    
+    // Story preview functionality
+    async function showStoryPreview(shareType) {
+        try {
+            // Show loading overlay
+            const overlay = document.getElementById('overlay');
+            const message = document.getElementById('overlay-message');
+            
+            if (overlay && message) {
+                message.textContent = 'Preparing your story image...';
+                overlay.style.display = 'flex';
+            }
+            
+            // Get the data
+            const topSongs = window.kanyeApp.getTopSongs();
+            const topAlbums = window.kanyeApp.getTopAlbums();
+            
+            // Generate the story image (portrait 9:16)
+            const canvas = document.getElementById('export-canvas') || document.createElement('canvas');
+            const exporter = new window.KanyeRankerExport();
+            
+            // Use story-specific portrait export (9:16 ratio)
+            if (shareType === 'songs') {
+                await exporter.generateStoryImage(topSongs, window.kanyeApp.albums, canvas);
+            } else {
+                await exporter.generateStoryAlbumsImage(topAlbums, canvas);
+            }
+            
+            // Hide loading overlay
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
+            
+            // Create full-screen preview overlay
+            const previewOverlay = document.createElement('div');
+            previewOverlay.id = 'story-preview-overlay';
+            previewOverlay.className = 'story-preview-overlay';
+            
+            // Create image element
+            const img = new Image();
+            img.src = canvas.toDataURL('image/png');
+            img.className = 'story-preview-image';
+            
+            // Create instruction banner
+            const instruction = document.createElement('div');
+            instruction.className = 'story-preview-instruction';
+            instruction.innerHTML = '📸 Take a screenshot now';
+            
+            // Create close hint
+            const closeHint = document.createElement('div');
+            closeHint.className = 'story-preview-close-hint';
+            closeHint.textContent = 'Tap anywhere to close';
+            
+            // Create platform shortcuts container (hidden initially)
+            const platformShortcuts = document.createElement('div');
+            platformShortcuts.className = 'platform-shortcuts';
+            platformShortcuts.style.display = 'none';
+            
+            // Platform buttons
+            const platforms = [
+                { name: 'Instagram', icon: '📷', url: 'instagram://story-camera', color: '#E4405F' },
+                { name: 'Snapchat', icon: '👻', url: 'snapchat://', color: '#FFFC00' },
+                { name: 'TikTok', icon: '🎵', url: 'tiktok://', color: '#000000' }
+            ];
+            
+            platforms.forEach(platform => {
+                const btn = document.createElement('button');
+                btn.className = 'platform-shortcut-btn';
+                btn.innerHTML = `${platform.icon} ${platform.name}`;
+                btn.style.backgroundColor = platform.color;
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    window.location.href = platform.url;
+                });
+                platformShortcuts.appendChild(btn);
+            });
+            
+            // Assemble overlay
+            previewOverlay.appendChild(instruction);
+            previewOverlay.appendChild(img);
+            previewOverlay.appendChild(closeHint);
+            previewOverlay.appendChild(platformShortcuts);
+            
+            // Add to body
+            document.body.appendChild(previewOverlay);
+            
+            // Detect screenshot taken via Page Visibility API
+            let screenshotTaken = false;
+            const handleVisibilityChange = () => {
+                if (document.hidden) {
+                    // User likely taking screenshot
+                    screenshotTaken = true;
+                } else if (!document.hidden && screenshotTaken) {
+                    // User returned after taking screenshot
+                    instruction.innerHTML = '✅ Screenshot taken! Open your favorite app';
+                    platformShortcuts.style.display = 'flex';
+                    closeHint.textContent = 'Tap anywhere to close';
+                    
+                    // Auto-close after 10 seconds
+                    setTimeout(() => {
+                        if (document.body.contains(previewOverlay)) {
+                            previewOverlay.remove();
+                        }
+                    }, 10000);
+                }
+            };
+            
+            document.addEventListener('visibilitychange', handleVisibilityChange);
+            
+            // Close on tap/click
+            previewOverlay.addEventListener('click', () => {
+                document.removeEventListener('visibilitychange', handleVisibilityChange);
+                previewOverlay.remove();
+            });
+            
+            // Track analytics
+            if (window.analytics) {
+                window.analytics.trackShare('stories', shareType);
+            }
+            
+        } catch (error) {
+            console.error('[StoryPreview] Error:', error);
+            alert('Failed to generate story preview. Please try again.');
+            
+            // Hide loading overlay
+            const overlay = document.getElementById('overlay');
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
+        }
+    }
     
 })();

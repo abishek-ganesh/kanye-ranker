@@ -1110,6 +1110,297 @@ class KanyeRankerExport {
     }
     
     /**
+     * Generate story image for social media stories (9:16 portrait)
+     */
+    async generateStoryImage(topSongs, albumsMap, canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        
+        // Story format (9:16 ratio)
+        this.canvas.width = 1080;
+        this.canvas.height = 1920;
+        
+        // Get the top song's album for background and colors
+        const topAlbumId = topSongs[0]?.albumId;
+        this.currentAlbumId = topAlbumId;
+        
+        this.drawBackground(topAlbumId);
+        this.drawStoryHeader(topAlbumId);
+        await this.drawStorySongList(topSongs, albumsMap);
+        this.drawStoryFooter(topAlbumId);
+    }
+    
+    drawStoryHeader(albumId = null) {
+        // Get album colors and fonts
+        let primaryColor = '#D4AF37';
+        let textColor = '#ffffff';
+        let headerFont = '"Helvetica Neue", Arial, sans-serif';
+        
+        if (albumId && window.getAlbumColors) {
+            const albumColors = window.getAlbumColors(albumId);
+            primaryColor = albumColors.primary;
+            textColor = this.getReadableTextColor(albumColors.background);
+            headerFont = albumColors.headerFont || headerFont;
+        }
+        
+        // Bigger header for stories
+        this.ctx.fillStyle = textColor;
+        this.ctx.font = `bold 96px ${headerFont}`;
+        this.ctx.textAlign = 'center';
+        this.ctx.fillText('MY TOP 10', this.canvas.width / 2, 150);
+        
+        this.ctx.fillStyle = primaryColor;
+        this.ctx.font = `bold 120px ${headerFont}`;
+        this.ctx.fillText('KANYE', this.canvas.width / 2, 280);
+        this.ctx.fillText('SONGS', this.canvas.width / 2, 400);
+        
+        // Divider
+        this.ctx.strokeStyle = primaryColor;
+        this.ctx.lineWidth = 4;
+        this.ctx.beginPath();
+        this.ctx.moveTo(100, 450);
+        this.ctx.lineTo(this.canvas.width - 100, 450);
+        this.ctx.stroke();
+    }
+    
+    async drawStorySongList(topSongs, albumsMap) {
+        const startY = 550;
+        const itemHeight = 120;
+        const padding = 60;
+        
+        // Get colors and fonts based on top album
+        let primaryColor = '#D4AF37';
+        let textColor = '#ffffff';
+        let secondaryTextColor = '#999999';
+        let bodyFont = '"Helvetica Neue", Arial, sans-serif';
+        
+        if (this.currentAlbumId && window.getAlbumColors) {
+            const albumColors = window.getAlbumColors(this.currentAlbumId);
+            primaryColor = albumColors.primary;
+            textColor = this.getReadableTextColor(albumColors.background);
+            secondaryTextColor = this.getSecondaryTextColor(albumColors.background);
+            bodyFont = albumColors.bodyFont || bodyFont;
+        }
+        
+        // Display all 10 songs in vertical list
+        for (let i = 0; i < Math.min(topSongs.length, 10); i++) {
+            const song = topSongs[i];
+            const album = albumsMap.get(song.albumId);
+            const y = startY + (i * itemHeight);
+            
+            // Subtle background for each item
+            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+            this.ctx.fillRect(padding, y - 45, this.canvas.width - (padding * 2), 100);
+            
+            // Rank number
+            this.ctx.fillStyle = primaryColor;
+            this.ctx.font = `bold 72px ${bodyFont}`;
+            this.ctx.textAlign = 'left';
+            this.ctx.fillText(`${i + 1}`, padding + 30, y + 15);
+            
+            // Album art
+            const albumArtSize = 80;
+            const albumArtX = padding + 140;
+            const albumArtY = y - 40;
+            
+            if (album && album.coverArt) {
+                await this.drawAlbumArt(album.coverArt, albumArtX, albumArtY, albumArtSize);
+            } else {
+                this.ctx.fillStyle = '#333333';
+                this.ctx.fillRect(albumArtX, albumArtY, albumArtSize, albumArtSize);
+            }
+            
+            // Song info
+            const textX = albumArtX + albumArtSize + 30;
+            
+            // Song title
+            this.ctx.fillStyle = textColor;
+            this.ctx.font = `bold 42px ${bodyFont}`;
+            this.ctx.textAlign = 'left';
+            
+            const maxTitleWidth = this.canvas.width - textX - padding;
+            const displayTitle = song.title === "Niggas in Paris" ? "N****s in Paris" : song.title;
+            const title = this.truncateText(displayTitle, maxTitleWidth);
+            this.ctx.fillText(title, textX, y);
+            
+            // Album name
+            if (this.currentAlbumId === 'wtt') {
+                this.ctx.fillStyle = '#000000';
+            } else {
+                this.ctx.fillStyle = secondaryTextColor;
+            }
+            this.ctx.font = `32px ${bodyFont}`;
+            const albumText = album ? this.formatAlbumName(album.name) : 'Unknown';
+            const truncatedAlbum = this.truncateText(albumText, maxTitleWidth);
+            this.ctx.fillText(truncatedAlbum, textX, y + 40);
+        }
+    }
+    
+    drawStoryFooter(albumId = null) {
+        const footerY = this.canvas.height - 200;
+        
+        // Get album colors and fonts
+        let primaryColor = '#D4AF37';
+        let textColor = '#ffffff';
+        let bodyFont = '"Helvetica Neue", Arial, sans-serif';
+        
+        if (albumId && window.getAlbumColors) {
+            const albumColors = window.getAlbumColors(albumId);
+            primaryColor = albumColors.primary;
+            textColor = this.getReadableTextColor(albumColors.background);
+            bodyFont = albumColors.bodyFont || bodyFont;
+        }
+        
+        // Divider
+        this.ctx.strokeStyle = primaryColor;
+        this.ctx.lineWidth = 4;
+        this.ctx.beginPath();
+        this.ctx.moveTo(100, footerY);
+        this.ctx.lineTo(this.canvas.width - 100, footerY);
+        this.ctx.stroke();
+        
+        // Website URL (bigger for stories)
+        this.ctx.fillStyle = primaryColor;
+        this.ctx.font = `bold 56px ${bodyFont}`;
+        this.ctx.textAlign = 'center';
+        this.ctx.fillText('kanyeranker.com', this.canvas.width / 2, footerY + 70);
+        
+        // Date
+        const date = new Date().toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'short', 
+            day: 'numeric' 
+        });
+        this.ctx.fillStyle = textColor;
+        this.ctx.font = `32px ${bodyFont}`;
+        this.ctx.fillText(date, this.canvas.width / 2, footerY + 120);
+    }
+    
+    /**
+     * Generate story image for albums (9:16 portrait)
+     */
+    async generateStoryAlbumsImage(topAlbums, canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        
+        // Story format (9:16 ratio)
+        this.canvas.width = 1080;
+        this.canvas.height = 1920;
+        
+        // Get the top album's ID for background and colors
+        const topAlbumId = topAlbums[0]?.album?.id;
+        this.currentAlbumId = topAlbumId;
+        
+        this.drawBackground(topAlbumId);
+        this.drawStoryAlbumsHeader(topAlbumId);
+        await this.drawStoryAlbumsList(topAlbums);
+        this.drawStoryFooter(topAlbumId);
+    }
+    
+    drawStoryAlbumsHeader(albumId = null) {
+        // Get album colors and fonts
+        let primaryColor = '#D4AF37';
+        let textColor = '#ffffff';
+        let headerFont = '"Helvetica Neue", Arial, sans-serif';
+        
+        if (albumId && window.getAlbumColors) {
+            const albumColors = window.getAlbumColors(albumId);
+            primaryColor = albumColors.primary;
+            textColor = this.getReadableTextColor(albumColors.background);
+            headerFont = albumColors.headerFont || headerFont;
+        }
+        
+        // Bigger header for stories
+        this.ctx.fillStyle = textColor;
+        this.ctx.font = `bold 96px ${headerFont}`;
+        this.ctx.textAlign = 'center';
+        this.ctx.fillText('MY TOP 5', this.canvas.width / 2, 150);
+        
+        this.ctx.fillStyle = primaryColor;
+        this.ctx.font = `bold 120px ${headerFont}`;
+        this.ctx.fillText('KANYE', this.canvas.width / 2, 280);
+        this.ctx.fillText('ALBUMS', this.canvas.width / 2, 400);
+        
+        // Divider
+        this.ctx.strokeStyle = primaryColor;
+        this.ctx.lineWidth = 4;
+        this.ctx.beginPath();
+        this.ctx.moveTo(100, 450);
+        this.ctx.lineTo(this.canvas.width - 100, 450);
+        this.ctx.stroke();
+    }
+    
+    async drawStoryAlbumsList(topAlbums) {
+        const startY = 600;
+        const itemHeight = 250;
+        const padding = 80;
+        
+        // Get colors and fonts based on top album
+        let primaryColor = '#D4AF37';
+        let textColor = '#ffffff';
+        let secondaryTextColor = '#999999';
+        let bodyFont = '"Helvetica Neue", Arial, sans-serif';
+        
+        if (this.currentAlbumId && window.getAlbumColors) {
+            const albumColors = window.getAlbumColors(this.currentAlbumId);
+            primaryColor = albumColors.primary;
+            textColor = this.getReadableTextColor(albumColors.background);
+            secondaryTextColor = this.getSecondaryTextColor(albumColors.background);
+            bodyFont = albumColors.bodyFont || bodyFont;
+        }
+        
+        for (let i = 0; i < Math.min(topAlbums.length, 5); i++) {
+            const albumData = topAlbums[i];
+            const album = albumData.album;
+            const y = startY + (i * itemHeight);
+            
+            // Background card
+            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+            this.ctx.fillRect(padding, y - 100, this.canvas.width - (padding * 2), 200);
+            
+            // Rank
+            this.ctx.fillStyle = primaryColor;
+            this.ctx.font = `bold 96px ${bodyFont}`;
+            this.ctx.textAlign = 'left';
+            this.ctx.fillText(`#${i + 1}`, padding + 40, y + 35);
+            
+            // Album art (bigger for stories)
+            const albumArtSize = 160;
+            const albumArtX = padding + 220;
+            const albumArtY = y - 80;
+            
+            if (album && album.coverArt) {
+                await this.drawAlbumArt(album.coverArt, albumArtX, albumArtY, albumArtSize);
+            } else {
+                this.ctx.fillStyle = '#333333';
+                this.ctx.fillRect(albumArtX, albumArtY, albumArtSize, albumArtSize);
+            }
+            
+            // Album info
+            const textX = albumArtX + albumArtSize + 40;
+            
+            // Album name
+            this.ctx.fillStyle = textColor;
+            this.ctx.font = `bold 56px ${bodyFont}`;
+            this.ctx.textAlign = 'left';
+            
+            const maxTitleWidth = this.canvas.width - textX - padding;
+            const formattedName = this.formatAlbumName(album.name);
+            const title = this.truncateText(formattedName, maxTitleWidth);
+            this.ctx.fillText(title, textX, y + 15);
+            
+            // Album year
+            if (this.currentAlbumId === 'wtt') {
+                this.ctx.fillStyle = '#000000';
+            } else {
+                this.ctx.fillStyle = secondaryTextColor;
+            }
+            this.ctx.font = `44px ${bodyFont}`;
+            this.ctx.fillText(album.year.toString(), textX, y + 70);
+        }
+    }
+    
+    /**
      * Generate square image for albums
      */
     async generateSquareAlbumsImage(topAlbums, canvas) {
