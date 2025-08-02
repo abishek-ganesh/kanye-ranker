@@ -1,10 +1,13 @@
 /* Mobile Override Styles - Ensure mobile layout works properly */
 
 @media screen and (max-width: 768px) {
-    /* Hide back button on landing screen and when it's active */
+    /* Hide back button on landing and results screens */
     #landing-screen #back-button,
     #landing-screen.active ~ #back-button,
-    body:has(#landing-screen.active) #back-button {
+    body:has(#landing-screen.active) #back-button,
+    #results-screen #back-button,
+    #results-screen.active ~ #back-button,
+    body:has(#results-screen.active) #back-button {
         display: none !important;
     }
     
