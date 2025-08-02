@@ -452,10 +452,20 @@ body {
 #skip-comparison {
     margin-right: 0;
     order: 2;
+    width: 200px;
+    min-width: 200px;
 }
 
 #show-results {
     order: 1;
+    width: 200px;
+    min-width: 200px;
+    transition: none !important;
+}
+
+/* Prevent layout shifts when buttons appear/disappear */
+.comparison-footer {
+    min-height: 120px;
 }
 
 /* Results Screen */
