@@ -1825,17 +1825,6 @@
       "dailyStreams": 0
     },
     {
-      "id": "v2-2",
-      "title": "Field Trip",
-      "albumId": "v2",
-      "trackNumber": 2,
-      "initialRating": 1500,
-      "spotifyRank": 235,
-      "spotifyStreams": 20000000,
-      "totalStreams": 0,
-      "dailyStreams": 0
-    },
-    {
       "id": "v2-3",
       "title": "Fried",
       "albumId": "v2",
@@ -1975,17 +1964,6 @@
       "initialRating": 1500,
       "spotifyRank": 300,
       "spotifyStreams": 7500000,
-      "totalStreams": 0,
-      "dailyStreams": 0
-    },
-    {
-      "id": "v2-16",
-      "title": "Vultures",
-      "albumId": "v2",
-      "trackNumber": 16,
-      "initialRating": 1500,
-      "spotifyRank": 305,
-      "spotifyStreams": 7000000,
       "totalStreams": 0,
       "dailyStreams": 0
     },
