@@ -2,7 +2,9 @@
 
 /* Base rule: These buttons should NEVER move */
 #continue-ranking,
-#restart {
+#restart,
+#continue-ranking-bottom,
+#restart-bottom {
     /* Only allow color transitions, nothing else */
     transition: background-color 0.2s ease, 
                 color 0.2s ease, 
@@ -24,6 +26,8 @@
 /* Override any hover transforms */
 #continue-ranking:hover,
 #restart:hover,
+#continue-ranking-bottom:hover,
+#restart-bottom:hover,
 .btn-secondary.btn-large:hover {
     transform: none !important;
     -webkit-transform: none !important;
@@ -34,6 +38,10 @@
 #restart:active,
 #continue-ranking:focus,
 #restart:focus,
+#continue-ranking-bottom:active,
+#restart-bottom:active,
+#continue-ranking-bottom:focus,
+#restart-bottom:focus,
 .btn-secondary.btn-large:active,
 .btn-secondary.btn-large:focus {
     transform: none !important;
@@ -51,7 +59,9 @@
 /* Mobile specific - prevent any tap animations */
 @media (max-width: 768px) {
     #continue-ranking,
-    #restart {
+    #restart,
+    #continue-ranking-bottom,
+    #restart-bottom {
         -webkit-tap-highlight-color: transparent !important;
         -webkit-touch-callout: none !important;
         -webkit-user-select: none !important;
@@ -61,7 +71,9 @@
 
 /* Dark mode compatibility */
 .dark-mode #continue-ranking:hover,
-.dark-mode #restart:hover {
+.dark-mode #restart:hover,
+.dark-mode #continue-ranking-bottom:hover,
+.dark-mode #restart-bottom:hover {
     transform: none !important;
     -webkit-transform: none !important;
 }
