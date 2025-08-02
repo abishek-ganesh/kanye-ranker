@@ -24,10 +24,10 @@ This comprehensive guide will help you set up a powerful dashboard in Google Ana
 | `page_view` | Tracks screen navigation | `page_title`, `page_location` |
 | `ranking_started` | User clicks START button | `event_category`: 'engagement' |
 | `song_compared` | Detailed comparison data | `winner_song`, `loser_song`, `comparison_number`, `time_taken_seconds` |
-| `ranking_completed` | User completes full ranking | `total_comparisons`, `top_album`, `top_song` |
+| `ranking_completed` | User views results (can continue indefinitely) | `total_comparisons`, `top_album`, `top_song` |
 | `ranking_early_exit` | User clicks "I'm Done" button* | `comparisons_completed`, `completion_rate` |
 
-*Note: This event only fires when users actively click "I'm Done - Show Results" button (which appears after 20 comparisons). Users who abandon by closing the browser are not tracked with this event, but can be partially tracked through session timeout events.
+*Note: The "I'm Done - Show Results" button is always visible. If users have completed fewer than 20 comparisons, clicking it shows a warning banner telling them how many more comparisons are needed. The event only fires when users successfully exit after 20+ comparisons.
 
 ### Engagement Events
 | Event Name | Description | Key Parameters |
@@ -35,7 +35,7 @@ This comprehensive guide will help you set up a powerful dashboard in Google Ana
 | `comparison_made` | Each song choice | `comparison_number`, `completion_percentage` |
 | `comparison_skipped` | User skips comparison | `comparison_number` |
 | `song_previewed` | Preview button clicked | `song_title`, `album_name`, `preview_source` |
-| `external_link_clicked` | YouTube/Lyrics clicked | `link_type`, `song_title`, `album_name` |
+| `external_link_clicked` | Lyrics link clicked | `link_type`, `song_title`, `album_name` |
 | `continue_ranking` | Continues from results | `from_comparison` |
 | `feedback_submitted` | Feedback form submitted | `has_email` |
 
@@ -43,7 +43,7 @@ This comprehensive guide will help you set up a powerful dashboard in Google Ana
 | Event Name | Description | Key Parameters |
 |------------|-------------|----------------|
 | `songs_image_exported` | Top 10 songs exported | `top_album` |
-| `albums_image_exported` | Top albums exported | `top_album` |
+| `albums_image_exported` | Top 5 albums exported | `top_album` |
 
 ### System Events
 | Event Name | Description | Key Parameters |
@@ -57,13 +57,13 @@ This comprehensive guide will help you set up a powerful dashboard in Google Ana
 Based on typical user behavior patterns:
 - **ranking_started**: 100% of engaged users
 - **comparison_made**: 20-80 events per session (average: 35)
-- **ranking_completed**: 15-25% of sessions
+- **ranking_completed**: 15-25% of sessions (users can continue ranking)
 - **ranking_early_exit**: 30-40% of sessions (after 20+ comparisons)
 - **comparison_skipped**: 5-10% of total comparisons
 - **song_previewed**: 10-20% of sessions include previews
 - **songs_image_exported**: 5-10% of completed rankings
 - **albums_image_exported**: 3-5% of completed rankings
-- **external_link_clicked**: 2-5% of sessions
+- **external_link_clicked**: 2-5% of sessions (Lyrics only)
 - **continue_ranking**: 10-15% of users who reach results
 
 These benchmarks help identify unusual patterns and potential issues.
@@ -129,7 +129,7 @@ Click **Create custom dimensions** and add each of these:
 #### 9. Link Type
 - **Dimension name**: Link Type
 - **Scope**: Event
-- **Description**: Type of external link (youtube/lyrics)
+- **Description**: Type of external link (lyrics)
 - **Event parameter**: `link_type`
 
 #### 10. Comparison Number
@@ -188,17 +188,21 @@ Click **Create custom metrics** and add:
 2. **Technique**: Funnel exploration
 3. **Steps**:
    - Step 1: `ranking_started` (Entry point)
-   - Step 2: `comparison_made` where `comparison_number` = 10
-   - Step 3: `comparison_made` where `comparison_number` = 20
-   - Step 4: `ranking_completed`
-   - Step 5: `songs_image_exported` OR `albums_image_exported`
+   - Step 2: `comparison_made` where `comparison_number` = 1 (First comparison)
+   - Step 3: `comparison_made` where `comparison_number` = 5
+   - Step 4: `comparison_made` where `comparison_number` = 20
+   - Step 5: `comparison_made` where `comparison_number` = 50
+   - Step 6: `comparison_made` where `comparison_number` = 100
+   - Step 7: `comparison_made` where `comparison_number` = 200
+   - Step 8: `ranking_completed`
+   - Step 9: `songs_image_exported` OR `albums_image_exported`
 
 4. **Breakdown**: Device category
 5. **Segment**: All users
 
-**Insights**: This shows where users drop off and completion rates at each milestone.
+**Insights**: This shows where users drop off and completion rates at each milestone, with detailed tracking of engagement levels from casual to power users.
 
-**Note**: The `ranking_early_exit` event only fires when users click "I'm Done - Show Results" (appears after 20 comparisons). True abandonment rate requires comparing session starts to completion events, as browser abandonment won't trigger exit events.
+**Note**: The `ranking_early_exit` event only fires when users successfully click "I'm Done - Show Results" after completing 20+ comparisons. Users who click before 20 comparisons see a warning and must continue. True abandonment rate requires comparing session starts to completion events, as browser abandonment won't trigger exit events.
 
 ### B. Song Popularity Analysis
 
@@ -225,10 +229,14 @@ Click **Create custom metrics** and add:
 3. **Configuration**:
    - **Rows**: Comparison Number
    - **Values**: 
-     - Time Taken Seconds (average)
+     - Time Taken Seconds (change aggregation from "Sum" to "Average")
      - Event count
    - **Filters**: Event name exactly matches `song_compared`
    - **Visualization**: Line chart
+
+**Note**: If "Average" aggregation isn't available for the custom metric:
+- Create a calculated metric: `Time Taken Seconds (sum) / Event count`
+- This will give you the average time per comparison
 
 ### D. Drop-off Analysis
 
@@ -238,26 +246,40 @@ Click **Create custom metrics** and add:
 2. **Technique**: Free form
 3. **Configuration**:
    - **Rows**: Comparison Number (custom dimension)
-   - **Values**: 
-     - Users
-     - Drop-off rate (calculated)
+   - **Values**: Users
    - **Filters**: Event name exactly matches `comparison_made`
-   - **Visualization**: Line chart showing user retention by comparison number
+   - **Visualization**: Line chart
 
-**Alternative Analysis**: Create a cohort retention chart showing what percentage of users who start ranking reach various comparison milestones (5, 10, 15, 20, 30, 50+ comparisons)
+**How to analyze drop-off:**
+1. The line chart will show Users by Comparison Number
+2. Look for steep drops to identify critical abandonment points
+3. Export the data to calculate exact retention rates:
+   - Retention Rate = (Users at comparison X / Users at comparison 1) × 100
+   - Drop-off Rate = 100 - Retention Rate
+
+**Key insights to look for:**
+- Biggest drop usually occurs between comparisons 1-5
+- Another significant drop around comparison 20 (when exit becomes available)
+- Power users who reach 50+ comparisons tend to continue much longer
 
 ### E. Song Battle Matrix
 
 **Purpose**: Head-to-head win rates between specific songs
 
 1. **Name**: "Song vs Song Win Rates"
-2. **Technique**: Pivot table
+2. **Technique**: Free form
 3. **Configuration**:
-   - **Rows**: Winner Song
-   - **Columns**: Loser Song
+   - **Rows**: 
+     - Winner Song
+     - Loser Song (as secondary dimension)
    - **Values**: Event count
    - **Filter**: Event name = `song_compared`
-   - **Heat map**: Apply color scale to visualize dominance
+   - **Visualization**: Table with heat map formatting
+
+**Note**: While GA4 doesn't have a true pivot table, you can:
+- Use a table visualization with two dimensions to see song matchups
+- Sort by event count to find most common battles
+- Export to Excel/Sheets to create a proper pivot table for deeper analysis
 
 ### F. Fatigue Curve Analysis
 
@@ -269,15 +291,27 @@ Click **Create custom metrics** and add:
    - **Dimension**: Comparison Number
    - **Metrics**:
      - Time Taken Seconds (average)
-     - Time Taken Seconds (median)
-     - Skip rate (calculated)
-   - **Visualization**: Combo chart with dual axis
+     - Event count
+   - **Visualization**: Line chart
+
+**What to look for:**
+- Decision time typically starts around 8-10 seconds
+- Drops to 5-7 seconds as users get into a rhythm (comparisons 5-20)
+- May drop below 5 seconds after comparison 30+ (fatigue/rushing)
+- Sudden spikes might indicate difficult matchups
 
 ## Step 4: Build Dashboard
 
 ### Navigate to Reports
-1. Go to **Reports** → **Library**
-2. Click **Create new report** → **Create detail report**
+1. Look at the bottom left of your GA4 interface
+2. Click on **Library** (it should be below the main navigation items)
+3. Click **+ Create new report** button
+4. Choose **Blank** to start from scratch
+
+**Alternative**: You can also customize existing reports:
+- Go to any existing report
+- Click the pencil icon (Customize report) in the top right
+- Add your custom metrics and dimensions
 
 ### A. Overview Dashboard
 
@@ -732,7 +766,7 @@ Track these metrics weekly to measure success:
 ### Engagement Metrics
 - **Start Rate**: landing_page_views → ranking_started (Target: >60%)
 - **20-Comparison Rate**: Users reaching 20 comparisons (Target: >40%)
-- **Completion Rate**: Full ranking completion (Target: >20%)
+- **Completion Rate**: Users viewing results (Target: >20%)
 - **Export Rate**: Results exported/shared (Target: >5%)
 
 ### Quality Metrics
@@ -746,6 +780,59 @@ Track these metrics weekly to measure success:
 - **Viral Coefficient**: Exports leading to new sessions
 - **Return Rate**: Users starting multiple sessions (despite no persistence)
 - **Geographic Expansion**: New markets emerging
+
+## Making Your Dashboards Default
+
+### Set Custom Reports as Homepage
+
+To make your Kanye Ranker dashboards appear front and center when you log in:
+
+1. **Pin Reports to Navigation:**
+   - In the left sidebar, look for "Reports" section
+   - You'll see a "Life cycle" or "Business objectives" collection
+   - Click on any collection name
+   - Click "Edit collection" (pencil icon)
+   - Click "Add report +" 
+   - Select your custom reports from Library
+   - Click "Save" to add them to that collection
+   - They now appear in the main Reports navigation
+
+2. **Set as Landing Page:**
+   - Unfortunately, GA4 doesn't allow changing the default landing page
+   - But you can bookmark your custom report URL directly
+   - Example: `https://analytics.google.com/analytics/web/#/p[PROPERTY_ID]/reports/[REPORT_ID]`
+
+3. **Organize Your Navigation:**
+   - In Library, drag and drop to reorder reports
+   - Put your most important dashboards at the top
+   - Remove unused default reports from navigation
+
+4. **Create Report Collections:**
+   - Group related reports together
+   - Name them clearly: "Kanye Ranker - Daily", "Kanye Ranker - Analysis"
+   - This makes them easy to find
+
+5. **Quick Access Tips:**
+   - Star (⭐) your favorite reports for quick access
+   - Use the search bar to quickly find "Kanye" reports
+   - Create browser bookmarks for each key dashboard
+
+### Recommended Dashboard Organization
+
+1. **Primary Collection: "Kanye Ranker Overview"**
+   - User Journey Funnel
+   - Song Performance Metrics
+   - Daily KPIs
+
+2. **Secondary Collection: "Kanye Ranker Analysis"**
+   - Drop-off Analysis
+   - Decision Time Patterns
+   - Song Battle Matrix
+
+3. **Weekly Collection: "Kanye Ranker Insights"**
+   - Top Songs Report
+   - Album Performance
+   - User Behavior Patterns
 
 ## Additional Resources
 

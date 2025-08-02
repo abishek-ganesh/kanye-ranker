@@ -8,7 +8,7 @@ This document explores creative ways to incorporate AI into the Kanye Ranker app
 - Chatbot that accepts natural language requests: "I haven't seen Through the Wire yet"
 - AI understands song variations: "Gorgeous feat. Kid Cudi" → matches to correct song
 - Learns user preferences from conversation: "Show me more emotional songs like Street Lights"
-- Proactive suggestions: "I noticed you like soul samples - want to see more songs from that era?"
+- Proactive suggestions: "I noticed you like soul sa mples - want to see more songs from that era?"
 
 **Implementation**: Fine-tuned LLM with Kanye's discography knowledge + RAG system
 
