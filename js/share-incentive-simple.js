@@ -350,48 +350,10 @@
             }
         }
         
-        // Find hidden album gem
-        if (topAlbums.length >= 6 && topSongs.length >= 20) {
-            // Look at albums ranked 6-10
-            const lowerAlbums = topAlbums.slice(5, 10);
-            
-            // Count how many top 20 songs each lower album contributed
-            const albumContributions = new Map();
-            
-            topSongs.forEach(song => {
-                const albumId = song.albumId;
-                const isLowerAlbum = lowerAlbums.some(a => a.album.id === albumId);
-                
-                if (isLowerAlbum) {
-                    const count = albumContributions.get(albumId) || 0;
-                    albumContributions.set(albumId, count + 1);
-                }
-            });
-            
-            // Find album with most contributions
-            let maxContributions = 0;
-            let gemAlbumId = null;
-            
-            albumContributions.forEach((count, albumId) => {
-                if (count > maxContributions && count >= 2) {
-                    maxContributions = count;
-                    gemAlbumId = albumId;
-                }
-            });
-            
-            if (gemAlbumId) {
-                const album = window.kanyeApp.albums.get(gemAlbumId);
-                if (album) {
-                    hiddenAlbumGem = {
-                        name: album.name,
-                        songCount: maxContributions
-                    };
-                }
-            }
-        }
+        // Removed hidden album gem calculation
         
         // Show album insights
-        if (kanyeTimeline || hiddenAlbumGem || albumJustMissed) {
+        if (kanyeTimeline || albumJustMissed) {
             showAlbumInsights(false);
         }
     }
@@ -434,15 +396,7 @@
             `;
         }
         
-        // Hidden album gem
-        if (hiddenAlbumGem) {
-            insightsHTML += `
-                <div class="insight-compact">
-                    <span class="insight-label">Hidden Album Gem:</span>
-                    <span class="insight-value">${hiddenAlbumGem.name}</span>
-                </div>
-            `;
-        }
+        // Hidden album gem section removed
         
         insights.innerHTML = insightsHTML;
         
