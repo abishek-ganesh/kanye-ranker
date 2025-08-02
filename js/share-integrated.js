@@ -398,6 +398,22 @@
         createShareAlbumsSection();
     }
     
+    function getSubtitleText() {
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        const hasWebShare = navigator.canShare && navigator.canShare({ files: [new File([''], 'test.png', { type: 'image/png' })] });
+        const hasClipboard = navigator.clipboard && typeof ClipboardItem !== 'undefined';
+        
+        if (hasWebShare && isMobile) {
+            return 'Download and let the kids know what G.O.O.D. Music really is';
+        } else if (hasWebShare && !isMobile) {
+            return 'Name one genius that ain\'t crazy... now share yours';
+        } else if (hasClipboard && !isMobile) {
+            return 'Copy that, Yeezy taught me';
+        } else {
+            return 'Download and let the kids know what G.O.O.D. Music really is';
+        }
+    }
+    
     function createShareSongsSection() {
         // Find the insertion point - after top-songs, before albums header
         const topSongs = document.getElementById('top-songs');
@@ -460,10 +476,6 @@
         shareSongsSection.appendChild(songsTitle);
         
         // Add helpful subtitle based on device
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        const hasWebShare = navigator.canShare && navigator.canShare({ files: [new File([''], 'test.png', { type: 'image/png' })] });
-        const hasClipboard = navigator.clipboard && typeof ClipboardItem !== 'undefined';
-        
         const subtitle = document.createElement('p');
         subtitle.style.cssText = `
             font-size: 0.85rem !important;
@@ -473,15 +485,7 @@
             line-height: 1.4 !important;
         `;
         
-        if (hasWebShare && isMobile) {
-            subtitle.textContent = 'Download and let the kids know what G.O.O.D. Music really is';
-        } else if (hasWebShare && !isMobile) {
-            subtitle.textContent = 'Name one genius that ain\'t crazy... now share yours';
-        } else if (hasClipboard && !isMobile) {
-            subtitle.textContent = 'Copy that, Yeezy taught me';
-        } else {
-            subtitle.textContent = 'Download and let the kids know what G.O.O.D. Music really is';
-        }
+        subtitle.textContent = getSubtitleText();
         
         shareSongsSection.appendChild(subtitle);
         
@@ -570,10 +574,6 @@
         shareAlbumsSection.appendChild(albumsTitle);
         
         // Add helpful subtitle based on device
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        const hasWebShare = navigator.canShare && navigator.canShare({ files: [new File([''], 'test.png', { type: 'image/png' })] });
-        const hasClipboard = navigator.clipboard && typeof ClipboardItem !== 'undefined';
-        
         const subtitle = document.createElement('p');
         subtitle.style.cssText = `
             font-size: 0.85rem !important;
@@ -583,15 +583,7 @@
             line-height: 1.4 !important;
         `;
         
-        if (hasWebShare && isMobile) {
-            subtitle.textContent = 'Download and let the kids know what GOOD Music really is';
-        } else if (hasWebShare && !isMobile) {
-            subtitle.textContent = 'Name one genius that ain\'t crazy... now share yours';
-        } else if (hasClipboard && !isMobile) {
-            subtitle.textContent = 'Copy that, Yeezy taught me';
-        } else {
-            subtitle.textContent = 'Download and let the kids know what GOOD Music really is';
-        }
+        subtitle.textContent = getSubtitleText();
         
         shareAlbumsSection.appendChild(subtitle);
         
