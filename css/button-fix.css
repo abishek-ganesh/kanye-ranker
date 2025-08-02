@@ -109,14 +109,28 @@
         padding: 10px 15px 20px !important;
         margin-top: 10px !important;
         min-height: auto !important;
+        /* Fixed layout container */
+        display: block !important;
+        text-align: center !important;
+        width: 100% !important;
     }
     
     #skip-comparison,
     #show-results {
-        width: 100% !important;
-        min-width: unset !important;
+        /* Reset all positioning */
+        position: static !important;
+        transform: none !important;
+        -webkit-transform: none !important;
+        left: auto !important;
+        top: auto !important;
+        /* Fixed dimensions */
+        display: inline-block !important;
+        width: 250px !important;
+        min-width: 250px !important;
         max-width: 250px !important;
-        margin: 0 auto !important;
+        height: 44px !important;
+        line-height: 24px !important;
+        margin: 8px auto !important;
         padding: 10px 20px !important;
         font-size: 13px !important;
         /* Prevent any movement on touch */
@@ -124,25 +138,46 @@
         -webkit-touch-callout: none !important;
         -webkit-user-select: none !important;
         user-select: none !important;
+        /* Ensure proper centering */
+        text-align: center !important;
+        box-sizing: border-box !important;
+        vertical-align: middle !important;
     }
     
-    /* Disable all transforms and position changes on touch states */
+    /* Ensure order is maintained */
+    #show-results {
+        display: block !important;
+        margin-bottom: 8px !important;
+    }
+    
+    #skip-comparison {
+        display: block !important;
+    }
+    
+    /* Keep all states exactly the same */
+    #skip-comparison:hover,
     #skip-comparison:active,
-    #show-results:active {
+    #skip-comparison:focus,
+    #show-results:hover,
+    #show-results:active,
+    #show-results:focus {
+        position: static !important;
         transform: none !important;
         -webkit-transform: none !important;
-        position: relative !important;
-        top: 0 !important;
-        left: 0 !important;
-        margin: 0 auto !important;
+        width: 250px !important;
+        min-width: 250px !important;
+        max-width: 250px !important;
+        height: 44px !important;
+        margin: 8px auto !important;
+        outline: none !important;
+        left: auto !important;
+        top: auto !important;
     }
     
-    /* Prevent focus outline movement */
-    #skip-comparison:focus,
+    #show-results:hover,
+    #show-results:active,
     #show-results:focus {
-        outline: none !important;
-        transform: none !important;
-        -webkit-transform: none !important;
+        margin-bottom: 8px !important;
     }
 }
 

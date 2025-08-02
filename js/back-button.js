@@ -63,8 +63,11 @@ class BackButtonManager {
                     min-width: auto;
                     height: 30px;
                     line-height: 30px;
-                    display: flex !important;
                     align-items: center !important;
+                }
+                
+                #back-button.visible {
+                    display: flex !important;
                 }
                 
                 #back-button .back-text {
