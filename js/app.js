@@ -44,6 +44,7 @@ class KanyeRankerApp {
         
         // Dynamic pairing properties
         this.lastWinnerId = null; // Track the last winner for carry-over
+        this.lastWinnerPosition = null; // Track which position (a/b) the winner was in
         this.consecutiveWins = 0; // Track consecutive wins by the same song
         this.carryOverProbability = 0.75; // 75% chance to carry over winner
         this.comparisonsSinceBreak = 0; // Track comparisons for fatigue prevention
@@ -861,16 +862,25 @@ class KanyeRankerApp {
             const opponentId = this.selectOpponentForWinner(this.lastWinnerId, pool);
             
             if (opponentId) {
-                console.log('Carrying over winner to next comparison');
+                console.log(`Carrying over winner to next comparison, maintaining position: ${this.lastWinnerPosition}`);
                 this.comparisonsSinceBreak++;
                 this.shownSongs.add(opponentId);
-                return [this.lastWinnerId, opponentId];
+                
+                // Maintain the winner's position from the previous comparison
+                if (this.lastWinnerPosition === 'b') {
+                    // Winner was on right/bottom, keep it there
+                    return [opponentId, this.lastWinnerId];
+                } else {
+                    // Winner was on left/top (or position not tracked), keep it there
+                    return [this.lastWinnerId, opponentId];
+                }
             }
         }
         
         // Reset counters when not carrying over
         this.consecutiveWins = 0;
         this.comparisonsSinceBreak = 0;
+        this.lastWinnerPosition = null;
         
         // Generate a new pair
         const newPair = this.selectNewPair(pool);
@@ -1587,7 +1597,9 @@ class KanyeRankerApp {
                 this.consecutiveWins = 1;
             }
             this.lastWinnerId = winnerId;
-            console.log(`Winner tracked for carry-over. Consecutive wins: ${this.consecutiveWins}`);
+            // Track which position the winner was in (a = left/top, b = right/bottom)
+            this.lastWinnerPosition = (winnerId === songIdA) ? 'a' : 'b';
+            console.log(`Winner tracked for carry-over. Position: ${this.lastWinnerPosition}, Consecutive wins: ${this.consecutiveWins}`);
         }
         
         const winnerRating = this.songRatings.get(winnerId);
@@ -1657,6 +1669,7 @@ class KanyeRankerApp {
         // Reset carry-over when skipping
         if (this.useDynamicPairing) {
             this.lastWinnerId = null;
+            this.lastWinnerPosition = null;
             this.consecutiveWins = 0;
             console.log('Reset carry-over due to skip');
         }
@@ -1882,6 +1895,7 @@ class KanyeRankerApp {
         // Reset dynamic pairing state
         if (this.useDynamicPairing) {
             this.lastWinnerId = null;
+            this.lastWinnerPosition = null;
             this.consecutiveWins = 0;
             this.comparisonsSinceBreak = 0;
         }
