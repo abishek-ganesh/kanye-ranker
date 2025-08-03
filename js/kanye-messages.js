@@ -48,15 +48,14 @@ const KanyeMessages = {
     // Progress milestone messages
     milestones: {
         10: "Slow jamz, but we're getting there",
-        25: "Halfway to Graduation 🎓",
+        25: "Almost made it to graduation 🎓",
         40: "Family business of ranking continues",
-        50: "Through the wire to your results",
-        60: "Homecoming to your favorites soon",
+        60: "Through the wire to your results",
         75: "Almost touched the sky",
-        90: "Last call before results",
-        100: "My Beautiful Dark Twisted Ranking complete",
-        125: "Ultralight beam of comparisons",
-        150: "Saint Pablo level dedication"
+        90: "Saint Pablo level dedication",
+        125: "My Beautiful Dark Twisted Ranking",
+        150: "Ultralight beam of comparisons",
+        175: "Last call before results"
     },
     
     // Results page headers
