@@ -88,8 +88,8 @@
 /* Position each milestone at its percentage */
 .milestone[data-value="0"] {
     left: 0%;
-    transform: translateX(0); /* Don't center the start milestone */
-    -webkit-transform: translateX(0);
+    transform: translateX(-15px); /* Move start milestone left for better alignment */
+    -webkit-transform: translateX(-15px);
 }
 
 .milestone[data-value="20"] {
@@ -107,6 +107,7 @@
 /* Starting milestone (0) */
 .milestone-start {
     opacity: 1;
+    margin-top: 3px;
 }
 
 .milestone-start .milestone-number {
@@ -193,8 +194,8 @@
 }
 
 .milestone[data-value="0"].next-target {
-    transform: translateX(0) scale(1.1);
-    -webkit-transform: translateX(0) scale(1.1);
+    transform: translateX(-15px) scale(1.1);
+    -webkit-transform: translateX(-15px) scale(1.1);
 }
 
 .milestone.next-target .milestone-icon {
@@ -392,13 +393,13 @@
     
     /* Align start milestone with progress bar edge on mobile */
     .milestone[data-value="0"] {
-        transform: translateX(-10px);
-        -webkit-transform: translateX(-10px);
+        transform: translateX(-20px);
+        -webkit-transform: translateX(-20px);
     }
     
     .milestone[data-value="0"].next-target {
-        transform: translateX(-10px) scale(1.1);
-        -webkit-transform: translateX(-10px) scale(1.1);
+        transform: translateX(-20px) scale(1.1);
+        -webkit-transform: translateX(-20px) scale(1.1);
     }
 }
 
