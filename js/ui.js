@@ -135,6 +135,31 @@ class UI {
         console.log(`Screen "${screenName}" is now active`);
         console.log('Active class check:', this.screens[screenName].classList.contains('active'));
         
+        // Safari fix: Force progress bar initialization when showing comparison screen
+        if (screenName === 'comparison') {
+            setTimeout(() => {
+                const progressFill = document.getElementById('progress-fill');
+                const progressIndicator = document.getElementById('progress-indicator');
+                if (progressFill && progressIndicator) {
+                    // Force Safari to recognize the elements
+                    const currentWidth = progressFill.style.width || '0%';
+                    const currentLeft = progressIndicator.style.left || '0%';
+                    
+                    // Force reflow
+                    progressFill.style.display = 'none';
+                    progressIndicator.style.display = 'none';
+                    void progressFill.offsetHeight;
+                    void progressIndicator.offsetHeight;
+                    progressFill.style.display = '';
+                    progressIndicator.style.display = '';
+                    
+                    // Reapply values
+                    progressFill.style.width = currentWidth;
+                    progressIndicator.style.left = currentLeft;
+                }
+            }, 50);
+        }
+        
         // Handle auto-scroll on mobile
         if (window.innerWidth <= 768) {
             setTimeout(() => {
@@ -194,10 +219,14 @@ class UI {
         
         if (progressFill) {
             progressFill.style.width = `${progressPercentage}%`;
+            // Force Safari repaint
+            progressFill.style.webkitTransform = 'translateZ(0)';
         }
         
         if (progressIndicator) {
             progressIndicator.style.left = `${progressPercentage}%`;
+            // Force Safari repaint
+            progressIndicator.style.webkitTransform = 'translate(-50%, -50%) translateZ(0)';
         }
         
         // Check for milestone achievements and show messages

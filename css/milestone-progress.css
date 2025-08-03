@@ -11,20 +11,28 @@
 .progress-track {
     height: 8px;
     background: rgba(0, 0, 0, 0.15);
+    background-color: rgba(0, 0, 0, 0.15);
     border-radius: 4px;
     margin: 0 20px 20px;
     position: relative;
     overflow: visible;
     border: 1px solid rgba(0, 0, 0, 0.2);
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
 }
 
 /* Progress fill (colored part) */
 .milestone-progress .progress-fill {
     height: 100%;
     background: linear-gradient(90deg, #FF6B6B 0%, #FF8E53 50%, #FFD93D 100%);
+    background: -webkit-linear-gradient(90deg, #FF6B6B 0%, #FF8E53 50%, #FFD93D 100%);
     border-radius: 3px;
     transition: width 0.3s ease;
-    position: relative;
+    -webkit-transition: width 0.3s ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
     box-shadow: 0 2px 4px rgba(255, 107, 107, 0.3);
 }
 
@@ -33,6 +41,7 @@
     position: absolute;
     top: 50%;
     transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
     width: 16px;
     height: 16px;
     background: #FFD93D;
@@ -40,6 +49,8 @@
     border-radius: 50%;
     z-index: 3;
     transition: left 0.3s ease;
+    -webkit-transition: left 0.3s ease;
+    left: 0;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
@@ -57,21 +68,28 @@
 /* Individual milestone */
 .milestone {
     display: flex;
+    display: -webkit-flex;
     flex-direction: column;
+    -webkit-flex-direction: column;
     align-items: center;
+    -webkit-align-items: center;
     gap: 5px;
     position: absolute;
     cursor: default;
     transition: transform 0.2s ease;
+    -webkit-transition: -webkit-transform 0.2s ease;
     transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
     height: 60px;
     justify-content: flex-start;
+    -webkit-justify-content: flex-start;
 }
 
 /* Position each milestone at its percentage */
 .milestone[data-value="0"] {
     left: 0%;
     transform: translateX(0); /* Don't center the start milestone */
+    -webkit-transform: translateX(0);
 }
 
 .milestone[data-value="20"] {
@@ -166,10 +184,12 @@
 
 .milestone.next-target {
     transform: translateX(-50%) scale(1.1);
+    -webkit-transform: translateX(-50%) scale(1.1);
 }
 
 .milestone[data-value="0"].next-target {
     transform: translateX(0) scale(1.1);
+    -webkit-transform: translateX(0) scale(1.1);
 }
 
 .milestone.next-target .milestone-icon {
