@@ -1,0 +1,391 @@
+/* Milestone-based Progress System */
+
+/* Container for the entire milestone progress */
+.milestone-progress {
+    margin: 20px 0 30px;
+    position: relative;
+    padding-bottom: 40px;
+}
+
+/* Progress track background */
+.progress-track {
+    height: 8px;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    margin: 0 20px 20px;
+    position: relative;
+    overflow: visible;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+/* Progress fill (colored part) */
+.milestone-progress .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #FF6B6B 0%, #FF8E53 50%, #FFD93D 100%);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(255, 107, 107, 0.3);
+}
+
+/* Current position indicator */
+.progress-indicator {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+    background: #FFD93D;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    z-index: 3;
+    transition: left 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Milestones container */
+.milestones {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    top: 24px;
+    left: 20px;
+    right: 20px;
+    width: calc(100% - 40px);
+}
+
+/* Individual milestone */
+.milestone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    position: absolute;
+    cursor: default;
+    transition: transform 0.2s ease;
+    transform: translateX(-50%);
+    height: 60px;
+    justify-content: flex-start;
+}
+
+/* Position each milestone at its percentage */
+.milestone[data-value="0"] {
+    left: 0%;
+    transform: translateX(0); /* Don't center the start milestone */
+}
+
+.milestone[data-value="20"] {
+    left: 20%; /* 20/100 = 20% */
+}
+
+.milestone[data-value="50"] {
+    left: 50%; /* 50/100 = 50% */
+}
+
+.milestone[data-value="100"] {
+    left: 100%; /* 100/100 = 100% */
+}
+
+/* Starting milestone (0) */
+.milestone-start {
+    opacity: 0.8;
+}
+
+.milestone-start .milestone-number {
+    font-weight: 600;
+    color: #999;
+    font-size: 12px;
+}
+
+.milestone-start.achieved {
+    opacity: 1;
+}
+
+.milestone-start.achieved .milestone-icon {
+    animation: startJourney 0.6s ease-out;
+}
+
+.milestone-start .milestone-icon {
+    font-size: 20px;
+}
+
+@keyframes startJourney {
+    0% {
+        transform: scale(1) rotate(0deg);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1.2) rotate(180deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1) rotate(360deg);
+        opacity: 1;
+    }
+}
+
+/* Milestone icon */
+.milestone-icon {
+    font-size: 24px;
+    transition: all 0.3s ease;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Milestone number */
+.milestone-number {
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+    transition: color 0.3s ease;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Milestone states */
+.milestone.unlocked .milestone-icon {
+    animation: milestoneUnlock 0.5s ease-out;
+}
+
+.milestone.unlocked .milestone-number {
+    color: #FF8E53;
+}
+
+.milestone.achieved .milestone-icon {
+    animation: milestoneAchieve 0.6s ease-out;
+}
+
+.milestone.achieved .milestone-number {
+    color: #4CAF50;
+    font-weight: 700;
+}
+
+.milestone.next-target {
+    transform: translateX(-50%) scale(1.1);
+}
+
+.milestone[data-value="0"].next-target {
+    transform: translateX(0) scale(1.1);
+}
+
+.milestone.next-target .milestone-icon {
+    animation: pulse 2s infinite;
+}
+
+.milestone.next-target .milestone-number {
+    color: #FFD93D;
+    font-weight: 700;
+}
+
+/* Progress message */
+.progress-message {
+    text-align: center;
+    font-size: 16px;
+    color: #FFD93D;
+    margin-top: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.progress-message.unlocked {
+    color: #FFD93D;
+    font-weight: 600;
+}
+
+/* Updated comparison count styling */
+.comparison-count {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 15px 0 20px;
+    color: #FFD93D;
+}
+
+.comparison-count #current-comparison {
+    color: #FFD93D;
+    font-weight: 700;
+}
+
+/* I'm Done button locked state */
+.btn-locked {
+    opacity: 0.6;
+    cursor: not-allowed !important;
+    position: relative;
+}
+
+/* Tooltip for locked button */
+.btn-locked::before {
+    content: attr(title);
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: #FFD93D;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.btn-locked:hover::before {
+    opacity: 1;
+}
+
+.btn-locked .btn-lock-icon {
+    margin-right: 8px;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.btn-locked .btn-text {
+    transition: all 0.3s ease;
+}
+
+/* When button becomes unlocked */
+.btn-primary:not(.btn-locked):not(:disabled) .btn-lock-icon {
+    display: none;
+}
+
+.btn-primary.unlock-animation {
+    animation: buttonUnlock 0.6s ease-out;
+}
+
+/* Animations */
+@keyframes milestoneUnlock {
+    0% {
+        transform: scale(1) rotate(0deg);
+    }
+    50% {
+        transform: scale(1.3) rotate(180deg);
+    }
+    100% {
+        transform: scale(1) rotate(360deg);
+    }
+}
+
+@keyframes milestoneAchieve {
+    0% {
+        transform: scale(1);
+    }
+    40% {
+        transform: scale(1.4);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes buttonUnlock {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(255, 217, 61, 0.6);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Milestone position markers on track */
+.milestone-progress::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 20px;
+    right: 20px;
+    height: 8px;
+    pointer-events: none;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .milestone-progress {
+        margin: 15px 0 20px;
+        padding-top: 30px;
+    }
+    
+    .progress-track {
+        margin: 0 15px 15px;
+    }
+    
+    .milestones {
+        left: 15px;
+        right: 15px;
+        width: calc(100% - 30px);
+        top: 20px;
+    }
+    
+    .milestone-icon {
+        font-size: 20px;
+    }
+    
+    .milestone-number {
+        font-size: 12px;
+    }
+    
+    .comparison-count {
+        font-size: 20px;
+    }
+    
+    .progress-message {
+        font-size: 14px;
+    }
+}
+
+/* Dark mode adjustments */
+.dark-mode .progress-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dark-mode .progress-indicator {
+    border-color: #0a0a0a;
+}
+
+.dark-mode .milestone-number {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.dark-mode .milestone.achieved .milestone-number {
+    color: #6BCF7E;
+}
+
+.dark-mode .progress-message {
+    color: #FFD93D;
+}
+
+.dark-mode .progress-message.unlocked {
+    color: #FFD93D;
+}
+
+.dark-mode .comparison-count {
+    color: #FFD93D;
+}
+
+.dark-mode .comparison-count #current-comparison {
+    color: #FFD93D;
+}

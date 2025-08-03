@@ -156,7 +156,6 @@ class FeedbackManager {
         // Add screen-specific context
         if (screenName === 'comparison-screen') {
             const currentComp = document.getElementById('current-comparison');
-            const totalComp = document.getElementById('total-comparisons');
             
             // Get song names from comparison
             const songA = document.querySelector('#song-a .song-title');
@@ -166,7 +165,6 @@ class FeedbackManager {
             
             context.comparison = {
                 current: currentComp ? currentComp.textContent : 'unknown',
-                total: totalComp ? totalComp.textContent : 'unknown',
                 songA: songA ? songA.textContent : 'Unknown Song',
                 songB: songB ? songB.textContent : 'Unknown Song',
                 albumA: albumA ? albumA.textContent : 'Unknown Album',
@@ -205,9 +203,9 @@ class FeedbackManager {
                 }
             }
             
-            const totalComps = document.getElementById('total-comparisons');
+            const currentComp = document.getElementById('current-comparison');
             context.results = {
-                completedComparisons: totalComps ? totalComps.textContent : 'unknown',
+                completedComparisons: currentComp ? currentComp.textContent : 'unknown',
                 topSongs: topSongs,
                 topAlbums: topAlbums
             };

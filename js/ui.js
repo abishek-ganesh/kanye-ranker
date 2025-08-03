@@ -11,6 +11,9 @@ class UI {
         // Initialize YouTube preview system
         this.youtubePreview = null;
         
+        // Track achieved milestones
+        this.achievedMilestones = new Set();
+        
         // Check if screens exist
         if (!this.screens.landing || !this.screens.comparison || !this.screens.results) {
             console.error('One or more screens not found:', this.screens);
@@ -30,7 +33,6 @@ class UI {
             exportAlbumsImageButton: document.getElementById('export-albums-image'),
             
             currentComparison: document.getElementById('current-comparison'),
-            totalComparisons: document.getElementById('total-comparisons'),
             progressFill: document.getElementById('progress-fill'),
             completedComparisons: document.getElementById('completed-comparisons'),
             
@@ -87,7 +89,6 @@ class UI {
         const criticalElements = [
             'startButton',
             'currentComparison',
-            'totalComparisons',
             'progressFill',
             'songCards.a.container',
             'songCards.b.container'
@@ -172,31 +173,199 @@ class UI {
     }
     
     updateProgressBar(current, total, completedComparisons = null) {
+        // Update comparison count
         this.elements.currentComparison.textContent = current;
-        this.elements.totalComparisons.textContent = total;
-        const percentage = (current / total) * 100;
-        this.elements.progressFill.style.width = `${percentage}%`;
         
-        // Update completed comparisons count if provided
-        if (completedComparisons !== null && this.elements.completedComparisons) {
-            this.elements.completedComparisons.textContent = completedComparisons;
+        // Update milestone progress
+        this.updateMilestoneProgress(current);
+        
+        // Update show results button based on completed comparisons
+        this.updateShowResultsButton(completedComparisons !== null ? completedComparisons : current);
+    }
+    
+    updateMilestoneProgress(current) {
+        const milestones = [0, 20, 50, 100];
+        const maxMilestone = 100;
+        
+        // Calculate progress percentage (capped at 100)
+        const progressPercentage = Math.min((current / maxMilestone) * 100, 100);
+        const progressFill = document.getElementById('progress-fill');
+        const progressIndicator = document.getElementById('progress-indicator');
+        
+        if (progressFill) {
+            progressFill.style.width = `${progressPercentage}%`;
         }
         
-        // Update show results button visibility based on completed comparisons
-        this.updateShowResultsButton(completedComparisons !== null ? completedComparisons : current);
+        if (progressIndicator) {
+            progressIndicator.style.left = `${progressPercentage}%`;
+        }
+        
+        // Check for milestone achievements and show messages
+        this.checkMilestoneAchievements(current);
+        
+        // Update milestone states
+        const milestoneElements = document.querySelectorAll('.milestone');
+        let nextTarget = null;
+        
+        milestoneElements.forEach((elem, index) => {
+            const milestoneValue = milestones[index];
+            const icon = elem.querySelector('.milestone-icon');
+            
+            elem.classList.remove('unlocked', 'achieved', 'next-target');
+            
+            if (current >= milestoneValue && milestoneValue > 0) {
+                elem.classList.add('achieved');
+                icon.textContent = '✅';
+            } else if (current >= milestoneValue && milestoneValue === 0) {
+                // Special case for 0 - always achieved once started
+                elem.classList.add('achieved');
+                icon.textContent = '✅';
+            } else if (!nextTarget && milestoneValue > current) {
+                nextTarget = milestoneValue;
+                elem.classList.add('next-target');
+                icon.textContent = '🎯';
+            } else {
+                icon.textContent = '🔒';
+            }
+        });
+        
+        // Update progress message
+        const progressMessage = document.getElementById('progress-message');
+        if (progressMessage) {
+            if (current === 0) {
+                progressMessage.textContent = 'Start your journey • 20 comparisons to unlock results';
+                progressMessage.classList.remove('unlocked');
+            } else if (current < 20) {
+                progressMessage.textContent = `Keep going! ${20 - current} more to unlock results`;
+                progressMessage.classList.remove('unlocked');
+            } else if (current < 50) {
+                progressMessage.textContent = 'You can stop anytime • Keep ranking or view your results';
+                progressMessage.classList.add('unlocked');
+            } else if (current < 100) {
+                progressMessage.textContent = 'Power ranker! Keep going or view your results';
+                progressMessage.classList.add('unlocked');
+            } else {
+                progressMessage.textContent = `${current} comparisons • Continue as long as you want to perfect your rankings`;
+                progressMessage.classList.add('unlocked');
+            }
+        }
+    }
+    
+    checkMilestoneAchievements(current) {
+        // Define milestone messages from kanye-messages.js
+        const milestoneMessages = {
+            10: "Slow jamz, but we're getting there",
+            25: "Halfway to Graduation 🎓",
+            40: "Family business of ranking continues",
+            50: "Through the Wire to your results",
+            60: "Homecoming to your favorites soon",
+            75: "Almost touched the Sky",
+            90: "Last call before results",
+            100: "My Beautiful Dark Twisted Ranking complete",
+            125: "Ultralight beam of comparisons",
+            150: "Saint Pablo level dedication"
+        };
+        
+        // Check for new milestones
+        for (const [milestone, message] of Object.entries(milestoneMessages)) {
+            const milestoneNum = parseInt(milestone);
+            if (current >= milestoneNum && !this.achievedMilestones.has(milestoneNum)) {
+                this.achievedMilestones.add(milestoneNum);
+                this.showMilestoneNotification(message);
+            }
+        }
+    }
+    
+    showMilestoneNotification(message) {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = 'milestone-notification';
+        notification.textContent = message;
+        
+        // Style the notification
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #FFD93D 0%, #FF8E53 100%);
+            color: #000;
+            padding: 16px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            animation: slideInDown 0.5s ease-out;
+        `;
+        
+        // Add animation keyframes if not already present
+        if (!document.querySelector('#milestone-animations')) {
+            const style = document.createElement('style');
+            style.id = 'milestone-animations';
+            style.textContent = `
+                @keyframes slideInDown {
+                    from {
+                        transform: translate(-50%, -100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translate(-50%, 0);
+                        opacity: 1;
+                    }
+                }
+                @keyframes slideOutUp {
+                    from {
+                        transform: translate(-50%, 0);
+                        opacity: 1;
+                    }
+                    to {
+                        transform: translate(-50%, -100%);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Add to document
+        document.body.appendChild(notification);
+        
+        // Remove after 4 seconds
+        setTimeout(() => {
+            notification.style.animation = 'slideOutUp 0.5s ease-in';
+            setTimeout(() => {
+                notification.remove();
+            }, 500);
+        }, 4000);
     }
     
     updateShowResultsButton(currentComparisons) {
         const minComparisons = 20;
         const showResultsBtn = this.elements.showResultsButton;
+        const lockIcon = showResultsBtn.querySelector('.btn-lock-icon');
+        const btnText = showResultsBtn.querySelector('.btn-text');
         
         if (currentComparisons < minComparisons) {
-            showResultsBtn.style.display = 'none';
+            // Keep button visible but locked
+            showResultsBtn.disabled = true;
+            showResultsBtn.classList.add('btn-locked');
+            showResultsBtn.classList.remove('unlock-animation');
+            if (lockIcon) lockIcon.style.display = 'inline-block';
+            showResultsBtn.title = `Complete ${minComparisons - currentComparisons} more comparisons to unlock`;
         } else {
-            showResultsBtn.style.display = 'block';
+            // Unlock the button
+            if (showResultsBtn.disabled) {
+                // First time unlocking - add animation
+                showResultsBtn.classList.add('unlock-animation');
+                setTimeout(() => {
+                    showResultsBtn.classList.remove('unlock-animation');
+                }, 600);
+            }
+            
             showResultsBtn.disabled = false;
-            showResultsBtn.classList.remove('btn-disabled');
-            showResultsBtn.textContent = 'I\'m Done - Show Results';
+            showResultsBtn.classList.remove('btn-locked');
+            if (lockIcon) lockIcon.style.display = 'none';
             showResultsBtn.title = 'Show your results';
         }
     }

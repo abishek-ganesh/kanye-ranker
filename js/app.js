@@ -356,6 +356,8 @@ class KanyeRankerApp {
             if (this.ui.elements.completedComparisons) {
                 this.ui.elements.completedComparisons.textContent = '0';
             }
+            // Initialize the milestone progress at 0
+            this.ui.updateProgressBar(0, 0, 0);
             setTimeout(() => {
                 // Ensure album colors are loaded
                 if (!window.getAlbumColors && window.AlbumColors) {
@@ -1526,9 +1528,9 @@ class KanyeRankerApp {
         // For dynamic pairing, show progress based on minimum comparisons
         if (this.useDynamicPairing) {
             const totalEstimate = Math.max(this.minComparisons, this.pairings.length + 10);
-            this.ui.updateProgressBar(completedCount + 1, totalEstimate, completedCount);
+            this.ui.updateProgressBar(completedCount, totalEstimate, completedCount);
         } else {
-            this.ui.updateProgressBar(this.currentPairIndex + 1, this.pairings.length, completedCount);
+            this.ui.updateProgressBar(this.currentPairIndex, this.pairings.length, completedCount);
         }
         
         // Save rating snapshot before comparison
@@ -1844,11 +1846,7 @@ class KanyeRankerApp {
             }
         }
         
-        // Update the comparison count
-        const totalComparisonsElement = document.getElementById('total-comparisons');
-        if (totalComparisonsElement) {
-            totalComparisonsElement.textContent = completedComparisons;
-        }
+        // Comparison count is now shown in the milestone progress
         
         if (topSongs[0].spotifyId) {
             setTimeout(() => this.ui.playPreview(topSongs[0].spotifyId), 1000);
@@ -1966,9 +1964,9 @@ class KanyeRankerApp {
         this.ui.stopPreview();
         this.ui.showScreen('landing');
         
-        // Hide the "I'm Done" button when restarting
+        // Reset the "I'm Done" button to locked state when restarting
         if (this.ui.elements.showResultsButton) {
-            this.ui.elements.showResultsButton.style.display = 'none';
+            this.ui.updateShowResultsButton(0);
         }
     }
     

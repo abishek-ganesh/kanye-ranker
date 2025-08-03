@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="css/mobile-override.css?v=2">
     <link rel="stylesheet" href="css/comparison-buttons-final.css">
     <link rel="stylesheet" href="css/results-buttons-fix.css">
+    <link rel="stylesheet" href="css/milestone-progress.css">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z2S91E0R6Z"></script>
     <script>
@@ -96,10 +97,32 @@
         <div class="container">
             <header class="comparison-header">
                 <h1>KANYE RANKER</h1>
-                <p class="comparison-count">Comparison <span id="current-comparison">1</span> of ~<span id="total-comparisons">100</span></p>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progress-fill"></div>
+                <p class="comparison-count">Comparison <span id="current-comparison">1</span></p>
+                <div class="milestone-progress">
+                    <div class="progress-track">
+                        <div class="progress-fill" id="progress-fill"></div>
+                        <div class="progress-indicator" id="progress-indicator"></div>
+                    </div>
+                    <div class="milestones">
+                        <div class="milestone milestone-start" data-value="0">
+                            <span class="milestone-icon">⭐</span>
+                            <span class="milestone-number">Start</span>
+                        </div>
+                        <div class="milestone" data-value="20">
+                            <span class="milestone-icon">🔒</span>
+                            <span class="milestone-number">20</span>
+                        </div>
+                        <div class="milestone" data-value="50">
+                            <span class="milestone-icon">🔒</span>
+                            <span class="milestone-number">50</span>
+                        </div>
+                        <div class="milestone" data-value="100">
+                            <span class="milestone-icon">🔒</span>
+                            <span class="milestone-number">100+</span>
+                        </div>
+                    </div>
                 </div>
+                <p class="progress-message" id="progress-message">Unlock results at 20 comparisons</p>
             </header>
 
             <div class="comparison-container">
@@ -142,7 +165,10 @@
 
             <div class="comparison-footer">
                 <button id="skip-comparison" class="btn btn-secondary">Skip This Comparison</button>
-                <button id="show-results" class="btn btn-primary" style="display: none;">I'm Done - Show Results</button>
+                <button id="show-results" class="btn btn-primary btn-locked" disabled>
+                    <span class="btn-lock-icon">🔒</span>
+                    <span class="btn-text">I'm Done - Show Results</span>
+                </button>
             </div>
         </div>
     </div>
