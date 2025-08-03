@@ -306,19 +306,8 @@ class UI {
     }
     
     checkMilestoneAchievements(current) {
-        // Define milestone messages from kanye-messages.js
-        const milestoneMessages = {
-            10: "Slow jamz, but we're getting there",
-            25: "Halfway to Graduation 🎓",
-            40: "Family business of ranking continues",
-            50: "Through the Wire to your results",
-            60: "Homecoming to your favorites soon",
-            75: "Almost touched the Sky",
-            90: "Last call before results",
-            100: "My Beautiful Dark Twisted Ranking complete",
-            125: "Ultralight beam of comparisons",
-            150: "Saint Pablo level dedication"
-        };
+        // Use milestone messages from KanyeMessages
+        const milestoneMessages = KanyeMessages.milestones;
         
         // Check for new milestones
         for (const [milestone, message] of Object.entries(milestoneMessages)) {
