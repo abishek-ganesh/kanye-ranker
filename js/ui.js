@@ -201,6 +201,14 @@ class UI {
         // Update comparison count
         this.elements.currentComparison.textContent = current;
         
+        // Safari fix: Force DOM update
+        if (window.safari || /^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+            // Force Safari to recognize the text change
+            this.elements.currentComparison.style.display = 'none';
+            void this.elements.currentComparison.offsetHeight;
+            this.elements.currentComparison.style.display = '';
+        }
+        
         // Update milestone progress
         this.updateMilestoneProgress(current);
         
@@ -218,12 +226,24 @@ class UI {
         const progressIndicator = document.getElementById('progress-indicator');
         
         if (progressFill) {
+            // Safari fix: Remove and re-add the width to force update
+            progressFill.style.width = '';
+            // Force layout recalculation
+            void progressFill.offsetWidth;
             progressFill.style.width = `${progressPercentage}%`;
             // Force Safari repaint
             progressFill.style.webkitTransform = 'translateZ(0)';
+            
+            // Additional Safari fix: trigger a reflow
+            progressFill.style.display = 'none';
+            progressFill.offsetHeight; // Force reflow
+            progressFill.style.display = '';
         }
         
         if (progressIndicator) {
+            // Safari fix: Remove and re-add the left position
+            progressIndicator.style.left = '';
+            void progressIndicator.offsetLeft;
             progressIndicator.style.left = `${progressPercentage}%`;
             // Force Safari repaint
             progressIndicator.style.webkitTransform = 'translate(-50%, -50%) translateZ(0)';
@@ -248,16 +268,18 @@ class UI {
             } else if (current >= milestoneValue && milestoneValue === 0) {
                 // Special case for 0 - keep star icon when achieved
                 elem.classList.add('achieved');
-                // Keep the star icon for the start milestone
-                if (!elem.classList.contains('milestone-start')) {
-                    icon.textContent = '✅';
-                }
+                // Always keep the star icon for the start milestone
+                // Don't change the icon content
             } else if (!nextTarget && milestoneValue > current) {
                 nextTarget = milestoneValue;
                 elem.classList.add('next-target');
-                icon.textContent = '🎯';
+                if (milestoneValue !== 0) {  // Only change icon if not start milestone
+                    icon.textContent = '🎯';
+                }
             } else {
-                icon.textContent = '🔒';
+                if (milestoneValue !== 0) {  // Only change icon if not start milestone
+                    icon.textContent = '🔒';
+                }
             }
         });
         
@@ -378,6 +400,9 @@ class UI {
         const lockIcon = showResultsBtn.querySelector('.btn-lock-icon');
         const btnText = showResultsBtn.querySelector('.btn-text');
         
+        // Safari fix: Log current state for debugging
+        console.log(`Updating show results button: ${currentComparisons} comparisons completed`);
+        
         if (currentComparisons < minComparisons) {
             // Keep button visible but locked
             showResultsBtn.disabled = true;
@@ -399,6 +424,13 @@ class UI {
             showResultsBtn.classList.remove('btn-locked');
             if (lockIcon) lockIcon.style.display = 'none';
             showResultsBtn.title = 'Show your results';
+            
+            // Safari fix: Force button state update
+            if (window.safari || /^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+                showResultsBtn.style.opacity = '0.99';
+                void showResultsBtn.offsetHeight;
+                showResultsBtn.style.opacity = '';
+            }
         }
     }
     
