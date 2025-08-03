@@ -246,9 +246,12 @@ class UI {
                 elem.classList.add('achieved');
                 icon.textContent = '✅';
             } else if (current >= milestoneValue && milestoneValue === 0) {
-                // Special case for 0 - always achieved once started
+                // Special case for 0 - keep star icon when achieved
                 elem.classList.add('achieved');
-                icon.textContent = '✅';
+                // Keep the star icon for the start milestone
+                if (!elem.classList.contains('milestone-start')) {
+                    icon.textContent = '✅';
+                }
             } else if (!nextTarget && milestoneValue > current) {
                 nextTarget = milestoneValue;
                 elem.classList.add('next-target');

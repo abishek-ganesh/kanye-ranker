@@ -374,6 +374,17 @@
     .progress-message {
         font-size: 14px;
     }
+    
+    /* Align start milestone with progress bar edge on mobile */
+    .milestone[data-value="0"] {
+        transform: translateX(-10px);
+        -webkit-transform: translateX(-10px);
+    }
+    
+    .milestone[data-value="0"].next-target {
+        transform: translateX(-10px) scale(1.1);
+        -webkit-transform: translateX(-10px) scale(1.1);
+    }
 }
 
 /* Dark mode adjustments */
