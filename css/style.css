@@ -951,6 +951,11 @@ body {
         text-align: left;
     }
     
+    /* Center album titles in top albums list on mobile */
+    #top-albums .result-title {
+        text-align: center;
+    }
+    
     .result-album {
         font-size: 0.875rem;
         margin-bottom: 0.5rem;

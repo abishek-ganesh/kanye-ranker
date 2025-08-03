@@ -106,13 +106,18 @@
 
 /* Starting milestone (0) */
 .milestone-start {
-    opacity: 0.8;
+    opacity: 1;
 }
 
 .milestone-start .milestone-number {
-    font-weight: 600;
-    color: #999;
-    font-size: 12px;
+    font-weight: 700;
+    color: #D4AF37 !important;
+    font-size: 16px;
+}
+
+/* Override achieved state for start milestone */
+.milestone-start.achieved .milestone-number {
+    color: #D4AF37 !important;
 }
 
 .milestone-start.achieved {
@@ -124,7 +129,7 @@
 }
 
 .milestone-start .milestone-icon {
-    font-size: 20px;
+    font-size: 28px;
 }
 
 @keyframes startJourney {
@@ -197,7 +202,7 @@
 }
 
 .milestone.next-target .milestone-number {
-    color: #FFD93D;
+    color: #D4AF37;
     font-weight: 700;
 }
 
@@ -205,14 +210,14 @@
 .progress-message {
     text-align: center;
     font-size: 16px;
-    color: #FFD93D;
+    color: #D4AF37;
     margin-top: 10px;
     font-weight: 500;
     transition: all 0.3s ease;
 }
 
 .progress-message.unlocked {
-    color: #FFD93D;
+    color: #D4AF37;
     font-weight: 600;
 }
 
@@ -221,11 +226,11 @@
     font-size: 24px;
     font-weight: 600;
     margin: 15px 0 20px;
-    color: #FFD93D;
+    color: #D4AF37;
 }
 
 .comparison-count #current-comparison {
-    color: #FFD93D;
+    color: #D4AF37;
     font-weight: 700;
 }
 
@@ -244,7 +249,7 @@
     left: 50%;
     transform: translateX(-50%);
     background: rgba(0, 0, 0, 0.9);
-    color: #FFD93D;
+    color: #D4AF37;
     padding: 8px 12px;
     border-radius: 4px;
     font-size: 14px;
@@ -363,8 +368,18 @@
         font-size: 20px;
     }
     
+    /* Keep start icon larger on mobile */
+    .milestone-start .milestone-icon {
+        font-size: 26px;
+    }
+    
     .milestone-number {
         font-size: 12px;
+    }
+    
+    /* Keep start text larger on mobile */
+    .milestone-start .milestone-number {
+        font-size: 14px;
     }
     
     .comparison-count {
@@ -406,17 +421,27 @@
 }
 
 .dark-mode .progress-message {
-    color: #FFD93D;
+    color: #D4AF37;
 }
 
 .dark-mode .progress-message.unlocked {
-    color: #FFD93D;
+    color: #D4AF37;
 }
 
 .dark-mode .comparison-count {
-    color: #FFD93D;
+    color: #D4AF37;
 }
 
 .dark-mode .comparison-count #current-comparison {
-    color: #FFD93D;
+    color: #D4AF37;
 }
+
+/* Ensure Start text is always gold in dark mode */
+.dark-mode .milestone-start .milestone-number {
+    color: #D4AF37 !important;
+}
+
+.dark-mode .milestone-start.achieved .milestone-number {
+    color: #D4AF37 !important;
+}
+
