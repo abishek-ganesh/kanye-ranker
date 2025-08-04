@@ -868,53 +868,8 @@ class UI {
         return div;
     }
     
-    async playPreview(spotifyId) {
-        if (this.currentlyPlaying) {
-            this.stopPreview();
-        }
-        
-        const embedUrl = `https://open.spotify.com/embed/track/${spotifyId}`;
-        
-        const iframe = document.createElement('iframe');
-        iframe.style.display = 'none';
-        iframe.src = embedUrl;
-        document.body.appendChild(iframe);
-        
-        this.currentlyPlaying = iframe;
-        
-        const previewBtns = document.querySelectorAll('.preview-btn');
-        previewBtns.forEach(btn => {
-            if (btn.dataset.spotifyId === spotifyId) {
-                btn.textContent = '⏸ Stop';
-                btn.classList.add('playing');
-            }
-        });
-    }
-    
-    stopPreview() {
-        if (this.currentlyPlaying) {
-            this.currentlyPlaying.remove();
-            this.currentlyPlaying = null;
-            
-            const previewBtns = document.querySelectorAll('.preview-btn');
-            previewBtns.forEach(btn => {
-                btn.textContent = '▶ Preview';
-                btn.classList.remove('playing');
-            });
-        }
-    }
-    
-    showLoading(element) {
-        element.classList.add('loading');
-    }
-    
-    hideLoading(element) {
-        element.classList.remove('loading');
-    }
-    
     showOverlay(message = 'Loading...') {
         // Overlay disabled for now
-        console.log('Overlay message:', message);
     }
     
     hideOverlay() {

@@ -1,7 +1,6 @@
 // Fallback YouTube Preview System - Simple Click-to-Play
 class YouTubePreviewFallback {
     constructor() {
-        console.log('[YouTube Preview Fallback] Initializing click-to-play system...');
         
         this.currentModal = null;
         this.videoIds = {};
@@ -9,12 +8,10 @@ class YouTubePreviewFallback {
         
         // Check if video data is already loaded
         if (window.videoLinks && window.videoLinks.videoIds) {
-            console.log('[YouTube Preview Fallback] Using already loaded video data');
             this.videoIds = window.videoLinks.videoIds;
             this.brokenVideoIds = window.videoLinks.brokenVideoIds || [];
             this.init();
         } else {
-            console.log('[YouTube Preview Fallback] Video data not loaded yet, loading from JSON...');
             // Load video data from JSON file
             this.loadVideoData().then(() => {
                 this.init();
@@ -38,7 +35,6 @@ class YouTubePreviewFallback {
                     this.videoIds[songTitle] = videoId;
                 } else {
                     brokenCount++;
-                    console.log(`[YouTube Preview] Filtering out broken video: ${songTitle} (${videoId})`);
                 }
             }
             
@@ -50,15 +46,8 @@ class YouTubePreviewFallback {
                 };
             }
             
-            console.log(`[YouTube Preview] Loaded ${Object.keys(this.videoIds).length} video links`);
-            console.log(`[YouTube Preview] Filtered out ${brokenCount} broken videos`);
             
             // Debug: Check if CARNIVAL is in the final list
-            if (this.videoIds['CARNIVAL']) {
-                console.log(`[YouTube Preview] ✓ CARNIVAL video is available: ${this.videoIds['CARNIVAL']}`);
-            } else {
-                console.log(`[YouTube Preview] ✗ CARNIVAL video not found in final list`);
-            }
         } catch (error) {
             console.error('[YouTube Preview] Failed to load video links:', error);
             // Fallback to empty database if loading fails
@@ -76,7 +65,6 @@ class YouTubePreviewFallback {
         // Listen for preview button clicks
         this.attachGlobalListeners();
         
-        console.log('[YouTube Preview Fallback] Ready!');
     }
     
     addStyles() {
@@ -260,33 +248,7 @@ class YouTubePreviewFallback {
         
         document.body.appendChild(this.modal);
         
-        // Help popup removed per user request
-        // this.showFirstTimeHelp();
     }
-    
-    // Method removed per user request - no first time help popup
-    // showFirstTimeHelp() {
-    //     if (localStorage.getItem('youtube-preview-help-shown')) return;
-    //     
-    //     const help = document.createElement('div');
-    //     help.className = 'preview-help';
-    //     help.innerHTML = `
-    //         <h3>🎵 Music Preview Available!</h3>
-    //         <p>Click on any song card to preview it on YouTube.</p>
-    //         <p><small>Songs with available previews will glow when you hover over them.</small></p>
-    //         <button onclick="this.parentElement.remove(); localStorage.setItem('youtube-preview-help-shown', 'true')">Got it!</button>
-    //     `;
-    //     
-    //     setTimeout(() => {
-    //         document.body.appendChild(help);
-    //         setTimeout(() => {
-    //             if (help.parentElement) {
-    //                 help.remove();
-    //                 localStorage.setItem('youtube-preview-help-shown', 'true');
-    //             }
-    //         }, 10000);
-    //     }, 2000);
-    // }
     
     attachGlobalListeners() {
         // Listen for clicks on preview buttons only
@@ -334,14 +296,11 @@ class YouTubePreviewFallback {
         
         // Only log debug info once per session
         if (!this._hasLoggedDebugInfo) {
-            console.log(`[Preview] Marking ${songCards.length} song cards`);
-            console.log(`[Preview] Video database has ${Object.keys(this.videoIds).length} videos`);
             
             // Debug: Show some Vultures videos
             const vultureVideos = Object.entries(this.videoIds)
                 .filter(([title]) => title.includes('ARNIVAL') || title.includes('arnival'))
                 .slice(0, 3);
-            console.log(`[Preview] Sample Vultures videos:`, vultureVideos);
             this._hasLoggedDebugInfo = true;
         }
         
@@ -351,7 +310,6 @@ class YouTubePreviewFallback {
             
             const titleElement = card.querySelector('.song-title');
             if (!titleElement) {
-                console.log(`[Preview] No title element found for card ${index}`);
                 return;
             }
             
@@ -376,7 +334,6 @@ class YouTubePreviewFallback {
             }
             
             if (videoId) {
-                console.log(`[Preview] Found video for "${songTitle}" (card ${index})`);
                 card.classList.add('has-preview');
                 
                 // Remove any existing indicators
@@ -388,7 +345,6 @@ class YouTubePreviewFallback {
                 if (previewBtn) {
                     // Only update if not already set up correctly
                     if (!previewBtn.classList.contains('has-preview') || previewBtn.textContent.includes('No Preview')) {
-                        console.log(`[Preview] Updating preview button for "${songTitle}"`);
                         previewBtn.classList.remove('disabled');
                         previewBtn.classList.add('has-preview');
                         previewBtn.textContent = '▶ Preview';
@@ -401,7 +357,6 @@ class YouTubePreviewFallback {
             } else {
                 // Only log missing videos if song title exists
                 if (songTitle && songTitle.trim()) {
-                    console.log(`[Preview] No video for "${songTitle}" (card ${index})`);
                 }
                 // Remove preview indicator if no video
                 const indicator = card.querySelector('.preview-indicator');
@@ -413,7 +368,6 @@ class YouTubePreviewFallback {
                     // Only update if currently showing as available
                     if (previewBtn.classList.contains('has-preview') || !previewBtn.textContent.includes('No Preview')) {
                         if (songTitle && songTitle.trim()) {
-                            console.log(`[Preview] Disabling preview button for "${songTitle}"`);
                         }
                         previewBtn.classList.remove('has-preview');
                         previewBtn.classList.add('disabled');
@@ -448,7 +402,6 @@ class YouTubePreviewFallback {
         }
         
         if (!videoId) {
-            console.log('No preview available for:', songTitle);
             // Show error message in modal
             this.modal.querySelector('.preview-title').textContent = 'Preview Not Available';
             const videoContainer = this.modal.querySelector('.preview-video');
@@ -462,7 +415,6 @@ class YouTubePreviewFallback {
             return;
         }
         
-        console.log('Playing preview for:', songTitle, 'Video ID:', videoId);
         
         // Update modal content
         this.modal.querySelector('.preview-title').textContent = songTitle;
