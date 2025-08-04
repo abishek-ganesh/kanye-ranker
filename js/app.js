@@ -6,11 +6,9 @@
  */
 class KanyeRankerApp {
     constructor() {
-        console.log('KanyeRankerApp constructor called');
         
         try {
             this.ui = new UI();
-            console.log('UI initialized');
         } catch (error) {
             console.error('Failed to initialize UI:', error);
             throw error;
@@ -18,7 +16,6 @@ class KanyeRankerApp {
         
         try {
             this.elo = new EloRating(32);
-            console.log('EloRating initialized');
         } catch (error) {
             console.error('Failed to initialize EloRating:', error);
             throw error;
@@ -55,7 +52,6 @@ class KanyeRankerApp {
     
     async init() {
         try {
-            console.log('Initializing KanyeRankerApp...');
             
             // Track initial page view
             if (window.analytics) {
@@ -66,16 +62,13 @@ class KanyeRankerApp {
             }
             
             await this.loadData();
-            console.log('Data loaded successfully');
             
             this.attachEventListeners();
-            console.log('Event listeners attached');
             
             // Initialize share system
             
             // Initialize back button
             this.backButton = new BackButtonManager(this);
-            console.log('Back button initialized');
             
             // Share functionality removed per user request
             // if (this.share) {
@@ -88,7 +81,6 @@ class KanyeRankerApp {
             
             // Session saving removed - users start fresh each time
             
-            console.log('App initialization complete');
         } catch (error) {
             console.error('Error during initialization:', error);
             this.ui.showError('Failed to initialize app: ' + error.message);
@@ -106,28 +98,23 @@ class KanyeRankerApp {
                 window.KanyeMessages.getRandomMessage('loading') : 
                 'Loading song database...';
             this.ui.showOverlay(loadingMessage);
-            console.log('Fetching data/songs.json...');
             const response = await fetch('data/songs.json');
-            console.log('Fetch response:', response.status, response.statusText);
             
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             
             const data = await response.json();
-            console.log('Parsed data:', data);
             
             if (!data.songs) {
                 throw new Error('No songs array found in data');
             }
             
             this.songs = data.songs;
-            console.log(`Loaded ${this.songs.length} songs`);
             
             data.albums.forEach(album => {
                 this.albums.set(album.id, album);
             });
-            console.log(`Loaded ${this.albums.size} albums`);
             
             this.songs.forEach(song => {
                 this.songRatings.set(song.id, song.initialRating);
@@ -155,21 +142,18 @@ class KanyeRankerApp {
     }
     
     attachEventListeners() {
-        console.log('Attaching event listeners...');
         
         // Core buttons
         if (this.ui.elements.startButton) {
             this.ui.elements.startButton.addEventListener('click', () => {
                 this.startRanking();
             });
-            console.log('Start button listener attached');
         }
         
         if (this.ui.elements.skipButton) {
             this.ui.elements.skipButton.addEventListener('click', () => {
                 this.skipComparison();
             });
-            console.log('Skip button listener attached');
         }
         
         if (this.ui.elements.showResultsButton) {
@@ -188,7 +172,6 @@ class KanyeRankerApp {
                 
                 this.showResults();
             });
-            console.log('Show results button listener attached');
         }
         
         if (this.ui.elements.restartButton) {
@@ -223,7 +206,6 @@ class KanyeRankerApp {
             this.ui.elements.songCards.a.chooseBtn.addEventListener('click', () => {
                 this.chooseSong('a');
             });
-            console.log('Choose A button listener attached');
         } else {
             console.error('Choose A button not found!');
         }
@@ -232,7 +214,6 @@ class KanyeRankerApp {
             this.ui.elements.songCards.b.chooseBtn.addEventListener('click', () => {
                 this.chooseSong('b');
             });
-            console.log('Choose B button listener attached');
         } else {
             console.error('Choose B button not found!');
         }
@@ -245,10 +226,8 @@ class KanyeRankerApp {
                 if (e.target.tagName === 'A' || e.target.classList.contains('preview-btn')) {
                     return;
                 }
-                console.log('Song card A clicked');
                 this.chooseSong('a');
             });
-            console.log('Song card A click listener attached');
         }
         
         if (this.ui.elements.songCards.b.container) {
@@ -258,10 +237,8 @@ class KanyeRankerApp {
                 if (e.target.tagName === 'A' || e.target.classList.contains('preview-btn')) {
                     return;
                 }
-                console.log('Song card B clicked');
                 this.chooseSong('b');
             });
-            console.log('Song card B click listener attached');
         }
         
         // Keyboard shortcuts
@@ -292,14 +269,10 @@ class KanyeRankerApp {
             }
         });
         
-        console.log('All event listeners attached');
     }
     
     
     startRanking() {
-        console.log('Starting ranking...');
-        console.log('Songs loaded:', this.songs.length);
-        console.log('Albums loaded:', this.albums.size);
         
         // Track page view for comparison screen
         if (window.analytics) {
@@ -332,13 +305,6 @@ class KanyeRankerApp {
             return;
         }
         
-        console.log(`Generated ${this.pairings.length} pairings`);
-        console.log('First 5 pairings:');
-        this.pairings.slice(0, 5).forEach((pair, i) => {
-            const songA = this.songs.find(s => s.id === pair[0]);
-            const songB = this.songs.find(s => s.id === pair[1]);
-            console.log(`${i + 1}: "${songA?.title}" (${(songA?.spotifyStreams || 0).toLocaleString()} streams) vs "${songB?.title}" (${(songB?.spotifyStreams || 0).toLocaleString()} streams)`);
-        });
         
         // Add delay to ensure DOM is ready
         setTimeout(() => {
@@ -361,7 +327,6 @@ class KanyeRankerApp {
     
     initializeSongTiers() {
         const songIds = Array.from(this.songRatings.keys());
-        console.log(`Initializing song tiers for ${songIds.length} songs`);
         
         // Define Kanye's most popular albums that should appear more often
         // Added 'grad' (Graduation) and 'cruel' (Cruel Summer) to the list per user request
@@ -408,15 +373,6 @@ class KanyeRankerApp {
         this.classicAlbumArray = Array.from(this.classicAlbumSongIds);
         this.allSongsArray = songIds;
         
-        console.log(`Song tiers: Top 20: ${top20Songs.length}, Top 50: ${top50Songs.length}, Top 100: ${top100Songs.length}`);
-        console.log(`Classic album songs: ${classicAlbumSongs.length} songs from ${popularAlbumIds.join(', ')}`);
-        
-        console.log('=== TOP 20 SONGS FOR EARLY COMPARISONS ===');
-        top20Songs.forEach((s, i) => {
-            const album = this.albums.get(s.albumId);
-            console.log(`${i + 1}. "${s.title}" (${album?.name}) - Streams: ${s.spotifyStreams.toLocaleString()}`);
-        });
-        console.log('=== END TOP 20 ===');
         
         // Track shown songs
         this.shownSongs = new Set();
@@ -452,15 +408,12 @@ class KanyeRankerApp {
             
             if (finalSongs.length > 0) {
                 this.albumTopSongs.set(albumId, finalSongs.map(s => s.id));
-                console.log(`Album ${albumId}: ${finalSongs.map(s => s.title).join(', ')}`);
             }
         });
         
         // Flatten all top album songs into a single array
         this.allAlbumTopSongs = Array.from(this.albumTopSongs.values()).flat();
         
-        console.log(`Albums with top songs: ${this.albumTopSongs.size}`);
-        console.log(`Total album top songs: ${this.allAlbumTopSongs.length}`);
         
         // Track which albums have been shown
         this.shownAlbums = new Set();
@@ -483,12 +436,10 @@ class KanyeRankerApp {
     shouldCarryOverWinner() {
         // Check fatigue prevention rules
         if (this.consecutiveWins >= 3) {
-            console.log('Forcing new pair: Same song won 3 times in a row');
             return false;
         }
         
         if (this.comparisonsSinceBreak >= 7) {
-            console.log('Forcing new pair: Mental break after 7 comparisons');
             return false;
         }
         
@@ -505,7 +456,6 @@ class KanyeRankerApp {
         );
         
         if (candidates.length === 0) {
-            console.log('No valid opponents for winner, will select new pair');
             return null;
         }
         
@@ -525,7 +475,6 @@ class KanyeRankerApp {
         const topCandidates = candidatesWithScores.slice(0, 5);
         const selected = topCandidates[Math.floor(Math.random() * topCandidates.length)];
         
-        console.log(`Selected opponent for winner: rating diff = ${selected.ratingDiff}`);
         return selected.id;
     }
     
@@ -589,7 +538,6 @@ class KanyeRankerApp {
         
         // Cross-tier challenges every 10 comparisons after the first 20
         if (completedComparisons >= 20 && completedComparisons % 10 === 0) {
-            console.log('Time for a cross-tier challenge round!');
             return true;
         }
         return false;
@@ -624,7 +572,6 @@ class KanyeRankerApp {
         if (lowConfidenceTop10.length === 0) return null;
         
         const topSong = lowConfidenceTop10[Math.floor(Math.random() * lowConfidenceTop10.length)];
-        console.log(`Selected top 10 song for challenge: Confidence ${(topSong.confidence * 100).toFixed(1)}%, Avg opponent: ${topSong.avgOpponentRating.toFixed(0)}`);
         
         // Pick challenger from next tier (60%) or lower tier (40%)
         let challenger;
@@ -662,9 +609,6 @@ class KanyeRankerApp {
         }
         
         if (challenger) {
-            const topRank = rankedSongs.indexOf(topSong) + 1;
-            const challengerRank = rankedSongs.indexOf(challenger) + 1;
-            console.log(`Cross-tier challenge: #${topRank} (conf: ${(topSong.confidence * 100).toFixed(1)}%) vs #${challengerRank} (conf: ${(challenger.confidence * 100).toFixed(1)}%)`);
             return [topSong.id, challenger.id];
         }
         
@@ -696,9 +640,6 @@ class KanyeRankerApp {
             // Top 10 vs Top 10
             const top10 = top20.slice(0, 10);
             pair = this.selectPairFromPool(top10.map(s => s.id));
-            if (pair) {
-                console.log('Finals: Top 10 vs Top 10 matchup');
-            }
         }
         
         if (!pair && strategy < 0.9) {
@@ -713,7 +654,6 @@ class KanyeRankerApp {
                 if (candidates.length > 0) {
                     const song2 = candidates[Math.floor(Math.random() * candidates.length)];
                     pair = [song1.id, song2.id];
-                    console.log('Finals: Top 10 vs 11-20 validation');
                 }
             }
         }
@@ -730,7 +670,6 @@ class KanyeRankerApp {
                 if (candidates.length > 0) {
                     const opponent = candidates[Math.floor(Math.random() * candidates.length)];
                     pair = [wildcard.id, opponent.id];
-                    console.log('Finals: Wildcard challenge');
                 }
             }
         }
@@ -766,7 +705,6 @@ class KanyeRankerApp {
     generateNextPairing() {
         const { phase, pool, poolName } = this.getCurrentPhase();
         const completedComparisons = this.elo.getCompletedComparisons();
-        console.log(`Generating pairing for phase ${phase} (${poolName} pool), comparison #${completedComparisons + 1}`);
         
         // BALANCED APPROACH: Mix popular songs with album diversity in first 40 comparisons
         if (completedComparisons < 40) {
@@ -810,8 +748,6 @@ class KanyeRankerApp {
                             this.shownAlbums.add(opponentSong.albumId);
                         }
                         
-                        const album = this.albums.get(albumToShow);
-                        console.log(`Album diversity pairing: Showing "${album?.name}" (${albumToShow})`);
                         this.comparisonsSinceBreak++;
                         return [songId, opponentId];
                     }
@@ -832,7 +768,6 @@ class KanyeRankerApp {
         if (poolName !== 'finals' && this.shouldDoCrossTierChallenge()) {
             const challengePair = this.generateCrossTierChallenge();
             if (challengePair) {
-                console.log('Generated cross-tier challenge pairing');
                 this.comparisonsSinceBreak++;
                 return challengePair;
             }
@@ -844,7 +779,6 @@ class KanyeRankerApp {
         if (phase <= 4 && Math.random() < classicAlbumChance) {
             const classicPair = this.generateClassicAlbumPairing();
             if (classicPair) {
-                console.log('Generated classic album pairing');
                 this.comparisonsSinceBreak++;
                 return classicPair;
             }
@@ -855,7 +789,6 @@ class KanyeRankerApp {
             const opponentId = this.selectOpponentForWinner(this.lastWinnerId, pool);
             
             if (opponentId) {
-                console.log(`Carrying over winner to next comparison, maintaining position: ${this.lastWinnerPosition}`);
                 this.comparisonsSinceBreak++;
                 this.shownSongs.add(opponentId);
                 
@@ -879,7 +812,6 @@ class KanyeRankerApp {
         const newPair = this.selectNewPair(pool);
         
         if (newPair) {
-            console.log('Generated new pair');
             this.comparisonsSinceBreak++;
             return newPair;
         }
@@ -910,11 +842,6 @@ class KanyeRankerApp {
         if (Math.random() < 0.7) {
             const pair = this.selectPairFromPool(classicSongs);
             if (pair) {
-                const song1 = this.songs.find(s => s.id === pair[0]);
-                const song2 = this.songs.find(s => s.id === pair[1]);
-                const album1 = this.albums.get(song1?.albumId);
-                const album2 = this.albums.get(song2?.albumId);
-                console.log(`Classic album matchup: "${song1?.title}" (${album1?.name}) vs "${song2?.title}" (${album2?.name})`);
                 return pair;
             }
         }
@@ -962,7 +889,6 @@ class KanyeRankerApp {
         const firstPair = this.generateNextPairing();
         if (firstPair) {
             this.pairings.push(firstPair);
-            console.log('Generated first pairing dynamically');
         } else {
             console.error('Failed to generate first pairing');
         }
@@ -996,10 +922,7 @@ class KanyeRankerApp {
         const top50Array = Array.from(top50SongIds);
         const top100Array = Array.from(top100SongIds);
         
-        console.log(`Song tiers: Top 20: ${top20Songs.length}, Top 50: ${top50Songs.length}, Top 100: ${top100Songs.length}`);
-        
         const totalPairings = this.minComparisons + Math.floor(Math.random() * (this.maxComparisons - this.minComparisons));
-        console.log(`Target number of pairings: ${totalPairings}`);
         
         this.pairings = [];
         const recentPairs = new Map();
@@ -1015,7 +938,6 @@ class KanyeRankerApp {
         let pairingIndex = 0;
         
         // PHASE 1: Generate pairings ONLY from top 20 songs
-        console.log('\nPHASE 1: Generating comparisons 1-15 from top 20 songs only');
         while (pairingIndex < phase1End && pairingIndex < totalPairings) {
             let bestPair = null;
             let bestScore = -Infinity;
@@ -1063,9 +985,6 @@ class KanyeRankerApp {
                 pairingIndex++;
                 
                 if (pairingIndex <= 3) {
-                    const songA = this.songs.find(s => s.id === bestPair[0]);
-                    const songB = this.songs.find(s => s.id === bestPair[1]);
-                    console.log(`Comparison ${pairingIndex}: "${songA?.title}" vs "${songB?.title}"`);
                 }
             } else {
                 console.warn('Could not find valid pair in phase 1, moving to phase 2');
@@ -1074,7 +993,6 @@ class KanyeRankerApp {
         }
         
         // PHASE 2: Top 50 songs ONLY (with smart inclusion of user preferences)
-        console.log('\nPHASE 2: Generating comparisons 16-30 from top 50 songs only');
         while (pairingIndex < phase2End && pairingIndex < totalPairings) {
             let bestPair = null;
             let bestScore = -Infinity;
@@ -1087,9 +1005,6 @@ class KanyeRankerApp {
             // 30% chance to prioritize a highly-rated song IF it's in top 50
             const includeHighRated = highlyRatedInTop50.length > 0 && Math.random() < 0.30;
             
-            if (pairingIndex === phase1End) {
-                console.log(`Phase 2: Found ${highlyRatedInTop50.length} highly-rated songs that are in top 50`);
-            }
             
             for (let attempt = 0; attempt < 100; attempt++) {
                 let songIdA, songIdB;
@@ -1161,9 +1076,6 @@ class KanyeRankerApp {
                 
                 // Log some comparisons for debugging
                 if (pairingIndex === 20 || pairingIndex === 23 || pairingIndex === 25) {
-                    const songA = this.songs.find(s => s.id === bestPair[0]);
-                    const songB = this.songs.find(s => s.id === bestPair[1]);
-                    console.log(`Comparison ${pairingIndex}: "${songA?.title}" (${songA?.spotifyStreams?.toLocaleString()}) vs "${songB?.title}" (${songB?.spotifyStreams?.toLocaleString()})`);
                 }
             } else {
                 console.warn('Could not find valid pair in phase 2');
@@ -1172,7 +1084,6 @@ class KanyeRankerApp {
         }
         
         // PHASE 3: Top 100 songs (with increased focus on user preferences)
-        console.log('\nPHASE 3: Generating comparisons 31-50 from top 100 songs only');
         while (pairingIndex < phase3End && pairingIndex < totalPairings) {
             let bestPair = null;
             let bestScore = -Infinity;
@@ -1185,9 +1096,6 @@ class KanyeRankerApp {
             // 50% chance to prioritize highly-rated songs in top 100
             const includeHighRated = highlyRatedInTop100.length > 0 && Math.random() < 0.50;
             
-            if (pairingIndex === phase2End) {
-                console.log(`Phase 3: Found ${highlyRatedInTop100.length} highly-rated songs that are in top 100`);
-            }
             
             for (let attempt = 0; attempt < 100; attempt++) {
                 let songIdA, songIdB;
@@ -1259,7 +1167,6 @@ class KanyeRankerApp {
         }
         
         // PHASE 4: All songs with strong preference for refining user's top picks
-        console.log('\nPHASE 4: Generating comparisons 51+ from all songs (focus on refining top picks)');
         
         // Track which songs have been shown to the user
         const shownSongs = new Set();
@@ -1269,7 +1176,6 @@ class KanyeRankerApp {
         });
         
         const unshownSongs = songIds.filter(id => !shownSongs.has(id));
-        console.log(`Phase 4: ${unshownSongs.length} songs haven't been shown yet`);
         
         for (let i = pairingIndex; i < totalPairings; i++) {
             let bestPair = null;
@@ -1379,16 +1285,7 @@ class KanyeRankerApp {
             }
         }
         
-        // Validate pairings and show summary
-        console.log(`\\nGenerated ${this.pairings.length} total pairings`);
-        console.log('Phase breakdown:');
-        console.log(`- Comparisons 1-15: Top 20 songs only (most popular by streams)`);
-        console.log(`- Comparisons 16-30: Top 50 songs only (30% chance of prioritizing user favorites within top 50)`);
-        console.log(`- Comparisons 31-50: Top 100 songs only (50% chance of prioritizing user favorites within top 100)`);
-        console.log(`- Comparisons 51+: All songs (70% include user's top picks for refinement)`);
-        
-        // Validate first few pairings to ensure popular songs
-        console.log('\\nValidating early comparisons have popular songs:');
+        // Validate pairings
         for (let i = 0; i < Math.min(5, this.pairings.length); i++) {
             const [idA, idB] = this.pairings[i];
             const songA = this.songs.find(s => s.id === idA);
@@ -1469,10 +1366,8 @@ class KanyeRankerApp {
                 const nextPair = this.generateNextPairing();
                 if (nextPair) {
                     this.pairings.push(nextPair);
-                    console.log(`Generated new pairing #${this.pairings.length}`);
                 } else {
                     // No more valid pairings possible
-                    console.log('No more valid pairings available');
                     this.ui.showSuccess('You\'ve compared all possible song combinations!');
                     this.showResults();
                     return;
@@ -1480,8 +1375,6 @@ class KanyeRankerApp {
             }
         } else {
             // Legacy behavior: check pre-generated pairings
-            console.log(`Showing comparison ${this.currentPairIndex + 1} of ${this.pairings.length}`);
-            
             if (this.currentPairIndex >= this.pairings.length) {
                 // For legacy system, automatically show results when done
                 this.showResults();
@@ -1490,7 +1383,6 @@ class KanyeRankerApp {
         }
         
         const [songIdA, songIdB] = this.pairings[this.currentPairIndex];
-        console.log('Current pairing IDs:', songIdA, songIdB);
         
         const songA = this.songs.find(s => s.id === songIdA);
         const songB = this.songs.find(s => s.id === songIdB);
@@ -1502,8 +1394,6 @@ class KanyeRankerApp {
             return;
         }
         
-        console.log('Song A:', songA.title, 'from album', songA.albumId);
-        console.log('Song B:', songB.title, 'from album', songB.albumId);
         
         songA.rating = this.songRatings.get(songIdA);
         songB.rating = this.songRatings.get(songIdB);
@@ -1537,11 +1427,9 @@ class KanyeRankerApp {
     }
     
     chooseSong(side) {
-        console.log(`chooseSong called with side: ${side}`);
         
         // Prevent multiple clicks
         if (this.isProcessingChoice) {
-            console.log('Already processing a choice, ignoring');
             return;
         }
         
@@ -1580,7 +1468,6 @@ class KanyeRankerApp {
         
         // Track user's favorite songs for exploration/exploitation
         this.userFavorites.add(winnerId);
-        console.log(`User chose: "${winnerSong?.title}" (${this.userFavorites.size} favorites tracked)`);
         
         // Track winner for dynamic pairing
         if (this.useDynamicPairing) {
@@ -1592,14 +1479,11 @@ class KanyeRankerApp {
             this.lastWinnerId = winnerId;
             // Track which position the winner was in (a = left/top, b = right/bottom)
             this.lastWinnerPosition = (winnerId === songIdA) ? 'a' : 'b';
-            console.log(`Winner tracked for carry-over. Position: ${this.lastWinnerPosition}, Consecutive wins: ${this.consecutiveWins}`);
         }
         
         const winnerRating = this.songRatings.get(winnerId);
         const loserRating = this.songRatings.get(loserId);
         
-        console.log(`Winner: ${winnerId} (rating: ${winnerRating})`);
-        console.log(`Loser: ${loserId} (rating: ${loserRating})`);
         
         const scoreA = winnerId === songIdA ? 1 : 0;
         const { newRatingA, newRatingB } = this.elo.updateRatings(
@@ -1615,15 +1499,10 @@ class KanyeRankerApp {
         
         this.elo.recordComparison(songIdA, songIdB, winnerId);
         
-        // Log rating changes and K-factors
-        const kA = this.elo.getDynamicK(songIdA);
-        const kB = this.elo.getDynamicK(songIdB);
-        console.log(`Rating changes: A: ${this.songRatings.get(songIdA)} (K=${kA}), B: ${this.songRatings.get(songIdB)} (K=${kB})`);
         
         // Check if entering finals mode
         const completedComparisons = this.elo.getCompletedComparisons();
         if (completedComparisons === 80) {
-            console.log('🏆 Entering FINALS MODE! Focus on refining top 10 rankings.');
             this.ui.showSuccess('Entering Finals Mode - Refining your top picks!');
         }
         
@@ -1645,7 +1524,6 @@ class KanyeRankerApp {
     skipComparison() {
         // Prevent rapid clicking
         if (this.isProcessingChoice) {
-            console.log('Skip ignored - already processing');
             return;
         }
         
@@ -1664,7 +1542,6 @@ class KanyeRankerApp {
             this.lastWinnerId = null;
             this.lastWinnerPosition = null;
             this.consecutiveWins = 0;
-            console.log('Reset carry-over due to skip');
         }
         
         this.currentPairIndex++;
@@ -1793,17 +1670,6 @@ class KanyeRankerApp {
             .sort((a, b) => b.finalScore - a.finalScore)
             .slice(0, 5);
         
-        // Log album ranking details for debugging
-        console.log('=== Album Rankings (New Algorithm) ===');
-        topAlbums.forEach((stats, index) => {
-            console.log(`${index + 1}. ${stats.album?.name}`);
-            console.log(`   - Compared songs: ${stats.comparedSongCount}`);
-            console.log(`   - Average rating: ${Math.round(stats.averageRating)}`);
-            console.log(`   - Median rating: ${Math.round(stats.medianRating)}`);
-            console.log(`   - Top 20% songs: ${stats.topSongsCount} (${(stats.topSongsRatio * 100).toFixed(1)}%)`);
-            console.log(`   - Top 40% songs: ${stats.goodSongsCount} (${(stats.goodSongsRatio * 100).toFixed(1)}%)`);
-            console.log(`   - Final score: ${stats.finalScore.toFixed(3)}`);
-        });
         
         this.ui.displayResults(topSongs, topAlbums, this.albums);
         this.ui.showScreen('results');
@@ -1921,8 +1787,6 @@ class KanyeRankerApp {
             imgA.src = albumArtPathA;
             imgB.src = albumArtPathB;
             
-            // Optional: log preloading
-            console.log(`Preloading images for next comparison: ${nextSongA.title} vs ${nextSongB.title}`);
         }
     }
     

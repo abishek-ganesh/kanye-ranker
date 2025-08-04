@@ -1,6 +1,5 @@
 class UI {
     constructor() {
-        console.log('Initializing UI...');
         
         this.screens = {
             landing: document.getElementById('landing-screen'),
@@ -20,8 +19,6 @@ class UI {
             console.error('Landing screen:', this.screens.landing);
             console.error('Comparison screen:', this.screens.comparison);
             console.error('Results screen:', this.screens.results);
-        } else {
-            console.log('All screens found successfully');
         }
         
         this.elements = {
@@ -80,7 +77,6 @@ class UI {
         setTimeout(() => {
             if (typeof YouTubePreview !== 'undefined') {
                 this.youtubePreview = new YouTubePreview();
-                console.log('YouTube preview system initialized');
             }
         }, 1000);
     }
@@ -107,14 +103,12 @@ class UI {
         });
         
         if (!hasErrors) {
-            console.log('All critical UI elements validated successfully');
         }
         
         return !hasErrors;
     }
     
     showScreen(screenName) {
-        console.log(`Switching to screen: ${screenName}`);
         
         if (!this.screens[screenName]) {
             console.error(`Screen "${screenName}" not found!`);
@@ -132,8 +126,6 @@ class UI {
         // Show the requested screen
         this.screens[screenName].style.display = 'block';
         this.screens[screenName].classList.add('active');
-        console.log(`Screen "${screenName}" is now active`);
-        console.log('Active class check:', this.screens[screenName].classList.contains('active'));
         
         // Safari fix: Force progress bar initialization when showing comparison screen
         if (screenName === 'comparison') {
@@ -194,7 +186,6 @@ class UI {
                 }
             }
         }
-        console.log('Display style:', this.screens[screenName].style.display);
     }
     
     updateProgressBar(current, total, completedComparisons = null) {
@@ -390,7 +381,6 @@ class UI {
         const btnText = showResultsBtn.querySelector('.btn-text');
         
         // Safari fix: Log current state for debugging
-        console.log(`Updating show results button: ${currentComparisons} comparisons completed`);
         
         if (currentComparisons < minComparisons) {
             // Keep button visible but locked
@@ -424,14 +414,11 @@ class UI {
     }
     
     displayComparison(songA, songB, albumsMap) {
-        console.log('displayComparison called with:', songA.title, 'vs', songB.title);
         
         try {
             const albumA = albumsMap.get(songA.albumId);
             const albumB = albumsMap.get(songB.albumId);
             
-            console.log('Album A:', albumA);
-            console.log('Album B:', albumB);
             
             // Ensure the comparison screen is visible
             if (!this.screens.comparison.classList.contains('active')) {
@@ -440,19 +427,16 @@ class UI {
             
             try {
                 this.updateSongCard('a', songA, albumA);
-                console.log('Card A updated successfully');
             } catch (error) {
                 console.error('Error updating card A:', error);
             }
             
             try {
                 this.updateSongCard('b', songB, albumB);
-                console.log('Card B updated successfully');
             } catch (error) {
                 console.error('Error updating card B:', error);
             }
             
-            console.log('Song cards update attempted');
         } catch (error) {
             console.error('Error displaying comparison:', error);
             console.error('Stack trace:', error.stack);
@@ -461,9 +445,7 @@ class UI {
     }
     
     updateSongCard(side, song, album) {
-        console.log(`Starting updateSongCard for side: ${side}`);
         const card = this.elements.songCards[side];
-        console.log(`Card object for ${side}:`, card);
         
         if (!card) {
             console.error(`Card object is null/undefined for side ${side}`);
@@ -480,17 +462,14 @@ class UI {
             return;
         }
         
-        console.log(`Setting title for ${side}...`);
         // Censor specific titles for display
         const displayTitle = KanyeUtils.getCensoredTitle(song.title);
         card.title.textContent = displayTitle || 'Unknown Title';
         
-        console.log(`Setting album for ${side}...`);
         // Display "Vultures" instead of "Vultures 1" for better UX
         const displayAlbumName = album?.name === 'Vultures 1' ? 'Vultures' : (album ? album.name : 'Unknown Album');
         card.album.textContent = displayAlbumName;
         
-        console.log(`Setting year for ${side}...`);
         card.year.textContent = album ? `(${album.year})` : '';
         
         // Reset image handlers
@@ -501,7 +480,6 @@ class UI {
             albumArtPath = `assets/album-covers/${album.coverArt}`;
         }
         
-        console.log(`Setting album art for ${side}: ${albumArtPath} (Album: ${album?.name})`);
         
         // Set up error handler first
         card.albumArt.onerror = function() {
@@ -513,7 +491,6 @@ class UI {
         
         // Add onload handler to confirm successful loads
         card.albumArt.onload = function() {
-            console.log(`SUCCESS: Album art loaded: ${this.src} (Album: ${album?.name})`);
         };
         
         // Special handling for Vultures albums - set background first
@@ -536,7 +513,6 @@ class UI {
         }
         
         // Set YouTube URL
-        console.log(`Setting YouTube link for ${side}...`);
         if (card.youtubeLink) {
             const youtubeQuery = encodeURIComponent(`${song.title} ${artistName}`);
             card.youtubeLink.href = `https://www.youtube.com/results?search_query=${youtubeQuery}`;
@@ -544,49 +520,28 @@ class UI {
             console.error(`No youtubeLink for ${side}`);
         }
         
-        console.log(`Setting lyrics link for ${side}...`);
-        console.log(`Song title: "${song.title}", Artist: "${artistName}"`);
-        console.log(`window.lyricsLinks available:`, !!window.lyricsLinks);
         
         // Check if we have a direct Genius URL for this song
         if (card.lyricsLink) {
             // Debug: log what we're looking for
-            console.log(`Looking for lyrics link for: "${song.title}"`);
-            
-            // CRITICAL DEBUG: Check if lyrics are loaded
-            if (!window.lyricsLinks) {
-                console.error(`❌ CRITICAL: window.lyricsLinks is not loaded!`);
-                console.log(`Attempting to check if lyrics-loader.js has run...`);
-            } else {
-                console.log(`✓ window.lyricsLinks is loaded with ${Object.keys(window.lyricsLinks).length} entries`);
-                // Check if our specific song exists
-                console.log(`Does "Carnival" exist in lyricsLinks?`, !!window.lyricsLinks["Carnival"]);
-                console.log(`First 5 Vultures songs in lyricsLinks:`, 
-                    Object.keys(window.lyricsLinks).filter(k => k.includes("ulture")).slice(0, 5));
-            }
             
             // Try case-sensitive first, then case-insensitive lookup
             let directGeniusUrl = null;
             if (window.lyricsLinks) {
                 directGeniusUrl = KanyeUtils.getCaseInsensitiveValue(window.lyricsLinks, song.title);
-                console.log(`Lyrics lookup for "${song.title}":`, directGeniusUrl);
             }
             
             if (directGeniusUrl) {
                 card.lyricsLink.href = directGeniusUrl;
-                console.log(`✓ Found direct lyrics URL for "${song.title}": ${directGeniusUrl}`);
             } else {
                 // Fallback to search if no direct URL
                 const lyricsQuery = encodeURIComponent(`${song.title} ${artistName}`);
                 card.lyricsLink.href = `https://genius.com/search?q=${lyricsQuery}`;
-                console.log(`✗ No direct lyrics URL found for "${song.title}", using search`);
-                console.log(`Search URL: https://genius.com/search?q=${lyricsQuery}`);
             }
         } else {
             console.error(`No lyricsLink for ${side}`);
         }
         
-        console.log(`Setting preview button for ${side}...`);
         if (card.previewBtn) {
             // Always apply album-specific colors first
             if (window.getAlbumColors) {
@@ -607,15 +562,11 @@ class UI {
                 };
             }
             
-            console.log(`Looking for video preview for: "${song.title}"`);
-            console.log(`window.videoLinks available:`, !!window.videoLinks);
-            console.log(`window.videoLinks.videoIds available:`, !!(window.videoLinks && window.videoLinks.videoIds));
             
             // Check if we have a YouTube video ID for this song
             let videoId = null;
             if (window.videoLinks && window.videoLinks.videoIds) {
                 videoId = KanyeUtils.getCaseInsensitiveValue(window.videoLinks.videoIds, song.title);
-                console.log(`Video lookup for "${song.title}":`, videoId);
             }
             
             if (videoId) {
@@ -623,13 +574,11 @@ class UI {
                 card.previewBtn.classList.remove('disabled');
                 card.previewBtn.classList.add('has-preview');  // Add this class for YouTube preview fallback
                 card.previewBtn.textContent = '▶ Preview';
-                console.log(`✓ Found video preview for "${song.title}": ${videoId}`);
             } else {
                 delete card.previewBtn.dataset.videoId;
                 card.previewBtn.classList.add('disabled');
                 card.previewBtn.classList.remove('has-preview');  // Remove this class
                 card.previewBtn.textContent = 'No Preview';
-                console.log(`✗ No video preview found for "${song.title}"`);
             }
         } else {
             console.error(`No previewBtn for ${side}`);
@@ -657,14 +606,12 @@ class UI {
             };
         }
         
-        console.log(`Setting choose button for ${side}...`);
         if (card.chooseBtn) {
             card.chooseBtn.dataset.songId = song.id;
         } else {
             console.error(`No chooseBtn for ${side}`);
         }
         
-        console.log(`Adding fade animation for ${side}...`);
         if (card.container) {
             card.container.classList.remove('fade-in');
             void card.container.offsetWidth;

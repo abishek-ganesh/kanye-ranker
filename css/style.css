@@ -975,3 +975,214 @@ body {
         font-size: 0.75rem;
     }
 }
+
+/* ==============================================
+   CONSOLIDATED BUTTON FIXES
+   Prevents unwanted button movement and animations
+   Merged from: comparison-buttons-final.css, results-buttons-fix.css
+   ============================================== */
+
+/* Comparison Screen Buttons - No Movement */
+#show-results,
+#skip-comparison,
+#continue-ranking,
+#restart,
+#continue-ranking-bottom,
+#restart-bottom {
+    /* Only allow color transitions */
+    transition: background-color 0.2s ease, 
+                color 0.2s ease, 
+                border-color 0.2s ease !important;
+    -webkit-transition: background-color 0.2s ease, 
+                        color 0.2s ease, 
+                        border-color 0.2s ease !important;
+    
+    /* Prevent all movement and animations */
+    transform: none !important;
+    -webkit-transform: none !important;
+    animation: none !important;
+    -webkit-animation: none !important;
+    position: relative !important;
+}
+
+/* Override hover states */
+#show-results:hover,
+#skip-comparison:hover,
+#continue-ranking:hover,
+#restart:hover,
+#continue-ranking-bottom:hover,
+#restart-bottom:hover,
+.btn-secondary.btn-large:hover {
+    transform: none !important;
+    -webkit-transform: none !important;
+}
+
+/* Override active/focus states */
+#show-results:active,
+#show-results:focus,
+#skip-comparison:active,
+#skip-comparison:focus,
+#continue-ranking:active,
+#continue-ranking:focus,
+#restart:active,
+#restart:focus,
+#continue-ranking-bottom:active,
+#continue-ranking-bottom:focus,
+#restart-bottom:active,
+#restart-bottom:focus,
+.btn-secondary.btn-large:active,
+.btn-secondary.btn-large:focus {
+    transform: none !important;
+    -webkit-transform: none !important;
+}
+
+/* Button ordering */
+#show-results { order: 1 !important; }
+#skip-comparison { order: 2 !important; }
+
+/* Container layouts */
+.comparison-footer {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 15px !important;
+}
+
+.results-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 15px !important;
+}
+
+/* Mobile specific */
+@media (max-width: 768px) {
+    #show-results,
+    #skip-comparison,
+    #continue-ranking,
+    #restart,
+    #continue-ranking-bottom,
+    #restart-bottom {
+        width: 280px !important;
+        position: static !important;
+        -webkit-tap-highlight-color: transparent !important;
+        -webkit-touch-callout: none !important;
+        -webkit-user-select: none !important;
+        user-select: none !important;
+    }
+}
+
+/* Dark mode compatibility */
+.dark-mode #show-results:hover,
+.dark-mode #skip-comparison:hover,
+.dark-mode #continue-ranking:hover,
+.dark-mode #restart:hover,
+.dark-mode #continue-ranking-bottom:hover,
+.dark-mode #restart-bottom:hover {
+    transform: none !important;
+    -webkit-transform: none !important;
+}
+/* ==============================================
+   ALBUM ART FIXES
+   Merged from: album-art-fix.css
+   ============================================== */
+.album-art-container {
+    width: 100% !important;
+    max-width: 280px !important;
+    height: 280px !important;
+    margin: 0 auto 20px !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    background: #f5f5f5 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+}
+
+/* Ensure album art loads properly for Vultures albums */
+.album-art[src*="vultures"] {
+    background-color: #000 !important;
+}
+
+.album-art {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+}
+
+/* Song info styling */
+.song-title {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    margin: 0 0 8px 0 !important;
+    color: #111 !important;
+    text-align: center !important;
+    line-height: 1.2 !important;
+}
+
+.album-name {
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    margin: 0 0 4px 0 !important;
+    color: #666 !important;
+    text-align: center !important;
+}
+
+.year {
+    font-size: 14px !important;
+    color: #999 !important;
+    margin: 0 0 15px 0 !important;
+    text-align: center !important;
+}
+
+/* Comparison container layout */
+.comparison-container {
+    display: flex !important;
+    align-items: stretch !important;
+    justify-content: center !important;
+    gap: 30px !important;
+    margin: 30px auto !important;
+    max-width: 1000px !important;
+    position: relative !important;
+}
+
+/* Progress bar styling */
+.progress-bar {
+    width: 100% !important;
+    max-width: 600px !important;
+    height: 6px !important;
+    background: #e0e0e0 !important;
+    border-radius: 3px !important;
+    margin: 10px auto 30px !important;
+    overflow: hidden !important;
+}
+
+.progress-fill {
+    height: 100% !important;
+    background: #ff4444 !important;
+    transition: width 0.3s ease !important;
+    border-radius: 3px !important;
+}
+
+/* Header styling */
+.comparison-header {
+    text-align: center !important;
+    margin-bottom: 20px !important;
+}
+
+.comparison-header h1 {
+    font-size: 32px !important;
+    margin: 0 0 10px 0 !important;
+    font-weight: 800 !important;
+    letter-spacing: -1px !important;
+}
+
+.comparison-count {
+    font-size: 16px !important;
+    color: #666 !important;
+    margin: 0 0 15px 0 !important;
+}
+
+/* Mobile styles moved to mobile-override.css for better control */
