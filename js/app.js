@@ -160,7 +160,6 @@ class KanyeRankerApp {
         // Core buttons
         if (this.ui.elements.startButton) {
             this.ui.elements.startButton.addEventListener('click', () => {
-                console.log('Start button clicked');
                 this.startRanking();
             });
             console.log('Start button listener attached');
@@ -168,7 +167,6 @@ class KanyeRankerApp {
         
         if (this.ui.elements.skipButton) {
             this.ui.elements.skipButton.addEventListener('click', () => {
-                console.log('Skip button clicked');
                 this.skipComparison();
             });
             console.log('Skip button listener attached');
@@ -176,7 +174,6 @@ class KanyeRankerApp {
         
         if (this.ui.elements.showResultsButton) {
             this.ui.elements.showResultsButton.addEventListener('click', () => {
-                console.log('Show results button clicked');
                 
                 // Track early exit
                 if (window.analytics) {
@@ -196,7 +193,6 @@ class KanyeRankerApp {
         
         if (this.ui.elements.restartButton) {
             this.ui.elements.restartButton.addEventListener('click', () => {
-                console.log('Restart button clicked');
                 this.restart();
             });
         }
@@ -205,7 +201,6 @@ class KanyeRankerApp {
         const continueRankingBtn = document.getElementById('continue-ranking');
         if (continueRankingBtn) {
             continueRankingBtn.addEventListener('click', () => {
-                console.log('Continue ranking button clicked');
                 this.continueRanking();
             });
         }
@@ -213,14 +208,12 @@ class KanyeRankerApp {
         // Export buttons
         if (this.ui.elements.exportSongsImageButton) {
             this.ui.elements.exportSongsImageButton.addEventListener('click', () => {
-                console.log('Export songs image button clicked');
                 this.exportSongsImage();
             });
         }
         
         if (this.ui.elements.exportAlbumsImageButton) {
             this.ui.elements.exportAlbumsImageButton.addEventListener('click', () => {
-                console.log('Export albums image button clicked');
                 this.exportAlbumsImage();
             });
         }
@@ -228,7 +221,6 @@ class KanyeRankerApp {
         // Song choice buttons
         if (this.ui.elements.songCards.a.chooseBtn) {
             this.ui.elements.songCards.a.chooseBtn.addEventListener('click', () => {
-                console.log('Choose A button clicked');
                 this.chooseSong('a');
             });
             console.log('Choose A button listener attached');
@@ -238,7 +230,6 @@ class KanyeRankerApp {
         
         if (this.ui.elements.songCards.b.chooseBtn) {
             this.ui.elements.songCards.b.chooseBtn.addEventListener('click', () => {
-                console.log('Choose B button clicked');
                 this.chooseSong('b');
             });
             console.log('Choose B button listener attached');
@@ -1961,7 +1952,6 @@ class KanyeRankerApp {
             this.comparisonsSinceBreak = 0;
         }
         
-        this.ui.stopPreview();
         this.ui.showScreen('landing');
         
         // Reset the "I'm Done" button to locked state when restarting
@@ -2122,7 +2112,6 @@ class KanyeRankerApp {
     }
     
     continueRanking() {
-        console.log('Continuing ranking from results screen');
         
         // Track analytics
         if (window.analytics) {

@@ -90,9 +90,13 @@
         // Mark as reorganized immediately
         buttonsContainer.classList.add('reorganized');
         
-        // Get existing buttons
-        const continueBtn = document.getElementById('continue-ranking');
-        const restartBtn = document.getElementById('restart');
+        // Get existing buttons and clone them to preserve event listeners
+        const originalContinueBtn = document.getElementById('continue-ranking');
+        const originalRestartBtn = document.getElementById('restart');
+        
+        // Clone the buttons to keep them intact
+        const continueBtn = originalContinueBtn ? originalContinueBtn.cloneNode(true) : null;
+        const restartBtn = originalRestartBtn ? originalRestartBtn.cloneNode(true) : null;
         
         // Clear container
         buttonsContainer.innerHTML = '';
@@ -116,13 +120,25 @@
         // Style the buttons to match
         if (continueBtn) {
             continueBtn.style.flex = '1';
+            // Re-attach event listener
+            continueBtn.addEventListener('click', () => {
+                if (window.kanyeApp) {
+                    window.kanyeApp.continueRanking();
+                }
+            });
         }
         if (restartBtn) {
             restartBtn.style.flex = '1';
+            // Re-attach event listener
+            restartBtn.addEventListener('click', () => {
+                if (window.kanyeApp) {
+                    window.kanyeApp.restart();
+                }
+            });
         }
         
-        buttonContainer.appendChild(continueBtn);
-        buttonContainer.appendChild(restartBtn);
+        if (continueBtn) buttonContainer.appendChild(continueBtn);
+        if (restartBtn) buttonContainer.appendChild(restartBtn);
         
         // Export buttons are no longer needed - removed to avoid duplication
         
@@ -645,7 +661,11 @@
             const continueClone = continueBtn.cloneNode(true);
             continueClone.id = 'continue-ranking-bottom';
             continueClone.style.flex = '1';
-            continueClone.addEventListener('click', () => continueBtn.click());
+            continueClone.addEventListener('click', () => {
+                if (window.kanyeApp) {
+                    window.kanyeApp.continueRanking();
+                }
+            });
             bottomContainer.appendChild(continueClone);
         }
         
@@ -653,7 +673,11 @@
             const restartClone = restartBtn.cloneNode(true);
             restartClone.id = 'restart-bottom';
             restartClone.style.flex = '1';
-            restartClone.addEventListener('click', () => restartBtn.click());
+            restartClone.addEventListener('click', () => {
+                if (window.kanyeApp) {
+                    window.kanyeApp.restart();
+                }
+            });
             bottomContainer.appendChild(restartClone);
         }
         
