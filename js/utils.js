@@ -65,10 +65,139 @@ function trackAnalytics(methodName, ...args) {
     }
 }
 
+/**
+ * Safely query for a DOM element with fallback
+ * @param {string} selector - CSS selector
+ * @param {Element} parent - Parent element to search within (default: document)
+ * @returns {Element|null} The element if found, null otherwise
+ */
+function safeQuerySelector(selector, parent = document) {
+    try {
+        return parent.querySelector(selector);
+    } catch (error) {
+        console.error(`Failed to query selector: ${selector}`, error);
+        return null;
+    }
+}
+
+/**
+ * Safely query for multiple DOM elements
+ * @param {string} selector - CSS selector
+ * @param {Element} parent - Parent element to search within (default: document)
+ * @returns {NodeList|Array} The elements if found, empty array otherwise
+ */
+function safeQuerySelectorAll(selector, parent = document) {
+    try {
+        return parent.querySelectorAll(selector);
+    } catch (error) {
+        console.error(`Failed to query selector: ${selector}`, error);
+        return [];
+    }
+}
+
+/**
+ * Validate that required DOM elements exist
+ * @param {Object} elements - Object mapping names to elements
+ * @param {boolean} throwOnMissing - Whether to throw error on missing elements
+ * @returns {Object} Object with validation results
+ */
+function validateElements(elements, throwOnMissing = false) {
+    const missing = [];
+    const valid = {};
+    
+    for (const [name, element] of Object.entries(elements)) {
+        if (!element) {
+            missing.push(name);
+        } else {
+            valid[name] = element;
+        }
+    }
+    
+    if (missing.length > 0) {
+        const message = `Missing required elements: ${missing.join(', ')}`;
+        console.error(message);
+        
+        if (throwOnMissing) {
+            throw new Error(message);
+        }
+    }
+    
+    return {
+        isValid: missing.length === 0,
+        missing,
+        valid
+    };
+}
+
+/**
+ * Centralized error handler with user notification
+ * @param {Error} error - The error object
+ * @param {string} context - Context where error occurred
+ * @param {boolean} showUser - Whether to show error to user
+ */
+function handleError(error, context, showUser = true) {
+    // Log error with context
+    console.error(`Error in ${context}:`, error);
+    
+    // Show user-friendly message if needed
+    if (showUser && window.ui && typeof window.ui.showError === 'function') {
+        const userMessage = getUserFriendlyErrorMessage(error, context);
+        window.ui.showError(userMessage);
+    }
+}
+
+/**
+ * Convert error to user-friendly message
+ * @param {Error} error - The error object
+ * @param {string} context - Context where error occurred
+ * @returns {string} User-friendly error message
+ */
+function getUserFriendlyErrorMessage(error, context) {
+    const contextMessages = {
+        'data-loading': 'Failed to load song data. Please refresh the page.',
+        'comparison': 'Failed to process comparison. Please try again.',
+        'export': 'Failed to export image. Please try again.',
+        'share': 'Failed to share. Please try copying the link instead.',
+        'preview': 'Failed to load preview. Please try the YouTube link.',
+        'save': 'Failed to save progress. Your rankings may not persist.',
+        'restore': 'Failed to restore previous session.'
+    };
+    
+    // Check for specific error types
+    if (error.name === 'NetworkError' || error.message.includes('fetch')) {
+        return 'Network error. Please check your connection and try again.';
+    }
+    
+    // Return context-specific message or generic
+    return contextMessages[context] || 'Something went wrong. Please try again.';
+}
+
+/**
+ * Wrap async function with error handling
+ * @param {Function} fn - Async function to wrap
+ * @param {string} context - Context for error messages
+ * @returns {Function} Wrapped function
+ */
+function withErrorHandling(fn, context) {
+    return async function(...args) {
+        try {
+            return await fn.apply(this, args);
+        } catch (error) {
+            handleError(error, context);
+            throw error; // Re-throw to allow caller to handle if needed
+        }
+    };
+}
+
 // Export utilities for use in other modules
 window.KanyeUtils = {
     applyAlbumButtonColors,
     getCaseInsensitiveValue,
     getCensoredTitle,
-    trackAnalytics
+    trackAnalytics,
+    safeQuerySelector,
+    safeQuerySelectorAll,
+    validateElements,
+    handleError,
+    withErrorHandling
 };

@@ -20,6 +20,11 @@ class YouTubePreviewFallback {
     async loadVideoData() {
         try {
             const response = await fetch('data/video-links.json');
+            
+            if (!response.ok) {
+                throw new Error(`Failed to load video data: ${response.status}`);
+            }
+            
             const data = await response.json();
             
             this.videoIds = data.videoIds || {};
@@ -31,11 +36,16 @@ class YouTubePreviewFallback {
                 };
             }
             
-            
-            // Debug: Check if CARNIVAL is in the final list
         } catch (error) {
+            console.error('Failed to load video links:', error);
             // Fallback to empty database if loading fails
             this.videoIds = {};
+            
+            // Don't show error to user as previews are optional
+            if (window.KanyeUtils && window.KanyeUtils.handleError) {
+                // Log but don't show to user
+                console.warn('Video previews unavailable');
+            }
         }
     }
     
@@ -349,46 +359,55 @@ class YouTubePreviewFallback {
     }
     
     playPreview(songTitle) {
-        let videoId = KanyeUtils.getCaseInsensitiveValue(this.videoIds, songTitle);
-        
-        if (!videoId) {
-            // Show error message in modal
-            this.modal.querySelector('.preview-title').textContent = 'Preview Not Available';
+        try {
+            let videoId = KanyeUtils.getCaseInsensitiveValue(this.videoIds, songTitle);
+            
+            if (!videoId) {
+                // Show error message in modal
+                this.modal.querySelector('.preview-title').textContent = 'Preview Not Available';
+                const videoContainer = this.modal.querySelector('.preview-video');
+                videoContainer.innerHTML = `
+                    <div style="padding: 50px; text-align: center; color: #999;">
+                        <p>Sorry, no preview is available for "${songTitle}"</p>
+                    </div>
+                `;
+                this.modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                return;
+            }
+            
+            // Update modal content
+            this.modal.querySelector('.preview-title').textContent = songTitle;
             const videoContainer = this.modal.querySelector('.preview-video');
-            videoContainer.innerHTML = `
-                <div style="padding: 50px; text-align: center; color: #999;">
-                    <p>Sorry, no preview is available for "${songTitle}"</p>
-                </div>
-            `;
+            
+            // Create a container div for the player
+            const playerId = `youtube-player-${Date.now()}`;
+            videoContainer.innerHTML = `<div id="${playerId}" style="width: 100%; height: 100%;"></div>`;
+            
+            // Show modal
             this.modal.classList.add('active');
             document.body.style.overflow = 'hidden';
-            return;
+            
+            // Create iframe with autoplay
+            videoContainer.innerHTML = `
+                <iframe 
+                    width="100%" 
+                    height="100%" 
+                    src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            `;
+            
+        } catch (error) {
+            console.error('Failed to play preview:', error);
+            this.closeModal();
+            
+            if (window.KanyeUtils && window.KanyeUtils.handleError) {
+                window.KanyeUtils.handleError(error, 'preview', false); // false = don't show to user
+            }
         }
-        
-        
-        // Update modal content
-        this.modal.querySelector('.preview-title').textContent = songTitle;
-        const videoContainer = this.modal.querySelector('.preview-video');
-        
-        // Create a container div for the player
-        const playerId = `youtube-player-${Date.now()}`;
-        videoContainer.innerHTML = `<div id="${playerId}" style="width: 100%; height: 100%;"></div>`;
-        
-        // Show modal
-        this.modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        
-        // Create iframe with autoplay
-        videoContainer.innerHTML = `
-            <iframe 
-                width="100%" 
-                height="100%" 
-                src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1" 
-                frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                allowfullscreen>
-            </iframe>
-        `;
     }
     
     closeModal() {

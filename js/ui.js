@@ -2,9 +2,9 @@ class UI {
     constructor() {
         
         this.screens = {
-            landing: document.getElementById('landing-screen'),
-            comparison: document.getElementById('comparison-screen'),
-            results: document.getElementById('results-screen')
+            landing: KanyeUtils.safeQuerySelector('#landing-screen'),
+            comparison: KanyeUtils.safeQuerySelector('#comparison-screen'),
+            results: KanyeUtils.safeQuerySelector('#results-screen')
         };
         
         // Initialize YouTube preview system
@@ -13,10 +13,10 @@ class UI {
         // Track achieved milestones
         this.achievedMilestones = new Set();
         
-        // Check if screens exist
-        if (!this.screens.landing || !this.screens.comparison || !this.screens.results) {
-            console.error('One or more screens not found:', this.screens);
-            throw new Error('Required screens not found in DOM');
+        // Validate screens exist
+        const screenValidation = KanyeUtils.validateElements(this.screens, true);
+        if (!screenValidation.isValid) {
+            throw new Error(`Required screens not found: ${screenValidation.missing.join(', ')}`);
         }
         
         this.elements = {
@@ -80,29 +80,21 @@ class UI {
     }
     
     validateElements() {
-        const criticalElements = [
-            'startButton',
-            'currentComparison',
-            'progressFill',
-            'songCards.a.container',
-            'songCards.b.container'
-        ];
+        const criticalElements = {
+            startButton: this.elements.startButton,
+            currentComparison: this.elements.currentComparison,
+            progressFill: this.elements.progressFill,
+            songCardA: this.elements.songCards?.a?.container,
+            songCardB: this.elements.songCards?.b?.container
+        };
         
-        let hasErrors = false;
-        criticalElements.forEach(path => {
-            const element = path.includes('.') 
-                ? path.split('.').reduce((obj, key) => obj?.[key], this.elements)
-                : this.elements[path];
-                
-            if (!element) {
-                hasErrors = true;
-            }
-        });
+        const validation = KanyeUtils.validateElements(criticalElements);
         
-        if (!hasErrors) {
+        if (!validation.isValid) {
+            console.warn('Missing UI elements:', validation.missing);
         }
         
-        return !hasErrors;
+        return validation.isValid;
     }
     
     showScreen(screenName) {
@@ -436,21 +428,25 @@ class UI {
     }
     
     updateSongCard(side, song, album) {
-        const card = this.elements.songCards[side];
-        
-        if (!card) {
-            return;
-        }
-        
-        if (!card.title || !card.album || !card.year || !card.albumArt) {
-            console.error(`Missing elements for card ${side}:`, {
-                title: !!card.title,
-                album: !!card.album,
-                year: !!card.year,
-                albumArt: !!card.albumArt
-            });
-            return;
-        }
+        try {
+            const card = this.elements.songCards[side];
+            
+            if (!card || !song) {
+                throw new Error(`Invalid card or song data for side ${side}`);
+            }
+            
+            // Validate required card elements
+            const cardElements = {
+                title: card.title,
+                album: card.album,
+                year: card.year,
+                albumArt: card.albumArt
+            };
+            
+            const validation = KanyeUtils.validateElements(cardElements);
+            if (!validation.isValid) {
+                throw new Error(`Missing card elements for ${side}: ${validation.missing.join(', ')}`);
+            }
         
         // Censor specific titles for display
         const displayTitle = KanyeUtils.getCensoredTitle(song.title);
@@ -615,22 +611,53 @@ class UI {
                 window.youtubePreviewFallback.markPreviewableSongs();
             }, 50);
         }
+        
+        } catch (error) {
+            console.error(`Failed to update song card ${side}:`, error);
+            // Show minimal card with error state
+            if (card && card.container) {
+                card.container.classList.add('error-state');
+            }
+        }
     }
     
     displayResults(topSongs, topAlbums, albumsMap) {
-        this.elements.topSongs.innerHTML = '';
-        this.elements.topAlbums.innerHTML = '';
-        
-        topSongs.forEach((song, index) => {
-            const album = albumsMap.get(song.albumId);
-            const resultItem = this.createResultItem(index + 1, song, album, true);
-            this.elements.topSongs.appendChild(resultItem);
-        });
-        
-        topAlbums.forEach((album, index) => {
-            const resultItem = this.createAlbumResultItem(index + 1, album);
-            this.elements.topAlbums.appendChild(resultItem);
-        });
+        try {
+            // Validate inputs
+            if (!Array.isArray(topSongs) || !Array.isArray(topAlbums) || !albumsMap) {
+                throw new Error('Invalid data for displaying results');
+            }
+            
+            // Validate elements exist
+            if (!this.elements.topSongs || !this.elements.topAlbums) {
+                throw new Error('Result containers not found');
+            }
+            
+            this.elements.topSongs.innerHTML = '';
+            this.elements.topAlbums.innerHTML = '';
+            
+            topSongs.forEach((song, index) => {
+                try {
+                    const album = albumsMap.get(song.albumId);
+                    const resultItem = this.createResultItem(index + 1, song, album, true);
+                    this.elements.topSongs.appendChild(resultItem);
+                } catch (error) {
+                    console.error(`Failed to create result item for song ${index + 1}:`, error);
+                }
+            });
+            
+            topAlbums.forEach((album, index) => {
+                try {
+                    const resultItem = this.createAlbumResultItem(index + 1, album);
+                    this.elements.topAlbums.appendChild(resultItem);
+                } catch (error) {
+                    console.error(`Failed to create album result item ${index + 1}:`, error);
+                }
+            });
+            
+        } catch (error) {
+            KanyeUtils.handleError(error, 'results-display');
+        }
     }
     
     createResultItem(rank, song, album, showRating = true) {

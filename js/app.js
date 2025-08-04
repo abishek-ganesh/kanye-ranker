@@ -13,12 +13,16 @@ class KanyeRankerApp {
         try {
             this.ui = new UI();
         } catch (error) {
+            console.error('Failed to initialize UI:', error);
+            alert('Failed to initialize app interface. Please refresh the page.');
             throw error;
         }
         
         try {
             this.elo = new EloRating(32);
         } catch (error) {
+            console.error('Failed to initialize ELO system:', error);
+            this.ui?.showError('Failed to initialize ranking system. Please refresh the page.');
             throw error;
         }
         
@@ -86,7 +90,7 @@ class KanyeRankerApp {
             // Session saving removed - users start fresh each time
             
         } catch (error) {
-            this.ui.showError('Failed to initialize app: ' + error.message);
+            KanyeUtils.handleError(error, 'initialization');
             if (window.analytics) {
                 window.analytics.trackError(error.message, 'app_init');
             }
@@ -112,35 +116,51 @@ class KanyeRankerApp {
             
             const data = await response.json();
             
-            if (!data.songs) {
-                throw new Error('No songs array found in data');
+            // Validate data structure
+            if (!data || typeof data !== 'object') {
+                throw new Error('Invalid data format received');
+            }
+            
+            if (!Array.isArray(data.songs) || data.songs.length === 0) {
+                throw new Error('No songs found in data');
+            }
+            
+            if (!Array.isArray(data.albums) || data.albums.length === 0) {
+                throw new Error('No albums found in data');
             }
             
             this.songs = data.songs;
             
+            // Safely load albums with validation
             data.albums.forEach(album => {
-                this.albums.set(album.id, album);
+                if (album && album.id) {
+                    this.albums.set(album.id, album);
+                }
             });
             
+            // Initialize ratings with validation
             this.songs.forEach(song => {
-                this.songRatings.set(song.id, song.initialRating);
+                if (song && song.id) {
+                    this.songRatings.set(song.id, song.initialRating || 1500);
+                }
             });
             
             this.ui.hideOverlay();
             
         } catch (error) {
             this.ui.hideOverlay();
+            KanyeUtils.handleError(error, 'data-loading');
             
-            // Check if this is a CORS error from file:// protocol
-            if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-                this.ui.showError('Failed to load song data. Please run a local server (e.g., python -m http.server) or use a web server to access this app.');
-            } else {
-                this.ui.showError(`Failed to load song data: ${error.message}. Please refresh the page.`);
-            }
-            
-            // Initialize empty arrays to prevent further errors
+            // Initialize empty arrays to prevent cascading errors
             this.songs = [];
             this.albums = new Map();
+            this.songRatings = new Map();
+            
+            // Disable start button if data load fails
+            if (this.ui.elements.startButton) {
+                this.ui.elements.startButton.disabled = true;
+                this.ui.elements.startButton.textContent = 'Data Load Failed';
+            }
         }
     }
     
@@ -279,56 +299,63 @@ class KanyeRankerApp {
     
     
     startRanking() {
-        
-        // Track page view for comparison screen
-        if (window.analytics) {
-            window.analytics.trackPageView('Comparison Screen');
-            window.analytics.trackRankingStarted();
-        }
-        
-        if (this.songs.length === 0) {
-            this.ui.showError('No songs loaded. Please refresh the page.');
-            return;
-        }
-        
-        // Clear any previous comparison history for a fresh start
-        this.elo = new EloRating(32);
-        this.currentPairIndex = 0;
-        
-        // Clear any cached data that might have old paths
-        localStorage.removeItem('albumCache');
-        localStorage.removeItem('songsCache');
-        // Clear ALL localStorage to eliminate any cached old album paths
-        Object.keys(localStorage).forEach(key => {
-            if (key.includes('album') || key.includes('vultures') || key.includes('cover')) {
-                localStorage.removeItem(key);
+        try {
+            // Track page view for comparison screen
+            if (window.analytics) {
+                window.analytics.trackPageView('Comparison Screen');
+                window.analytics.trackRankingStarted();
             }
-        });
-        
-        this.generatePairings();
-        if (this.pairings.length === 0) {
-            this.ui.showError('Failed to generate pairings. Please refresh the page.');
-            return;
-        }
-        
-        
-        // Add delay to ensure DOM is ready
-        setTimeout(() => {
-            this.ui.showScreen('comparison');
-            // Initialize the completed comparisons display to 0
-            if (this.ui.elements.completedComparisons) {
-                this.ui.elements.completedComparisons.textContent = '0';
+            
+            // Validate songs are loaded
+            if (!this.songs || this.songs.length === 0) {
+                throw new Error('No songs available for ranking');
             }
-            // Initialize the milestone progress at 0
-            this.ui.updateProgressBar(0, 0, 0);
+            
+            // Clear any previous comparison history for a fresh start
+            this.elo = new EloRating(32);
+            this.currentPairIndex = 0;
+            
+            // Clear any cached data that might have old paths
+            try {
+                localStorage.removeItem('albumCache');
+                localStorage.removeItem('songsCache');
+                // Clear ALL localStorage to eliminate any cached old album paths
+                Object.keys(localStorage).forEach(key => {
+                    if (key.includes('album') || key.includes('vultures') || key.includes('cover')) {
+                        localStorage.removeItem(key);
+                    }
+                });
+            } catch (storageError) {
+                // LocalStorage might be disabled or full
+                console.warn('Could not clear localStorage:', storageError);
+            }
+            
+            this.generatePairings();
+            if (!this.pairings || this.pairings.length === 0) {
+                throw new Error('Failed to generate song pairings');
+            }
+            
+            // Add delay to ensure DOM is ready
             setTimeout(() => {
-                // Ensure album colors are loaded
-                if (!window.getAlbumColors && window.AlbumColors) {
-                    window.getAlbumColors = window.AlbumColors.getColors;
+                this.ui.showScreen('comparison');
+                // Initialize the completed comparisons display to 0
+                if (this.ui.elements.completedComparisons) {
+                    this.ui.elements.completedComparisons.textContent = '0';
                 }
-                this.showNextComparison();
-            }, 200);
-        }, 100);
+                // Initialize the milestone progress at 0
+                this.ui.updateProgressBar(0, 0, 0);
+                setTimeout(() => {
+                    // Ensure album colors are loaded
+                    if (!window.getAlbumColors && window.AlbumColors) {
+                        window.getAlbumColors = window.AlbumColors.getColors;
+                    }
+                    this.showNextComparison();
+                }, 200);
+            }, 100);
+            
+        } catch (error) {
+            KanyeUtils.handleError(error, 'initialization');
+        }
     }
     
     // ==============================
@@ -1424,19 +1451,29 @@ class KanyeRankerApp {
     // SONG CHOICE & RATING UPDATE
     // ==============================
     chooseSong(side) {
-        
-        // Prevent multiple clicks
-        if (this.isProcessingChoice) {
-            return;
-        }
-        
-        this.isProcessingChoice = true;
-        this.ui.disableComparisonButtons();
-        
-        // Start timing for this comparison
-        const timeTaken = window.analytics ? window.analytics.endComparisonTimer() : 0;
-        
-        const [songIdA, songIdB] = this.pairings[this.currentPairIndex];
+        try {
+            // Prevent multiple clicks
+            if (this.isProcessingChoice) {
+                return;
+            }
+            
+            // Validate inputs
+            if (side !== 'a' && side !== 'b') {
+                throw new Error(`Invalid side: ${side}`);
+            }
+            
+            // Validate current pairing exists
+            if (!this.pairings[this.currentPairIndex]) {
+                throw new Error('No current pairing available');
+            }
+            
+            this.isProcessingChoice = true;
+            this.ui.disableComparisonButtons();
+            
+            // Start timing for this comparison
+            const timeTaken = window.analytics ? window.analytics.endComparisonTimer() : 0;
+            
+            const [songIdA, songIdB] = this.pairings[this.currentPairIndex];
         const winnerId = side === 'a' ? songIdA : songIdB;
         const loserId = side === 'a' ? songIdB : songIdA;
         
@@ -1516,13 +1553,27 @@ class KanyeRankerApp {
             this.isProcessingChoice = false;
             this.showNextComparison();
         }, 500);
+        
+        } catch (error) {
+            // Re-enable buttons on error
+            this.ui.enableComparisonButtons();
+            this.isProcessingChoice = false;
+            
+            KanyeUtils.handleError(error, 'comparison');
+        }
     }
     
     skipComparison() {
-        // Prevent rapid clicking
-        if (this.isProcessingChoice) {
-            return;
-        }
+        try {
+            // Prevent rapid clicking
+            if (this.isProcessingChoice) {
+                return;
+            }
+            
+            // Validate current pairing exists
+            if (!this.pairings[this.currentPairIndex]) {
+                throw new Error('No current pairing to skip');
+            }
         
         this.isProcessingChoice = true;
         
@@ -1548,6 +1599,11 @@ class KanyeRankerApp {
             this.showNextComparison();
             this.isProcessingChoice = false;
         }, 100);
+        
+        } catch (error) {
+            this.isProcessingChoice = false;
+            KanyeUtils.handleError(error, 'comparison');
+        }
     }
     
     animateChoice(side) {
@@ -1563,28 +1619,39 @@ class KanyeRankerApp {
     // RESULTS & RANKINGS
     // ==============================
     showResults() {
-        // Track page view for results screen
-        if (window.analytics) {
-            window.analytics.trackPageView('Results Screen');
-        }
-        
-        // Check minimum comparisons
-        const completedComparisons = this.elo.getCompletedComparisons();
-        if (completedComparisons < 20) {
-            this.ui.showWarning(`Need 20+ comparisons for results (${completedComparisons} done)`);
-            return;
-        }
-        
-        const rankedSongs = this.songs
-            .map(song => ({
-                ...song,
-                rating: this.songRatings.get(song.id)
-            }))
-            .sort((a, b) => b.rating - a.rating);
-        
-        const topSongs = rankedSongs.slice(0, 10);
-        
-        const albumStats = new Map();
+        try {
+            // Track page view for results screen
+            if (window.analytics) {
+                window.analytics.trackPageView('Results Screen');
+            }
+            
+            // Check minimum comparisons
+            const completedComparisons = this.elo.getCompletedComparisons();
+            if (completedComparisons < 20) {
+                this.ui.showWarning(`Need 20+ comparisons for results (${completedComparisons} done)`);
+                return;
+            }
+            
+            // Validate data before processing
+            if (!this.songs || !this.songRatings) {
+                throw new Error('Missing song data for results');
+            }
+            
+            const rankedSongs = this.songs
+                .filter(song => song && song.id) // Filter out invalid songs
+                .map(song => ({
+                    ...song,
+                    rating: this.songRatings.get(song.id) || 1500
+                }))
+                .sort((a, b) => b.rating - a.rating);
+            
+            if (rankedSongs.length === 0) {
+                throw new Error('No valid songs to display');
+            }
+            
+            const topSongs = rankedSongs.slice(0, 10);
+            
+            const albumStats = new Map();
         
         // Calculate percentile thresholds for "highly ranked" songs
         const sortedRatings = rankedSongs.map(s => s.rating).sort((a, b) => b - a);
@@ -1712,6 +1779,12 @@ class KanyeRankerApp {
         // Share buttons are now handled by share-simple.js which watches for results screen
         
         // Session saving removed - no clearing needed
+        
+        } catch (error) {
+            KanyeUtils.handleError(error, 'results');
+            // Try to at least show the results screen
+            this.ui.showScreen('results');
+        }
     }
     
     handlePreview(event) {
@@ -1825,21 +1898,29 @@ class KanyeRankerApp {
     }
     
     async exportSongsImage() {
-        const exporter = new KanyeRankerExport();
-        await exporter.generateSongsImage(
-            this.getTopSongs(),
-            this.albums,
-            this.ui.elements.exportCanvas
-        );
+        try {
+            const exporter = new KanyeRankerExport();
+            await exporter.generateSongsImage(
+                this.getTopSongs(),
+                this.albums,
+                this.ui.elements.exportCanvas
+            );
+        } catch (error) {
+            KanyeUtils.handleError(error, 'export');
+        }
     }
     
     async exportAlbumsImage() {
-        const topAlbums = this.getTopAlbums();
-        const exporter = new KanyeRankerExport();
-        await exporter.generateAlbumsImage(
-            topAlbums,
-            this.ui.elements.exportCanvas
-        );
+        try {
+            const topAlbums = this.getTopAlbums();
+            const exporter = new KanyeRankerExport();
+            await exporter.generateAlbumsImage(
+                topAlbums,
+                this.ui.elements.exportCanvas
+            );
+        } catch (error) {
+            KanyeUtils.handleError(error, 'export');
+        }
     }
     
     copyResults() {

@@ -160,14 +160,19 @@
     }
     
     function createShareSections() {
-        // Ensure styles are loaded
-        addGridStyles();
-        
-        // Create share songs section after top-songs but before albums header
-        createShareSongsSection();
-        
-        // Create share albums section at the bottom
-        createShareAlbumsSection();
+        try {
+            // Ensure styles are loaded
+            addGridStyles();
+            
+            // Create share songs section after top-songs but before albums header
+            createShareSongsSection();
+            
+            // Create share albums section at the bottom
+            createShareAlbumsSection();
+        } catch (error) {
+            console.error('Failed to create share sections:', error);
+            // Don't show error to user as this is a non-critical feature
+        }
     }
     
     function getSubtitleText() {
@@ -752,20 +757,20 @@
     }
     
     async function handleShare(platform, shareType) {
-        // Check if we have the app instance
-        if (!window.kanyeApp) {
-            alert('App not ready. Please try again.');
-            return;
-        }
-        
-        // Handle stories screenshot mode
-        if (platform === 'stories') {
-            showStoryPreview(shareType);
-            return;
-        }
-        
-        // Handle copy text without generating image
-        if (platform === 'copy-text') {
+        try {
+            // Check if we have the app instance
+            if (!window.kanyeApp) {
+                throw new Error('App not ready. Please try again.');
+            }
+            
+            // Handle stories screenshot mode
+            if (platform === 'stories') {
+                showStoryPreview(shareType);
+                return;
+            }
+            
+            // Handle copy text without generating image
+            if (platform === 'copy-text') {
             const topSongs = window.kanyeApp.getTopSongs();
             const topAlbums = window.kanyeApp.getTopAlbums();
             
@@ -803,25 +808,24 @@
                 }
                 document.body.removeChild(textArea);
             }
-            return;
-        }
-        
-        // Open window immediately for social platforms to avoid popup blockers on mobile
-        let shareWindow = null;
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        const isMobileBrowser = isMobile; // Use same variable
-        if (isMobileBrowser && (platform === 'x' || platform === 'twitter' || platform === 'reddit' || platform === 'facebook')) {
-            shareWindow = window.open('', '_blank');
-            if (shareWindow) {
-                shareWindow.document.write('<html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body style="margin:20px;font-family:system-ui,sans-serif;text-align:center;padding-top:50px;"><h2>Preparing your share...</h2><p>Please wait while we generate your ranking image.</p><p style="color:#666;font-size:14px;">This window will redirect automatically.</p></body></html>');
-            } else {
-                // If popup was blocked, warn the user
-                alert('Please allow popups for this site to share on social media.');
                 return;
             }
-        }
-        
-        try {
+            
+            // Open window immediately for social platforms to avoid popup blockers on mobile
+            let shareWindow = null;
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            const isMobileBrowser = isMobile; // Use same variable
+            if (isMobileBrowser && (platform === 'x' || platform === 'twitter' || platform === 'reddit' || platform === 'facebook')) {
+                shareWindow = window.open('', '_blank');
+                if (shareWindow) {
+                    shareWindow.document.write('<html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body style="margin:20px;font-family:system-ui,sans-serif;text-align:center;padding-top:50px;"><h2>Preparing your share...</h2><p>Please wait while we generate your ranking image.</p><p style="color:#666;font-size:14px;">This window will redirect automatically.</p></body></html>');
+                } else {
+                    // If popup was blocked, warn the user
+                    alert('Please allow popups for this site to share on social media.');
+                    return;
+                }
+            }
+            
             // Get overlay elements
             const overlay = document.getElementById('overlay');
             const message = document.getElementById('overlay-message');
@@ -1004,7 +1008,12 @@
             }
             
         } catch (error) {
-            alert('Failed to generate share image. Please try again.');
+            console.error('Share error:', error);
+            if (window.KanyeUtils && window.KanyeUtils.handleError) {
+                window.KanyeUtils.handleError(error, 'share');
+            } else {
+                alert('Failed to generate share image. Please try again.');
+            }
         } finally {
             // Hide loading
             const overlay = document.getElementById('overlay');
