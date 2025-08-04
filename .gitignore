@@ -64,3 +64,11 @@ tmp/
 
 # Development server
 .cache/
+
+# Security - NEVER commit these
+client_secret.json
+**/client_secret.json
+credentials.json
+**/credentials.json
+*.key
+*.pem
