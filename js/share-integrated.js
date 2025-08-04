@@ -154,253 +154,9 @@
     }
     
     function addGridStyles() {
-        if (document.getElementById('share-grid-styles')) return;
-        
-        const style = document.createElement('style');
-        style.id = 'share-grid-styles';
-        style.textContent = `
-            /* Hide download buttons container initially to prevent flash */
-            .download-buttons:not(.reorganized) {
-                opacity: 0 !important;
-                visibility: hidden !important;
-            }
-            
-            .action-container {
-                padding: 20px;
-                max-width: 1200px;
-                margin: 0 auto;
-                display: block !important;
-            }
-            
-            .action-grid {
-                display: flex;
-                flex-direction: column;
-                gap: 25px;
-            }
-            
-            /* Share sections container at bottom */
-            .share-sections-container,
-            #share-sections-container {
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-                margin-top: 3rem;
-                padding: 20px;
-                max-width: 1200px;
-                margin-left: auto;
-                margin-right: auto;
-            }
-            
-            .action-row {
-                display: flex !important;
-                gap: 20px;
-                justify-content: center;
-                min-height: 220px !important;
-            }
-            
-            .share-row {
-                display: flex !important;
-                gap: 20px;
-                justify-content: center;
-                min-height: 220px !important;
-            }
-            
-            .top-row {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 20px;
-                max-width: 100%;
-                width: 100%;
-            }
-            
-            .share-row {
-                display: flex !important;
-                flex-direction: row !important;
-                gap: 20px;
-                max-width: 100%;
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .action-section {
-                background: var(--card-bg, rgba(0, 0, 0, 0.03));
-                border: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
-                border-radius: 16px;
-                padding: 25px;
-                flex: 1;
-                transition: all 0.3s ease;
-                min-height: 180px !important;
-                display: block !important;
-            }
-            
-            .action-section:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-            }
-            
-            .section-title {
-                font-size: 1rem;
-                font-weight: 700;
-                color: var(--text-color, #000);
-                text-align: center;
-                margin: 0 0 20px 0;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-                opacity: 0.7;
-            }
-            
-            .section-buttons {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 12px;
-                justify-content: center;
-            }
-            
-            .share-buttons {
-                flex-direction: column;
-                min-height: auto;
-            }
-            
-            .share-buttons .btn-large {
-                width: 100%;
-            }
-            
-            .section-buttons {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 12px;
-                justify-content: center;
-            }
-            
-            /* Button style updates - uniform sizing */
-            .btn-large {
-                min-width: 200px;
-                min-height: 60px;
-                height: 60px;
-                transition: all 0.2s ease;
-                display: flex !important;
-                align-items: center;
-                justify-content: center;
-                padding: 0 20px;
-            }
-            
-            .btn-large .btn-icon {
-                margin-right: 8px;
-            }
-            
-            /* Share button specific styles */
-            .share-btn {
-                display: inline-flex !important;
-                align-items: center;
-                gap: 8px;
-                background: transparent !important;
-                border: 2px solid var(--text-color, #000) !important;
-                color: var(--text-color, #000) !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-                width: 100%;
-                min-height: 60px;
-                height: 60px;
-            }
-            
-            .share-btn .btn-icon {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            
-            .share-btn svg {
-                width: 20px;
-                height: 20px;
-            }
-            
-            /* Lock SVG colors - they use inline styles */
-            #song-share-buttons-container svg,
-            #song-share-buttons-container svg path,
-            #album-share-buttons-container svg,
-            #album-share-buttons-container svg path {
-                /* SVG colors are set via inline styles - no CSS overrides */
-            }
-            
-            
-            /* Dark mode support */
-            @media (prefers-color-scheme: dark) {
-                .action-section {
-                    background: rgba(255, 255, 255, 0.03);
-                    border-color: rgba(255, 255, 255, 0.1);
-                }
-                
-                .action-section:hover {
-                    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-                }
-            }
-            
-            body.dark-mode .action-section {
-                background: rgba(255, 255, 255, 0.03);
-                border-color: rgba(255, 255, 255, 0.1);
-            }
-            
-            body.dark-mode .action-section:hover {
-                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-            }
-            
-            /* Mobile responsiveness */
-            @media (max-width: 768px) {
-                .action-container {
-                    padding: 15px;
-                }
-                
-                .action-grid {
-                    gap: 15px;
-                }
-                
-                .action-row,
-                .top-row,
-                .share-row {
-                    flex-direction: column;
-                    grid-template-columns: 1fr;
-                }
-                
-                .action-section {
-                    padding: 20px;
-                }
-                
-                .section-title {
-                    font-size: 0.9rem;
-                    margin-bottom: 15px;
-                }
-                
-                .btn-large {
-                    width: 100%;
-                    min-width: unset;
-                }
-                
-                /* Mobile share button container */
-                .mobile-share-container {
-                    display: flex !important;
-                    flex-direction: column !important;
-                    gap: 15px !important;
-                }
-                
-                /* Native buttons container on mobile */
-                .native-buttons-container {
-                    display: flex !important;
-                    flex-direction: column !important;
-                    gap: 15px !important;
-                    margin-bottom: 20px !important;
-                    width: 100% !important;
-                }
-                
-                /* Ensure platform buttons grid stays 2x2 on mobile */
-                .platform-buttons {
-                    display: grid !important;
-                    grid-template-columns: 1fr 1fr !important;
-                    gap: 10px !important;
-                    margin-top: 0 !important;
-                }
-            }
-        `;
-        document.head.appendChild(style);
+        // CSS styles moved to features.css
+        // This function is kept for backward compatibility but does nothing
+        return;
     }
     
     function createShareSections() {
@@ -698,19 +454,10 @@
         const hasWebShare = navigator.canShare && navigator.canShare({ files: [new File([''], 'test.png', { type: 'image/png' })] });
         const hasClipboard = navigator.clipboard && typeof ClipboardItem !== 'undefined';
         
-        console.log('[ShareIntegrated] Device capabilities:', { 
-            isMobile, 
-            hasWebShare, 
-            hasClipboard,
-            userAgent: navigator.userAgent,
-            shareType
-        });
-        
         let shareButtons = [];
         
         // Add native share button - always show on mobile, desktop only if Web Share API available
         if (hasWebShare || isMobile) {
-            console.log('[ShareIntegrated] Adding Share with Friends button');
             shareButtons.push({
                 id: `share-${shareType}-native`,
                 icon: `<svg width="20" height="20" viewBox="0 0 24 24" style="fill: currentColor;"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>`,
@@ -747,7 +494,6 @@
         
         // X/Twitter - desktop only
         if (!isMobile) {
-            console.log('[ShareIntegrated] Adding X/Twitter button for desktop');
             platformButtons.push({
                 id: `share-${shareType}-twitter`,
                 icon: '𝕏',
@@ -757,7 +503,6 @@
                 hoverColor: '#333333'
             });
         } else {
-            console.log('[ShareIntegrated] Skipping X/Twitter button on mobile');
         }
         
         // Facebook - always show
@@ -772,7 +517,6 @@
         
         // Instagram - mobile only
         if (isMobile) {
-            console.log('[ShareIntegrated] Adding Instagram button for mobile');
             platformButtons.push({
                 id: `share-${shareType}-instagram`,
                 icon: `<svg width="20" height="20" viewBox="0 0 24 24" style="fill: #E4405F !important;"><path style="fill: #E4405F !important;" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.405a1.44 1.44 0 112.881.001 1.44 1.44 0 01-2.881-.001z"/></svg>`,
@@ -805,7 +549,6 @@
         
         shareButtons = shareButtons.concat(platformButtons);
         
-        console.log('[ShareIntegrated] Total buttons for', shareType + ':', shareButtons.filter(b => !b.isSeparator).map(b => b.label).join(', '));
         
         // Define social platforms for use in styles
         const socialPlatforms = ['twitter', 'facebook', 'instagram', 'reddit', 'copy-text'];
@@ -917,7 +660,6 @@
             // Count the social media platform buttons (X, Facebook, Instagram, Reddit)
             const isSocialButton = socialPlatforms.includes(btn.platform);
             
-            console.log(`[ShareIntegrated] Rendering button: ${btn.label}, platform: ${btn.platform}, isSocial: ${isSocialButton}, isPrimary: ${btn.isPrimary}`);
             
             if (isSocialButton) {
                 if (!container.querySelector('.platform-buttons')) {
@@ -930,13 +672,11 @@
                         margin-top: 10px !important;
                     `;
                     container.appendChild(platformContainer);
-                    console.log('[ShareIntegrated] Created platform-buttons container');
                 }
                 const platformContainer = container.querySelector('.platform-buttons');
                 button.style.width = '100% !important';
                 button.style.marginBottom = '0 !important';
                 platformContainer.appendChild(button);
-                console.log(`[ShareIntegrated] Added ${btn.label} to platform grid`);
             } else {
                 // Native share and Screenshot buttons go above the grid
                 // Create a dedicated container for native buttons on mobile if needed
@@ -958,14 +698,12 @@
                     } else {
                         container.appendChild(nativeButtonsContainer);
                     }
-                    console.log('[ShareIntegrated] Created native-buttons-container');
                 }
                 
                 // Ensure the button takes full width
                 button.style.width = '100% !important';
                 button.style.marginBottom = '0 !important';
                 nativeButtonsContainer.appendChild(button);
-                console.log(`[ShareIntegrated] Added ${btn.label} to native buttons container`);
             }
             
             // Hover effects
@@ -998,23 +736,16 @@
             const nativeContainer = container.querySelector('.native-buttons-container');
             const platformContainer = container.querySelector('.platform-buttons');
             
-            console.log(`[ShareIntegrated] Final button count in ${shareType} container:`, allButtons.length);
-            console.log(`[ShareIntegrated] Native container exists:`, !!nativeContainer);
-            console.log(`[ShareIntegrated] Platform container exists:`, !!platformContainer);
             
             if (nativeContainer) {
                 const nativeButtons = nativeContainer.querySelectorAll('button');
-                console.log(`[ShareIntegrated] Native buttons (${nativeButtons.length}):`);
                 nativeButtons.forEach(btn => {
-                    console.log(`  - ${btn.id}: ${btn.textContent.trim()}`);
                 });
             }
             
             if (platformContainer) {
                 const platformButtons = platformContainer.querySelectorAll('button');
-                console.log(`[ShareIntegrated] Platform buttons (${platformButtons.length}):`);
                 platformButtons.forEach(btn => {
-                    console.log(`  - ${btn.id}: ${btn.textContent.trim()}`);
                 });
             }
         }, 100);
@@ -1167,7 +898,6 @@
                             return;
                         }
                         // Fall back to download
-                        console.log('Web Share failed, falling back to download');
                     }
                 } else if (isMobile) {
                     // Mobile without Web Share API - download and show instructions
@@ -1206,7 +936,6 @@
                         }
                         return;
                     } catch (err) {
-                        console.error('Clipboard copy failed:', err);
                         // Fall back to download
                     }
                 }
@@ -1275,7 +1004,6 @@
             }
             
         } catch (error) {
-            console.error('[ShareIntegrated] Error:', error);
             alert('Failed to generate share image. Please try again.');
         } finally {
             // Hide loading
@@ -1432,7 +1160,6 @@
             }
             
         } catch (error) {
-            console.error('[StoryPreview] Error:', error);
             // Don't show alert - the preview likely still worked
             
             // Hide loading overlay

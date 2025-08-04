@@ -161,7 +161,6 @@ class KanyeRankerExport {
             // Ensure text is readable on dark backgrounds
             textColor = this.getReadableTextColor(albumColors.background);
             headerFont = albumColors.headerFont || headerFont;
-            console.log(`Export using album ${albumId} with font: ${headerFont}`);
         }
         
         this.ctx.fillStyle = textColor;

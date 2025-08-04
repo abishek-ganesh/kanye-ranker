@@ -4,12 +4,10 @@ class YouTubePreviewFallback {
         
         this.currentModal = null;
         this.videoIds = {};
-        this.brokenVideoIds = [];
         
         // Check if video data is already loaded
         if (window.videoLinks && window.videoLinks.videoIds) {
             this.videoIds = window.videoLinks.videoIds;
-            this.brokenVideoIds = window.videoLinks.brokenVideoIds || [];
             this.init();
         } else {
             // Load video data from JSON file
@@ -24,32 +22,18 @@ class YouTubePreviewFallback {
             const response = await fetch('data/video-links.json');
             const data = await response.json();
             
-            this.brokenVideoIds = data.brokenVideoIds || [];
-            const allVideos = data.videoIds || {};
-            
-            // Filter out broken video IDs
-            this.videoIds = {};
-            let brokenCount = 0;
-            for (const [songTitle, videoId] of Object.entries(allVideos)) {
-                if (!this.brokenVideoIds.includes(videoId)) {
-                    this.videoIds[songTitle] = videoId;
-                } else {
-                    brokenCount++;
-                }
-            }
+            this.videoIds = data.videoIds || {};
             
             // Only set globally if not already set by video-loader.js
             if (!window.videoLinks) {
                 window.videoLinks = {
-                    videoIds: this.videoIds,
-                    brokenVideoIds: this.brokenVideoIds
+                    videoIds: this.videoIds
                 };
             }
             
             
             // Debug: Check if CARNIVAL is in the final list
         } catch (error) {
-            console.error('[YouTube Preview] Failed to load video links:', error);
             // Fallback to empty database if loading fails
             this.videoIds = {};
         }

@@ -16,9 +16,7 @@ class UI {
         // Check if screens exist
         if (!this.screens.landing || !this.screens.comparison || !this.screens.results) {
             console.error('One or more screens not found:', this.screens);
-            console.error('Landing screen:', this.screens.landing);
-            console.error('Comparison screen:', this.screens.comparison);
-            console.error('Results screen:', this.screens.results);
+            throw new Error('Required screens not found in DOM');
         }
         
         this.elements = {
@@ -97,7 +95,6 @@ class UI {
                 : this.elements[path];
                 
             if (!element) {
-                console.error(`Critical element missing: ${path}`);
                 hasErrors = true;
             }
         });
@@ -111,7 +108,6 @@ class UI {
     showScreen(screenName) {
         
         if (!this.screens[screenName]) {
-            console.error(`Screen "${screenName}" not found!`);
             return;
         }
         
@@ -422,24 +418,19 @@ class UI {
             
             // Ensure the comparison screen is visible
             if (!this.screens.comparison.classList.contains('active')) {
-                console.warn('Comparison screen not active when trying to display comparison');
             }
             
             try {
                 this.updateSongCard('a', songA, albumA);
             } catch (error) {
-                console.error('Error updating card A:', error);
             }
             
             try {
                 this.updateSongCard('b', songB, albumB);
             } catch (error) {
-                console.error('Error updating card B:', error);
             }
             
         } catch (error) {
-            console.error('Error displaying comparison:', error);
-            console.error('Stack trace:', error.stack);
             this.showError('Failed to display songs. Please refresh and try again.');
         }
     }
@@ -448,7 +439,6 @@ class UI {
         const card = this.elements.songCards[side];
         
         if (!card) {
-            console.error(`Card object is null/undefined for side ${side}`);
             return;
         }
         
@@ -483,7 +473,6 @@ class UI {
         
         // Set up error handler first
         card.albumArt.onerror = function() {
-            console.error(`FAILED to load album art: ${this.src} (Album: ${album?.name})`);
             this.onerror = null; // Prevent infinite loop
             this.src = 'assets/album-covers/placeholder.svg';
             this.style.backgroundColor = '#f0f0f0';
@@ -517,7 +506,6 @@ class UI {
             const youtubeQuery = encodeURIComponent(`${song.title} ${artistName}`);
             card.youtubeLink.href = `https://www.youtube.com/results?search_query=${youtubeQuery}`;
         } else {
-            console.error(`No youtubeLink for ${side}`);
         }
         
         
@@ -539,7 +527,6 @@ class UI {
                 card.lyricsLink.href = `https://genius.com/search?q=${lyricsQuery}`;
             }
         } else {
-            console.error(`No lyricsLink for ${side}`);
         }
         
         if (card.previewBtn) {
@@ -581,7 +568,6 @@ class UI {
                 card.previewBtn.textContent = 'No Preview';
             }
         } else {
-            console.error(`No previewBtn for ${side}`);
         }
         
         // Apply album-specific colors to lyrics link (always, not just when preview exists)
@@ -609,7 +595,6 @@ class UI {
         if (card.chooseBtn) {
             card.chooseBtn.dataset.songId = song.id;
         } else {
-            console.error(`No chooseBtn for ${side}`);
         }
         
         if (card.container) {
@@ -617,7 +602,6 @@ class UI {
             void card.container.offsetWidth;
             card.container.classList.add('fade-in');
         } else {
-            console.error(`No container for ${side}`);
         }
         
         // Attach YouTube preview hover listeners

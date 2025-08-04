@@ -9,7 +9,6 @@ window.lyricsLoaderPromise = (async function() {
         
         return data;
     } catch (error) {
-        console.error('[Lyrics Loader] ❌ Failed to load lyrics links:', error);
         // Fallback to empty object if loading fails
         window.lyricsLinks = {};
         return {};

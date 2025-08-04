@@ -9,9 +9,8 @@ window.videoLoaderPromise = (async function() {
         
         return data;
     } catch (error) {
-        console.error('[Video Loader] ❌ Failed to load video links:', error);
         // Fallback to empty object if loading fails
-        window.videoLinks = { videoIds: {}, brokenVideoIds: [] };
+        window.videoLinks = { videoIds: {} };
         return window.videoLinks;
     }
 })();

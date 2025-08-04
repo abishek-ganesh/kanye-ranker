@@ -40,10 +40,11 @@ window.addEventListener('load', async function() {
                 
             } catch (error) {
                 console.error('Error initializing app:', error);
+                alert('Failed to initialize app. Please refresh the page.');
             }
         } else {
             console.error('Required classes not found. Please refresh the page.');
-            // Don't show alert, just log the error
+            alert('App failed to load properly. Please refresh the page.');
         }
     }, 500);
 });

@@ -11,9 +11,7 @@ class Analytics {
         this.pageViewTime = Date.now();
         
         if (!this.isEnabled) {
-            console.warn('Google Analytics not loaded - analytics disabled');
         } else {
-            console.log('Google Analytics initialized');
             this.initializeUserProperties();
         }
     }
@@ -33,10 +31,6 @@ class Analytics {
     track(eventName, parameters = {}) {
         if (!this.isEnabled) return;
         
-        // Log in development
-        if (window.location.hostname === 'localhost') {
-            console.log('Analytics Event:', eventName, parameters);
-        }
         
         // Add common parameters
         const enhancedParams = {

@@ -1,6 +1,5 @@
 // Feedback System - Updated with EmailJS
 // Version 2.0 - Cache bust: ${Date.now()}
-console.log('Loading new feedback.js with EmailJS support...');
 
 class FeedbackManager {
     constructor() {
@@ -29,7 +28,6 @@ class FeedbackManager {
         const initEmailJS = () => {
             if (window.emailjs) {
                 emailjs.init(this.publicKey);
-                console.log('EmailJS initialized with key:', this.publicKey);
                 return true;
             }
             return false;
@@ -37,11 +35,9 @@ class FeedbackManager {
         
         // Try to initialize immediately
         if (!initEmailJS()) {
-            console.warn('EmailJS not ready, waiting...');
             // If not ready, wait for window load
             window.addEventListener('load', () => {
                 if (!initEmailJS()) {
-                    console.error('EmailJS SDK failed to load!');
                 }
             });
         }
@@ -66,7 +62,6 @@ class FeedbackManager {
         this.form.addEventListener('submit', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log('Form submit intercepted!');
             this.handleSubmit(e);
             return false;
         });
@@ -216,7 +211,6 @@ class FeedbackManager {
     
     async handleSubmit(e) {
         e.preventDefault();
-        console.log('Form submitted!');
         
         // Check rate limiting
         const now = Date.now();
@@ -229,7 +223,6 @@ class FeedbackManager {
         const email = this.emailInput.value.trim();
         const message = this.messageInput.value.trim();
         
-        console.log('Email:', email, 'Message:', message);
         
         if (!message) {
             this.showToast('Please enter a message', 'error');
@@ -238,12 +231,10 @@ class FeedbackManager {
         
         // Check if EmailJS is available
         if (!window.emailjs) {
-            console.error('EmailJS not available in window object');
             this.showToast('Email service not available. Please try again later.', 'error');
             return;
         }
         
-        console.log('EmailJS is available, proceeding...');
         
         // Disable submit button
         const submitBtn = document.getElementById('feedback-send');
@@ -303,19 +294,14 @@ class FeedbackManager {
                 referrer: context.referrer
             };
             
-            console.log('Template params:', templateParams);
-            console.log('Service ID:', this.serviceID);
-            console.log('Template ID:', this.templateID);
             
             // Send email using EmailJS
-            console.log('About to call emailjs.send...');
             const response = await emailjs.send(
                 this.serviceID,
                 this.templateID,
                 templateParams
             );
             
-            console.log('EmailJS response:', response);
             
             // Track analytics
             if (window.analytics) {
@@ -334,7 +320,6 @@ class FeedbackManager {
             }, 2000);
             
         } catch (error) {
-            console.error('Error sending feedback:', error);
             this.showToast('Failed to send feedback. Please try again later.', 'error');
             
             // Re-enable form
@@ -381,13 +366,10 @@ class FeedbackManager {
 
 // Initialize feedback system when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Initializing FeedbackManager v2.0 with EmailJS...');
     window.feedbackManager = new FeedbackManager();
     
     // Double-check EmailJS is loaded
     if (!window.emailjs) {
-        console.error('CRITICAL: EmailJS not found! Check if CDN is blocked.');
     } else {
-        console.log('EmailJS confirmed available');
     }
 });

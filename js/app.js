@@ -5,19 +5,20 @@
  * Main application logic
  */
 class KanyeRankerApp {
+    // ==============================
+    // CONSTRUCTOR & INITIALIZATION
+    // ==============================
     constructor() {
         
         try {
             this.ui = new UI();
         } catch (error) {
-            console.error('Failed to initialize UI:', error);
             throw error;
         }
         
         try {
             this.elo = new EloRating(32);
         } catch (error) {
-            console.error('Failed to initialize EloRating:', error);
             throw error;
         }
         
@@ -50,6 +51,9 @@ class KanyeRankerApp {
         this.init();
     }
     
+    // ==============================
+    // INITIALIZATION & SETUP
+    // ==============================
     async init() {
         try {
             
@@ -82,7 +86,6 @@ class KanyeRankerApp {
             // Session saving removed - users start fresh each time
             
         } catch (error) {
-            console.error('Error during initialization:', error);
             this.ui.showError('Failed to initialize app: ' + error.message);
             if (window.analytics) {
                 window.analytics.trackError(error.message, 'app_init');
@@ -91,6 +94,9 @@ class KanyeRankerApp {
         }
     }
     
+    // ==============================
+    // DATA LOADING & VALIDATION
+    // ==============================
     async loadData() {
         try {
             // Ensure KanyeMessages is loaded and has the method
@@ -123,9 +129,6 @@ class KanyeRankerApp {
             this.ui.hideOverlay();
             
         } catch (error) {
-            console.error('Error loading data:', error);
-            console.error('Error details:', error.message);
-            console.error('Error stack:', error.stack);
             this.ui.hideOverlay();
             
             // Check if this is a CORS error from file:// protocol
@@ -141,6 +144,9 @@ class KanyeRankerApp {
         }
     }
     
+    // ==============================
+    // EVENT HANDLING & UI SETUP
+    // ==============================
     attachEventListeners() {
         
         // Core buttons
@@ -325,6 +331,9 @@ class KanyeRankerApp {
         }, 100);
     }
     
+    // ==============================
+    // SONG TIER SYSTEM & PAIRING
+    // ==============================
     initializeSongTiers() {
         const songIds = Array.from(this.songRatings.keys());
         
@@ -529,7 +538,6 @@ class KanyeRankerApp {
             attempts++;
         }
         
-        console.warn('Could not find valid new pair after', maxAttempts, 'attempts');
         return null;
     }
     
@@ -817,7 +825,6 @@ class KanyeRankerApp {
         }
         
         // Fallback: if we can't find a pair in the current pool, expand the pool
-        console.warn(`No valid pairs in ${poolName} pool, expanding search`);
         
         // Try with all songs
         const fallbackPair = this.selectNewPair(this.allSongsArray);
@@ -826,7 +833,6 @@ class KanyeRankerApp {
             return fallbackPair;
         }
         
-        console.error('Could not generate any valid pairing!');
         return null;
     }
     
@@ -890,7 +896,6 @@ class KanyeRankerApp {
         if (firstPair) {
             this.pairings.push(firstPair);
         } else {
-            console.error('Failed to generate first pairing');
         }
     }
     
@@ -955,7 +960,6 @@ class KanyeRankerApp {
                 
                 // STRICT VALIDATION - these MUST be in top 20
                 if (!top20SongIds.has(songIdA) || !top20SongIds.has(songIdB)) {
-                    console.error(`CRITICAL ERROR: Non-top-20 song in phase 1!`);
                     continue;
                 }
                 
@@ -987,7 +991,6 @@ class KanyeRankerApp {
                 if (pairingIndex <= 3) {
                 }
             } else {
-                console.warn('Could not find valid pair in phase 1, moving to phase 2');
                 break;
             }
         }
@@ -1033,9 +1036,6 @@ class KanyeRankerApp {
                 if (!top50SongIds.has(songIdA) || !top50SongIds.has(songIdB)) {
                     const songA = this.songs.find(s => s.id === songIdA);
                     const songB = this.songs.find(s => s.id === songIdB);
-                    console.error(`CRITICAL ERROR in Phase 2: Non-top-50 song detected!`);
-                    console.error(`Song A: "${songA?.title}" (${songA?.spotifyStreams?.toLocaleString()} streams)`);
-                    console.error(`Song B: "${songB?.title}" (${songB?.spotifyStreams?.toLocaleString()} streams)`);
                     continue;
                 }
                 
@@ -1065,7 +1065,6 @@ class KanyeRankerApp {
             if (bestPair) {
                 // Final validation before adding
                 if (!top50SongIds.has(bestPair[0]) || !top50SongIds.has(bestPair[1])) {
-                    console.error('CRITICAL: About to add non-top-50 pair in phase 2!');
                     continue;
                 }
                 
@@ -1078,7 +1077,6 @@ class KanyeRankerApp {
                 if (pairingIndex === 20 || pairingIndex === 23 || pairingIndex === 25) {
                 }
             } else {
-                console.warn('Could not find valid pair in phase 2');
                 pairingIndex++;
             }
         }
@@ -1122,7 +1120,6 @@ class KanyeRankerApp {
                 
                 // STRICT VALIDATION - both songs MUST be in top 100
                 if (!top100SongIds.has(songIdA) || !top100SongIds.has(songIdB)) {
-                    console.error(`CRITICAL ERROR in Phase 3: Non-top-100 song detected!`);
                     continue;
                 }
                 
@@ -1152,7 +1149,6 @@ class KanyeRankerApp {
             if (bestPair) {
                 // Final validation
                 if (!top100SongIds.has(bestPair[0]) || !top100SongIds.has(bestPair[1])) {
-                    console.error('CRITICAL: About to add non-top-100 pair in phase 3!');
                     continue;
                 }
                 
@@ -1161,7 +1157,6 @@ class KanyeRankerApp {
                 recentPairs.set(pairKey, pairingIndex);
                 pairingIndex++;
             } else {
-                console.warn('Could not find valid pair in phase 3');
                 pairingIndex++;
             }
         }
@@ -1292,9 +1287,6 @@ class KanyeRankerApp {
             const songB = this.songs.find(s => s.id === idB);
             
             if (songA?.spotifyStreams < 500000000 || songB?.spotifyStreams < 500000000) {
-                console.warn(`WARNING: Comparison ${i + 1} has low-stream song:`);
-                console.warn(`  ${songA?.title}: ${songA?.spotifyStreams?.toLocaleString()} streams`);
-                console.warn(`  ${songB?.title}: ${songB?.spotifyStreams?.toLocaleString()} streams`);
             }
         }
     }
@@ -1355,6 +1347,9 @@ class KanyeRankerApp {
         }
     }
     
+    // ==============================
+    // COMPARISON DISPLAY & PROCESSING
+    // ==============================
     showNextComparison() {
         // Dynamic pairing: generate next pair if needed
         if (this.useDynamicPairing) {
@@ -1388,7 +1383,6 @@ class KanyeRankerApp {
         const songB = this.songs.find(s => s.id === songIdB);
         
         if (!songA || !songB) {
-            console.error('Songs not found:', songIdA, songIdB);
             this.currentPairIndex++;
             this.showNextComparison();
             return;
@@ -1426,6 +1420,9 @@ class KanyeRankerApp {
         this.preloadNextComparison();
     }
     
+    // ==============================
+    // SONG CHOICE & RATING UPDATE
+    // ==============================
     chooseSong(side) {
         
         // Prevent multiple clicks
@@ -1562,6 +1559,9 @@ class KanyeRankerApp {
         setTimeout(() => chosenCard.classList.remove('success'), 600);
     }
     
+    // ==============================
+    // RESULTS & RANKINGS
+    // ==============================
     showResults() {
         // Track page view for results screen
         if (window.analytics) {
@@ -1861,6 +1861,9 @@ class KanyeRankerApp {
         });
     }
     
+    // ==============================
+    // UTILITY METHODS & HELPERS
+    // ==============================
     getTopSongs(limit = 20) {
         return this.songs
             .map(song => ({
@@ -1975,6 +1978,9 @@ class KanyeRankerApp {
             .slice(0, 10);
     }
     
+    // ==============================
+    // SESSION MANAGEMENT
+    // ==============================
     continueRanking() {
         
         // Track analytics
@@ -2002,12 +2008,9 @@ window.KanyeRankerApp = KanyeRankerApp;
 
 // Global error handler
 window.addEventListener('error', (event) => {
-    console.error('Global error:', event.error);
     const errorMessage = `Error: ${event.message} at ${event.filename}:${event.lineno}:${event.colno}`;
-    console.error(errorMessage);
 });
 
 // Unhandled promise rejection handler
 window.addEventListener('unhandledrejection', (event) => {
-    console.error('Unhandled promise rejection:', event.reason);
 });
