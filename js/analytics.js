@@ -10,6 +10,12 @@ class Analytics {
         this.comparisonStartTime = null;
         this.pageViewTime = Date.now();
         
+        // Check if we should track this user
+        if (window.analyticsConfig && !window.analyticsConfig.shouldTrackAnalytics()) {
+            this.isEnabled = false;
+            console.log('Analytics disabled for internal traffic');
+        }
+        
         if (!this.isEnabled) {
         } else {
             this.initializeUserProperties();
