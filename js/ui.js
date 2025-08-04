@@ -482,7 +482,7 @@ class UI {
         
         console.log(`Setting title for ${side}...`);
         // Censor specific titles for display
-        const displayTitle = song.title === "Niggas in Paris" ? "N****s in Paris" : song.title;
+        const displayTitle = KanyeUtils.getCensoredTitle(song.title);
         card.title.textContent = displayTitle || 'Unknown Title';
         
         console.log(`Setting album for ${side}...`);
@@ -566,31 +566,10 @@ class UI {
             }
             
             // Try case-sensitive first, then case-insensitive lookup
-            let directGeniusUrl = window.lyricsLinks && window.lyricsLinks[song.title];
-            console.log(`Direct lookup result:`, directGeniusUrl);
-            
-            // If not found, try case-insensitive lookup
-            if (!directGeniusUrl && window.lyricsLinks) {
-                console.log(`Trying case-insensitive lookup...`);
-                
-                // Try uppercase version (for Vultures songs)
-                const upperTitle = song.title.toUpperCase();
-                console.log(`Checking uppercase: "${upperTitle}"`);
-                directGeniusUrl = window.lyricsLinks[upperTitle];
-                console.log(`Uppercase lookup result:`, directGeniusUrl);
-                
-                // If still not found, do a case-insensitive search through all keys
-                if (!directGeniusUrl) {
-                    console.log(`Searching through all keys...`);
-                    const titleLower = song.title.toLowerCase();
-                    for (const key in window.lyricsLinks) {
-                        if (key.toLowerCase() === titleLower) {
-                            console.log(`Found match: key="${key}", url="${window.lyricsLinks[key]}"`);
-                            directGeniusUrl = window.lyricsLinks[key];
-                            break;
-                        }
-                    }
-                }
+            let directGeniusUrl = null;
+            if (window.lyricsLinks) {
+                directGeniusUrl = KanyeUtils.getCaseInsensitiveValue(window.lyricsLinks, song.title);
+                console.log(`Lyrics lookup for "${song.title}":`, directGeniusUrl);
             }
             
             if (directGeniusUrl) {
@@ -633,31 +612,10 @@ class UI {
             console.log(`window.videoLinks.videoIds available:`, !!(window.videoLinks && window.videoLinks.videoIds));
             
             // Check if we have a YouTube video ID for this song
-            let videoId = window.videoLinks && window.videoLinks.videoIds && window.videoLinks.videoIds[song.title];
-            console.log(`Direct lookup for "${song.title}":`, videoId);
-            
-            // If not found, try case-insensitive lookup (for Vultures songs like CARNIVAL)
-            if (!videoId && window.videoLinks && window.videoLinks.videoIds) {
-                console.log(`Trying case-insensitive lookup...`);
-                
-                // Try uppercase version
-                const upperTitle = song.title.toUpperCase();
-                console.log(`Checking uppercase: "${upperTitle}"`);
-                videoId = window.videoLinks.videoIds[upperTitle];
-                console.log(`Uppercase lookup result:`, videoId);
-                
-                // If still not found, do case-insensitive search
-                if (!videoId) {
-                    console.log(`Searching through all video keys...`);
-                    const titleLower = song.title.toLowerCase();
-                    for (const key in window.videoLinks.videoIds) {
-                        if (key.toLowerCase() === titleLower) {
-                            console.log(`Found match: key="${key}", videoId="${window.videoLinks.videoIds[key]}"`);
-                            videoId = window.videoLinks.videoIds[key];
-                            break;
-                        }
-                    }
-                }
+            let videoId = null;
+            if (window.videoLinks && window.videoLinks.videoIds) {
+                videoId = KanyeUtils.getCaseInsensitiveValue(window.videoLinks.videoIds, song.title);
+                console.log(`Video lookup for "${song.title}":`, videoId);
             }
             
             if (videoId) {
@@ -763,7 +721,7 @@ class UI {
             : null;
         
         // Censor specific titles for display
-        const displayTitle = song.title === "Niggas in Paris" ? "N****s in Paris" : song.title;
+        const displayTitle = KanyeUtils.getCensoredTitle(song.title);
         
         div.innerHTML = `
             <div class="result-rank">#${rank}</div>

@@ -314,24 +314,7 @@ class YouTubePreviewFallback {
             }
             
             const songTitle = titleElement.textContent.trim();
-            let videoId = this.videoIds[songTitle];
-            
-            // If not found, try case-insensitive lookup
-            if (!videoId) {
-                // Try uppercase
-                videoId = this.videoIds[songTitle.toUpperCase()];
-                
-                // If still not found, do case-insensitive search
-                if (!videoId) {
-                    const titleLower = songTitle.toLowerCase();
-                    for (const key in this.videoIds) {
-                        if (key.toLowerCase() === titleLower) {
-                            videoId = this.videoIds[key];
-                            break;
-                        }
-                    }
-                }
-            }
+            let videoId = KanyeUtils.getCaseInsensitiveValue(this.videoIds, songTitle);
             
             if (videoId) {
                 card.classList.add('has-preview');
@@ -382,24 +365,7 @@ class YouTubePreviewFallback {
     }
     
     playPreview(songTitle) {
-        let videoId = this.videoIds[songTitle];
-        
-        // If not found, try case-insensitive lookup
-        if (!videoId) {
-            // Try uppercase
-            videoId = this.videoIds[songTitle.toUpperCase()];
-            
-            // If still not found, do case-insensitive search
-            if (!videoId) {
-                const titleLower = songTitle.toLowerCase();
-                for (const key in this.videoIds) {
-                    if (key.toLowerCase() === titleLower) {
-                        videoId = this.videoIds[key];
-                        break;
-                    }
-                }
-            }
-        }
+        let videoId = KanyeUtils.getCaseInsensitiveValue(this.videoIds, songTitle);
         
         if (!videoId) {
             // Show error message in modal

@@ -153,33 +153,64 @@ function trackAnalytics(event, properties) {
 
 ## 4. RECOMMENDED CLEANUP ACTIONS
 
-### Phase 1: File Removal (Immediate)
-1. **Delete all test/debug HTML files** (10 files)
-2. **Delete unused JavaScript files** (6 files)
-3. **Delete backup data files** (2 files)
-4. **Create `dev/` folder** and move development scripts there
+### Phase 1: File Removal (Immediate) ✅ COMPLETED
+1. **Delete all test/debug HTML files** (10 files) ✅
+2. **Delete unused JavaScript files** (6 files) ✅
+3. **Delete backup data files** (2 files) ✅
+4. **Create `dev/` folder** and move development scripts there ⏳ (optional)
 
-### Phase 2: Function Cleanup (High Priority)
-1. **Remove Spotify preview methods** from `ui.js`
-2. **Remove unused overlay methods** from `ui.js`
-3. **Clean up commented code** in `youtube-preview-fallback.js`
-4. **Verify and fix/remove** `getStoredRatingsBeforeComparison()` in back-button.js
+### Phase 2: Function Cleanup (High Priority) ✅ COMPLETED
+1. **Remove Spotify preview methods** from `ui.js` ✅
+2. **Remove unused overlay methods** from `ui.js` ✅ (kept showOverlay/hideOverlay as they're called)
+3. **Clean up commented code** in `youtube-preview-fallback.js` ✅
+4. **Verify and fix/remove** `getStoredRatingsBeforeComparison()` in back-button.js ✅ (kept - it's used)
 
-### Phase 3: Code Consolidation (Medium Priority)
-1. **Create `js/utils.js`** file with:
-   - `applyAlbumButtonColors()`
-   - `getCaseInsensitiveValue()`
-   - `getCensoredTitle()`
-   - `trackAnalytics()`
+### Phase 3: Code Consolidation (Medium Priority) ✅ COMPLETED
+1. **Create `js/utils.js`** file with: ✅
+   - `applyAlbumButtonColors()` ✅
+   - `getCaseInsensitiveValue()` ✅
+   - `getCensoredTitle()` ✅
+   - `trackAnalytics()` ✅
 
-2. **Replace all duplicate instances** with utility function calls
+2. **Replace all duplicate instances** with utility function calls ✅
 
-3. **Simplify debug logging** in youtube-preview-fallback.js
+3. **Simplify debug logging** in youtube-preview-fallback.js ✅
 
-### Phase 4: Final Optimization (Low Priority)
-1. **Minify production JavaScript** files
-2. **Combine CSS files** where logical
-3. **Review and optimize** large files like app.js and export.js
+### Phase 4: Remove Debug Logging (High Priority) ✅ COMPLETED
+1. **Remove excessive console.log statements** from:
+   - `lyrics-loader.js` - 4 console logs
+   - `video-loader.js` - Similar logging patterns
+   - `app-init.js` - 26 console logs (development debugging)
+   - `app.js` - Initialization logs
+   - `ui.js` - Video/lyrics lookup logs
+
+2. **Keep only essential error logging** for production debugging
+
+### Phase 5: CSS Consolidation (Medium Priority)
+1. **Analyze 14 CSS files** for duplication
+2. **Combine related CSS files** where logical:
+   - Mobile styles (mobile-override.css)
+   - Button styles (comparison-buttons-final.css, results-buttons-fix.css)
+   - Share-related styles (share.css, share-incentive-simple.css)
+3. **Remove unused CSS rules**
+
+### Phase 6: Large File Refactoring (Low Priority)
+1. **Split `app.js`** into smaller modules:
+   - Core game logic
+   - Session management
+   - Analytics integration
+   - Export functionality
+
+2. **Split `share-integrated.js`** into:
+   - Image generation
+   - Social sharing logic
+   - UI components
+
+### Phase 7: Final Optimization (Low Priority)
+1. **Standardize error handling** patterns across all files
+2. **Minify production JavaScript** files
+3. **Optimize image assets** (album covers)
+4. **Add production build process**
 
 ## 5. IMPACT ASSESSMENT
 
@@ -188,12 +219,20 @@ function trackAnalytics(event, properties) {
 - **JavaScript files:** 25 files
 - **Test/Debug files:** 10 files
 - **Duplicate code blocks:** 15+ instances
+- **Console.log statements:** 100+ across all files
 
-### After Cleanup:
-- **Total files:** ~37 files (-33%)
-- **JavaScript files:** 19 files (-24%)
-- **Test/Debug files:** 0 files (-100%)
-- **Code size reduction:** ~40-60% in JS files
+### After Phases 1-3 (COMPLETED):
+- **Total files:** ~37 files (-33%) ✅
+- **JavaScript files:** 20 files (-20%) ✅ (added utils.js)
+- **Test/Debug files:** 0 files (-100%) ✅
+- **Code size reduction:** ~40-60% in JS files ✅
+- **Duplicate code consolidated:** 4 utility functions created ✅
+
+### Potential Additional Improvements (Phases 4-7):
+- **Console.log reduction:** Remove ~50+ debug statements
+- **CSS files:** Consolidate 14 files into ~8-10 files
+- **Large file splits:** Better modularity and maintainability
+- **Production optimization:** Minification and build process
 
 ### Benefits:
 - ✅ Easier maintenance
