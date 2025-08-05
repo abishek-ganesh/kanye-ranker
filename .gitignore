@@ -75,3 +75,6 @@ credentials.json
 
 # Analytics reports - keep private
 analytics-reports/
+
+# Project documentation - keep private
+CLAUDE.md
