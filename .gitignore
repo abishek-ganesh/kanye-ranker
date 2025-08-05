@@ -72,3 +72,6 @@ credentials.json
 **/credentials.json
 *.key
 *.pem
+
+# Analytics reports - keep private
+analytics-reports/
