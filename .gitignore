@@ -78,3 +78,8 @@ analytics-reports/
 
 # Project documentation - keep private
 CLAUDE.md
+AI_INTEGRATION_IDEAS.md
+ALGORITHMS.md
+
+# Claude-specific files
+.claude/
