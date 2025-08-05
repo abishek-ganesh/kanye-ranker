@@ -1,12 +1,23 @@
 # Generate Kanye Ranker Analytics Report
 
-Please generate a comprehensive Google Analytics report for the Kanye Ranker app using the following parameters: $ARGUMENTS
+Please generate a comprehensive Google Analytics report for the Kanye Ranker app.
+
+Report period: $ARGUMENTS (defaults to 'daily' if not specified)
 
 ## Instructions:
 
-1. **Connect to Google Analytics**
+1. **Determine Report Period**
+   - Parse $ARGUMENTS for: daily, weekly, biweekly, or monthly
+   - Default to 'daily' if no argument provided
+   - Date ranges:
+     - daily: yesterday to today (last 24 hours)
+     - weekly: last 7 days 
+     - biweekly: last 14 days
+     - monthly: last 30 days
+
+2. **Connect to Google Analytics**
    - Use the analytics-mcp server to access GA4 property ID: 498617351
-   - Default to last 30 days unless a different date range is specified in arguments
+   - Use the appropriate date range based on report type
 
 2. **Gather Key Metrics**
    - User metrics: Total users, sessions, new vs returning
@@ -21,8 +32,13 @@ Please generate a comprehensive Google Analytics report for the Kanye Ranker app
    - Note both raw and adjusted metrics where applicable
 
 4. **Create Report File**
-   - Save to `analytics-reports/YYYY-MM-DD-report.md`
+   - Organize by report type in subfolders:
+     - Daily: `analytics-reports/daily/YYYY-MM-DD-daily.md`
+     - Weekly: `analytics-reports/weekly/YYYY-MM-DD-weekly.md`
+     - Biweekly: `analytics-reports/biweekly/YYYY-MM-DD-biweekly.md`
+     - Monthly: `analytics-reports/monthly/YYYY-MM-DD-monthly.md`
    - Use today's date for the filename
+   - Include report type in filename
    - Include all sections from the baseline report template
 
 5. **Report Sections to Include**
@@ -42,8 +58,26 @@ Please generate a comprehensive Google Analytics report for the Kanye Ranker app
    - Note any data anomalies or tracking issues
 
 ## Example Usage:
-- `/project:analytics-report` - Generate report for last 30 days
-- `/project:analytics-report last 7 days` - Generate weekly report
-- `/project:analytics-report compare to 2025-08-04` - Generate with comparison to specific date
+- `/project:analytics-report` - Generate daily report (default)
+- `/project:analytics-report daily` - Explicitly generate daily report
+- `/project:analytics-report weekly` - Generate weekly report (last 7 days)
+- `/project:analytics-report biweekly` - Generate biweekly report (last 14 days)
+- `/project:analytics-report monthly` - Generate monthly report (last 30 days)
+
+## Report Organization:
+Reports will be saved in subfolders by type:
+```
+analytics-reports/
+├── daily/
+│   ├── 2025-08-04-daily.md
+│   └── 2025-08-05-daily.md
+├── weekly/
+│   ├── 2025-08-04-weekly.md
+│   └── 2025-08-11-weekly.md
+├── biweekly/
+│   └── 2025-08-04-biweekly.md
+└── monthly/
+    └── 2025-08-04-monthly.md
+```
 
 After generating the report, provide a brief summary of key findings and growth metrics.
