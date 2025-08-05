@@ -71,6 +71,7 @@ kanye-ranker/
 - **No API Keys**: Uses embed URLs only to avoid exposing credentials
 - **Cross-Platform Sharing**: Web Share API for mobile, Clipboard API for desktop
 - **Browser Compatibility**: Tested on Safari, Chrome, and mobile browsers
+- **Analytics**: Google Analytics 4 (G-Z2S91E0R6Z) and Microsoft Clarity (spowj2ipam) for user behavior tracking
 
 ## Implementation Status
 
