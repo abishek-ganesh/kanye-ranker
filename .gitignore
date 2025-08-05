@@ -80,6 +80,7 @@ analytics-reports/
 CLAUDE.md
 AI_INTEGRATION_IDEAS.md
 ALGORITHMS.md
+TESTING_GUIDE.md
 
 # Claude-specific files
 .claude/
