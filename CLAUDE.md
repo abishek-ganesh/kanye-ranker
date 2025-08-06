@@ -94,3 +94,19 @@ The project is **fully implemented and functional** with the following key compo
 - Implemented mobile-specific back button behavior
 - Refactored duplicate code for better maintainability
 - Updated landing page copy with Kanye-inspired messaging
+
+## Analytics & Reporting
+
+### Analytics Configuration
+- **Google Analytics 4**: Property ID 498617351 (accessed via `analytics-mcp` MCP server)
+- **Microsoft Clarity**: Project ID spowj2ipam (accessed via `clarity-kanye` MCP server)
+- **MCP Configuration**: API tokens stored in `~/.config/claude-code/mcp_servers.json`
+- **Reports**: Generated in `analytics-reports/` directory (gitignored)
+
+### Running Analytics Reports
+Use the `/analytics-report` command with Claude Code to generate combined GA4 + Clarity reports:
+- Daily: `/analytics-report` or `/analytics-report daily`
+- Weekly: `/analytics-report weekly`
+- Monthly: `/analytics-report monthly`
+
+Reports combine data from both platforms for comprehensive insights. The MCP servers handle authentication automatically using configured tokens.
