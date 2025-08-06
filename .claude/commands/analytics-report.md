@@ -32,6 +32,7 @@ Report period: $ARGUMENTS (defaults to 'daily' if not specified)
    - Note both raw and adjusted metrics where applicable
 
 4. **Create Report File**
+   - Check if analytics-reports directory structure exists (only create if missing)
    - Organize by report type in subfolders:
      - Daily: `analytics-reports/daily/YYYY-MM-DD-daily.md`
      - Weekly: `analytics-reports/weekly/YYYY-MM-DD-weekly.md`
