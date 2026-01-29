@@ -556,12 +556,12 @@ class UI {
                 card.previewBtn.dataset.videoId = videoId;
                 card.previewBtn.classList.remove('disabled');
                 card.previewBtn.classList.add('has-preview');  // Add this class for YouTube preview fallback
-                card.previewBtn.textContent = '▶ Preview';
+                card.previewBtn.textContent = '▶ Listen';
             } else {
                 delete card.previewBtn.dataset.videoId;
                 card.previewBtn.classList.add('disabled');
                 card.previewBtn.classList.remove('has-preview');  // Remove this class
-                card.previewBtn.textContent = 'No Preview';
+                card.previewBtn.textContent = 'Unavailable';
             }
         } else {
         }
@@ -693,7 +693,7 @@ class UI {
                         data-video-id="${videoId || ''}"
                         data-album-id="${song.albumId || ''}"
                         ${!videoId ? 'disabled' : ''}>
-                    ▶ Preview
+                    ▶ Listen
                 </button>
                 <a class="btn-small lyrics-btn" 
                    href="${lyricsUrl || '#'}"

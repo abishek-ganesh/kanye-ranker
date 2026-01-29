@@ -321,10 +321,10 @@ class YouTubePreviewFallback {
                 const previewBtn = card.querySelector('.preview-btn');
                 if (previewBtn) {
                     // Only update if not already set up correctly
-                    if (!previewBtn.classList.contains('has-preview') || previewBtn.textContent.includes('No Preview')) {
+                    if (!previewBtn.classList.contains('has-preview') || previewBtn.textContent.includes('Unavailable')) {
                         previewBtn.classList.remove('disabled');
                         previewBtn.classList.add('has-preview');
-                        previewBtn.textContent = '▶ Preview';
+                        previewBtn.textContent = '▶ Listen';
                         // Remove any inline styles
                         previewBtn.removeAttribute('style');
                         // Remove any existing onclick to prevent duplicates
@@ -343,12 +343,12 @@ class YouTubePreviewFallback {
                 const previewBtn = card.querySelector('.preview-btn');
                 if (previewBtn) {
                     // Only update if currently showing as available
-                    if (previewBtn.classList.contains('has-preview') || !previewBtn.textContent.includes('No Preview')) {
+                    if (previewBtn.classList.contains('has-preview') || !previewBtn.textContent.includes('Unavailable')) {
                         if (songTitle && songTitle.trim()) {
                         }
                         previewBtn.classList.remove('has-preview');
                         previewBtn.classList.add('disabled');
-                        previewBtn.textContent = 'No Preview';
+                        previewBtn.textContent = 'Unavailable';
                         // Remove any inline styles
                         previewBtn.removeAttribute('style');
                         previewBtn.onclick = null;
