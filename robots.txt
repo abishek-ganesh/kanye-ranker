@@ -1,0 +1,8 @@
+# Robots.txt for Kanye Ranker
+# https://www.kanyeranker.com
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://www.kanyeranker.com/sitemap.xml
