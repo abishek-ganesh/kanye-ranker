@@ -72,16 +72,32 @@
             `width=${width},height=${height},left=${left},top=${top}`
         );
 
+        // Check if popup was blocked
+        if (!authPopup || authPopup.closed) {
+            throw new Error('Popup blocked');
+        }
+
         return new Promise((resolve, reject) => {
             const timeout = setTimeout(() => {
                 window.removeEventListener('message', handler);
                 reject(new Error('Auth timed out'));
             }, 120000);
 
+            // Also watch for popup being closed without completing auth
+            const popupCheck = setInterval(() => {
+                if (authPopup && authPopup.closed) {
+                    clearInterval(popupCheck);
+                    clearTimeout(timeout);
+                    window.removeEventListener('message', handler);
+                    reject(new Error('Login window closed'));
+                }
+            }, 500);
+
             function handler(event) {
                 if (event.origin !== window.location.origin) return;
                 if (event.data?.type !== 'spotify-auth-callback') return;
 
+                clearInterval(popupCheck);
                 clearTimeout(timeout);
                 window.removeEventListener('message', handler);
 
@@ -257,8 +273,20 @@
             <div id="spotify-banner-message" class="spotify-banner-message" style="display:none;"></div>
         `;
 
-        // Insert before the top songs list (so it's above everything)
-        topSongs.parentNode.insertBefore(banner, topSongs);
+        // Insert at the very top of the results container, before everything else
+        const container = topSongs.closest('.container');
+        if (container) {
+            container.insertBefore(banner, container.firstChild);
+        } else {
+            topSongs.parentNode.insertBefore(banner, topSongs);
+        }
+
+        // Trigger slide-in animation after a frame
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                banner.classList.add('spotify-banner-visible');
+            });
+        });
 
         // Attach click handler
         document.getElementById('spotify-create-btn').addEventListener('click', handleCreatePlaylist);
@@ -327,12 +355,16 @@
             labelEl.style.display = 'inline';
             btn.disabled = false;
 
-            if (err.message === 'Auth timed out') {
-                showMessage(messageEl, 'Spotify login timed out. Please try again.', 'error');
-            } else {
-                showMessage(messageEl, 'Something went wrong. Please try again.', 'error');
-                console.error('Spotify playlist error:', err);
-            }
+            const messages = {
+                'Popup blocked': 'Please allow popups for this site and try again.',
+                'Auth timed out': 'Spotify login timed out. Please try again.',
+                'Login window closed': 'Spotify login was cancelled. Try again when ready.',
+                'State mismatch': 'Security check failed. Please try again.',
+                'Token exchange failed': 'Could not connect to Spotify. Please try again.'
+            };
+            const matchedKey = Object.keys(messages).find(k => err.message.startsWith(k));
+            showMessage(messageEl, matchedKey ? messages[matchedKey] : `Error: ${err.message}`, 'error');
+            console.error('Spotify playlist error:', err);
         }
     }
 
@@ -356,9 +388,18 @@
                 background: linear-gradient(135deg, #191414 0%, #1a1a2e 100%);
                 border: 1px solid #1DB954;
                 border-radius: 16px;
-                padding: 20px 24px;
-                margin: 24px 0;
+                padding: 16px 20px;
+                margin: 0 auto 24px;
+                max-width: 520px;
                 color: #fff;
+                opacity: 0;
+                transform: translateY(-12px);
+                transition: opacity 0.4s ease, transform 0.4s ease;
+            }
+
+            .spotify-playlist-banner.spotify-banner-visible {
+                opacity: 1;
+                transform: translateY(0);
             }
 
             .spotify-banner-content {
@@ -484,8 +525,9 @@
             /* Mobile responsive */
             @media (max-width: 600px) {
                 .spotify-playlist-banner {
-                    padding: 16px 18px;
-                    margin: 16px 0;
+                    padding: 14px 16px;
+                    margin: 0 auto 20px;
+                    max-width: 100%;
                 }
 
                 .spotify-banner-content {
