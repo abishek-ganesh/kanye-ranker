@@ -159,6 +159,16 @@ const albumColors = {
         tertiary: '#CD853F',  // Peru
         headerFont: '"Franklin Gothic Heavy", "Impact", sans-serif',
         bodyFont: '"Franklin Gothic Medium", Arial, sans-serif'
+    },
+    // Bully - Black/Silver - Raw/stark B&W
+    'bully': {
+        primary: '#1A1A1A',   // Near black - matches raw B&W album art
+        secondary: '#909090', // Silver grey
+        background: '#000000',
+        text: '#FFFFFF',
+        tertiary: '#787878',  // Medium grey for lyrics button
+        headerFont: '"Arial Black", "Impact", sans-serif',
+        bodyFont: '"Arial", "Helvetica Neue", sans-serif'
     }
 };
 

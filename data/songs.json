@@ -127,6 +127,14 @@
       "trackCount": 16,
       "type": "studio",
       "coverArt": "vultures-2.jpg"
+    },
+    {
+      "id": "bully",
+      "name": "Bully",
+      "year": 2026,
+      "trackCount": 18,
+      "type": "studio",
+      "coverArt": "bully.png"
     }
   ],
   "songs": [
@@ -2098,8 +2106,206 @@
       "spotifyStreams": 265810011,
       "totalStreams": 0,
       "dailyStreams": 0
+    },
+    {
+      "id": "bully-1",
+      "title": "King",
+      "albumId": "bully",
+      "trackNumber": 1,
+      "initialRating": 1500,
+      "spotifyRank": 200,
+      "spotifyStreams": 20000000,
+      "totalStreams": 0,
+      "dailyStreams": 0
+    },
+    {
+      "id": "bully-2",
+      "title": "This a Must",
+      "albumId": "bully",
+      "trackNumber": 2,
+      "initialRating": 1500,
+      "spotifyRank": 216,
+      "spotifyStreams": 2500000,
+      "totalStreams": 0,
+      "dailyStreams": 0
+    },
+    {
+      "id": "bully-3",
+      "title": "Father ft. Travis Scott",
+      "albumId": "bully",
+      "trackNumber": 3,
+      "initialRating": 1500,
+      "spotifyRank": 201,
+      "spotifyStreams": 22000000,
+      "totalStreams": 0,
+      "dailyStreams": 0
+    },
+    {
+      "id": "bully-4",
+      "title": "All the Love ft. André Troutman",
+      "albumId": "bully",
+      "trackNumber": 4,
+      "initialRating": 1500,
+      "spotifyRank": 204,
+      "spotifyStreams": 18000000,
+      "totalStreams": 0,
+      "dailyStreams": 0
+    },
+    {
+      "id": "bully-5",
+      "title": "Punch Drunk",
+      "albumId": "bully",
+      "trackNumber": 5,
+      "initialRating": 1500,
+      "spotifyRank": 217,
+      "spotifyStreams": 2303044,
+      "totalStreams": 0,
+      "dailyStreams": 0
+    },
+    {
+      "id": "bully-6",
+      "title": "Whatever Works",
+      "albumId": "bully",
+      "trackNumber": 6,
+      "initialRating": 1500,
+      "spotifyRank": 218,
+      "spotifyStreams": 2000000,
+      "totalStreams": 0,
+      "dailyStreams": 0
+    },
+    {
+      "id": "bully-7",
+      "title": "Mama's Favorite",
+      "albumId": "bully",
+      "trackNumber": 7,
+      "initialRating": 1500,
+      "spotifyRank": 220,
+      "spotifyStreams": 1500000,
+      "totalStreams": 0,
+      "dailyStreams": 0
+    },
+    {
+      "id": "bully-8",
+      "title": "Sisters and Brothers",
+      "albumId": "bully",
+      "trackNumber": 8,
+      "initialRating": 1500,
+      "spotifyRank": 219,
+      "spotifyStreams": 1500000,
+      "totalStreams": 0,
+      "dailyStreams": 0
+    },
+    {
+      "id": "bully-9",
+      "title": "Bully ft. CeeLo Green",
+      "albumId": "bully",
+      "trackNumber": 9,
+      "initialRating": 1500,
+      "spotifyRank": 210,
+      "spotifyStreams": 5000000,
+      "totalStreams": 0,
+      "dailyStreams": 0
+    },
+    {
+      "id": "bully-10",
+      "title": "Highs and Lows",
+      "albumId": "bully",
+      "trackNumber": 10,
+      "initialRating": 1500,
+      "spotifyRank": 215,
+      "spotifyStreams": 2000000,
+      "totalStreams": 0,
+      "dailyStreams": 0
+    },
+    {
+      "id": "bully-11",
+      "title": "I Can't Wait",
+      "albumId": "bully",
+      "trackNumber": 11,
+      "initialRating": 1500,
+      "spotifyRank": 211,
+      "spotifyStreams": 5000000,
+      "totalStreams": 0,
+      "dailyStreams": 0
+    },
+    {
+      "id": "bully-12",
+      "title": "White Lines ft. André Troutman",
+      "albumId": "bully",
+      "trackNumber": 12,
+      "initialRating": 1500,
+      "spotifyRank": 213,
+      "spotifyStreams": 3000000,
+      "totalStreams": 0,
+      "dailyStreams": 0
+    },
+    {
+      "id": "bully-13",
+      "title": "Circles ft. Don Toliver",
+      "albumId": "bully",
+      "trackNumber": 13,
+      "initialRating": 1500,
+      "spotifyRank": 212,
+      "spotifyStreams": 4000000,
+      "totalStreams": 0,
+      "dailyStreams": 0
+    },
+    {
+      "id": "bully-14",
+      "title": "Preacher Man",
+      "albumId": "bully",
+      "trackNumber": 14,
+      "initialRating": 1500,
+      "spotifyRank": 200,
+      "spotifyStreams": 28475566,
+      "totalStreams": 0,
+      "dailyStreams": 0
+    },
+    {
+      "id": "bully-15",
+      "title": "Beauty and the Beast",
+      "albumId": "bully",
+      "trackNumber": 15,
+      "initialRating": 1500,
+      "spotifyRank": 203,
+      "spotifyStreams": 19628337,
+      "totalStreams": 0,
+      "dailyStreams": 0
+    },
+    {
+      "id": "bully-16",
+      "title": "Damn",
+      "albumId": "bully",
+      "trackNumber": 16,
+      "initialRating": 1500,
+      "spotifyRank": 206,
+      "spotifyStreams": 13051096,
+      "totalStreams": 0,
+      "dailyStreams": 0
+    },
+    {
+      "id": "bully-17",
+      "title": "Last Breath ft. Peso Pluma",
+      "albumId": "bully",
+      "trackNumber": 17,
+      "initialRating": 1500,
+      "spotifyRank": 205,
+      "spotifyStreams": 14951275,
+      "totalStreams": 0,
+      "dailyStreams": 0
+    },
+    {
+      "id": "bully-18",
+      "title": "This One Here",
+      "albumId": "bully",
+      "trackNumber": 18,
+      "initialRating": 1500,
+      "spotifyRank": 214,
+      "spotifyStreams": 3000000,
+      "totalStreams": 0,
+      "dailyStreams": 0
     }
   ],
-  "totalSongs": 181,
-  "lastFiltered": "2025-07-14T05:17:46.564Z"
+  "totalSongs": 199,
+  "lastFiltered": "2026-03-28T00:00:00.000Z"
 }

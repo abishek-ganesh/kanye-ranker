@@ -51,7 +51,17 @@ class KanyeRankerApp {
         this.carryOverProbability = 0.75; // 75% chance to carry over winner
         this.comparisonsSinceBreak = 0; // Track comparisons for fatigue prevention
         this.useDynamicPairing = true; // Flag to use new dynamic system
-        
+
+        // New album boost: surface new album songs in early comparisons
+        // To update for a future album, change albumId here only
+        this.newAlbumConfig = {
+            albumId: 'bully',
+            boostTarget: 4,  // guarantee this many new album comparisons
+            boostWindow: 10  // within the first N comparisons
+        };
+        this.newAlbumComparisonsShown = 0;
+        this.shownNewAlbumSongs = new Set();
+
         this.init();
     }
     
@@ -737,10 +747,51 @@ class KanyeRankerApp {
         return null;
     }
     
+    generateNewAlbumBoostPairing() {
+        const albumId = this.newAlbumConfig.albumId;
+        const albumSongIds = this.songs
+            .filter(s => s.albumId === albumId)
+            .map(s => s.id);
+
+        if (albumSongIds.length === 0) return null;
+
+        // Prefer songs not yet shown; fall back to any album song
+        const unshown = albumSongIds.filter(id => !this.shownNewAlbumSongs.has(id));
+        const candidates = unshown.length > 0 ? unshown : albumSongIds;
+        const songId = candidates[Math.floor(Math.random() * candidates.length)];
+        this.shownNewAlbumSongs.add(songId);
+
+        // Pair against an established song from top 50 that hasn't been compared with this song
+        const opponents = this.top50Array.filter(id =>
+            id !== songId &&
+            !this.elo.hasBeenCompared(songId, id) &&
+            !this.elo.shouldSkipPairing(songId, id)
+        );
+
+        if (opponents.length === 0) return null;
+
+        const opponentId = opponents[Math.floor(Math.random() * Math.min(20, opponents.length))];
+        return [songId, opponentId];
+    }
+
     generateNextPairing() {
         const { phase, pool, poolName } = this.getCurrentPhase();
         const completedComparisons = this.elo.getCompletedComparisons();
-        
+
+        // NEW ALBUM BOOST: inject new album songs on every other comparison in the boost window
+        if (
+            completedComparisons < this.newAlbumConfig.boostWindow &&
+            this.newAlbumComparisonsShown < this.newAlbumConfig.boostTarget &&
+            completedComparisons % 2 === 0
+        ) {
+            const boostPair = this.generateNewAlbumBoostPairing();
+            if (boostPair) {
+                this.newAlbumComparisonsShown++;
+                this.comparisonsSinceBreak++;
+                return boostPair;
+            }
+        }
+
         // BALANCED APPROACH: Mix popular songs with album diversity in first 40 comparisons
         if (completedComparisons < 40) {
             // Check which albums haven't been shown yet
@@ -1888,6 +1939,10 @@ class KanyeRankerApp {
             this.consecutiveWins = 0;
             this.comparisonsSinceBreak = 0;
         }
+
+        // Reset new album boost state
+        this.newAlbumComparisonsShown = 0;
+        this.shownNewAlbumSongs.clear();
         
         this.ui.showScreen('landing');
         

@@ -62,12 +62,10 @@ body.dark-mode {
 
 /* Fix preview button text visibility */
 .dark-mode .preview-btn.has-preview {
-    background: #ff4444 !important;
     color: white !important;
 }
 
 .dark-mode .preview-btn.has-preview:hover {
-    background: #ff0000 !important;
     color: white !important;
 }
 
@@ -140,10 +138,6 @@ body.dark-mode {
 
 .dark-mode .quote-attribution {
     color: #b0b0b0 !important;
-}
-
-.dark-mode .bottom-quote p {
-    color: #e0e0e0 !important;
 }
 
 /* Stats line */

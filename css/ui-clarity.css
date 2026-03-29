@@ -56,18 +56,13 @@
 }
 
 .preview-btn.has-preview {
-    background: #ff4444 !important;
-    color: white !important;
     cursor: pointer !important;
     font-weight: normal !important;
     opacity: 1 !important;
 }
 
 .preview-btn.has-preview:hover {
-    background: #ff0000 !important;
     transform: translateY(-1px) !important;
-    box-shadow: 0 2px 6px rgba(255, 0, 0, 0.3) !important;
-    color: white !important;
     opacity: 1 !important;
 }
 

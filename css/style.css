@@ -85,9 +85,67 @@ body {
         #FF6B35 75%,    /* Donda - Orange */
         #8B008B 81.25%, /* Donda 2 - Magenta */
         #D2691E 87.5%,  /* Vultures 1 - Brown */
-        #CD853F 93.75%, /* Vultures 2 - Peru */
+        #CD853F 88%,    /* Vultures 2 - Peru */
+        #CCCCCC 94%,    /* BULLY - Silver (B&W album art) */
         #000000 100%    /* End - Black */
     );
+}
+
+/* Featured new album banner */
+.new-album-feature {
+    margin-bottom: 2.5rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.new-album-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1.5rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    gap: 1rem;
+}
+
+.new-album-label {
+    font-size: 1.1rem;
+    font-weight: 900;
+    letter-spacing: 0.25em;
+    color: #555;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.new-album-art {
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+}
+
+.new-album-title {
+    font-size: 4rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: var(--primary-color);
+    line-height: 1;
+    margin: 0;
+}
+
+.new-album-meta {
+    font-size: 0.75rem;
+    color: #888;
+    letter-spacing: 0.12em;
+    font-weight: 600;
+    margin: 0;
+}
+
+body.dark-mode .new-album-content {
+    background: #111;
+    border-color: #333;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .app-title {
@@ -164,7 +222,6 @@ body {
     display: flex;
     justify-content: space-between;
     gap: 2rem;
-    margin-bottom: 3rem;
 }
 
 .step {
@@ -193,19 +250,6 @@ body {
     font-size: 0.95rem;
     color: #666;
     line-height: 1.5;
-}
-
-.bottom-quote {
-    text-align: center;
-    padding-top: 2rem;
-    border-top: 1px solid #e0e0e0;
-}
-
-.bottom-quote p {
-    font-size: 1.25rem;
-    font-style: italic;
-    color: #333;
-    margin: 0;
 }
 
 /* Buttons */
