@@ -118,7 +118,7 @@ class KanyeRankerApp {
                 window.KanyeMessages.getRandomMessage('loading') : 
                 'Loading song database...';
             this.ui.showOverlay(loadingMessage);
-            const response = await fetch('data/songs.json');
+            const response = await fetch('data/songs.json?v=2');
             
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
