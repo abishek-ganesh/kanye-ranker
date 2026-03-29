@@ -109,7 +109,7 @@ class YouTubePreviewFallback {
             .preview-content {
                 position: relative;
                 width: 90%;
-                max-width: 800px;
+                max-width: 1200px;
                 background: #000;
                 border-radius: 12px;
                 overflow: hidden;
