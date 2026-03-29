@@ -1,0 +1,16 @@
+{
+  "name": "kanye-ranker",
+  "version": "1.0.0",
+  "description": "Kanye West Song Ranking App with ELO rating system",
+  "scripts": {
+    "test": "jest",
+    "test:unit": "jest --testPathPattern=tests/unit",
+    "test:e2e": "npx playwright test",
+    "test:all": "jest && npx playwright test"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "@playwright/test": "^1.51.0"
+  }
+}
