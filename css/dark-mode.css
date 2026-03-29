@@ -283,41 +283,6 @@ body.dark-mode {
     display: none !important;
 }
 
-/* Original theme toggle styles (kept for reference)
-.theme-toggle {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: #333;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 30px;
-    cursor: pointer;
-    z-index: 999;
-    font-size: 14px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    white-space: nowrap;
-    min-width: 140px;
-}
-
-.theme-toggle:hover {
-    background: #444;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-}
-
-.dark-mode .theme-toggle {
-    background: #f0f0f0;
-    color: #333;
-}
-
-.dark-mode .theme-toggle:hover {
-    background: #fff;
-}
-
 /* Instructions Modal */
 .dark-mode #ui-instructions {
     background: rgba(0, 0, 0, 0.98) !important;

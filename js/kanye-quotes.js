@@ -93,16 +93,16 @@
     }
 
     function setMainQuote() {
-        var el = document.querySelector('.main-quote');
+        const el = document.querySelector('.main-quote');
         if (el) {
-            var q = getRandomQuote();
+            const q = getRandomQuote();
             el.textContent = '"' + q.quote + '"';
             el.dataset.quoteType = q.type;
         }
     }
 
     function cycleMainQuote() {
-        var el = document.querySelector('.main-quote');
+        const el = document.querySelector('.main-quote');
         if (el) {
             el.style.transition = 'opacity 0.5s ease';
             el.style.opacity = '0';

@@ -368,19 +368,19 @@ body.dark-mode .new-album-content {
 
 .progress-bar {
     width: 100%;
-    max-width: 400px;
-    height: 8px;
-    background: #f0f0f0;
-    border-radius: 4px;
-    margin: 0 auto;
+    max-width: 600px;
+    height: 6px;
+    background: #e0e0e0;
+    border-radius: 3px;
+    margin: 10px auto 30px;
     overflow: hidden;
 }
 
 .progress-fill {
     height: 100%;
-    background: var(--secondary-color);
-    width: 0%;
+    background: #ff4444;
     transition: width 0.3s ease;
+    border-radius: 3px;
 }
 
 .comparison-container {
@@ -423,22 +423,27 @@ body.dark-mode .new-album-content {
 }
 
 .song-title {
-    font-size: 1.5rem;
+    font-size: 24px;
     font-weight: 700;
-    margin-bottom: 0.5rem;
-    color: var(--text-color);
+    margin: 0 0 8px 0;
+    color: #111;
+    text-align: center;
+    line-height: 1.2;
 }
 
 .album-name {
-    font-size: 1.125rem;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0 0 4px 0;
     color: #666;
-    margin-bottom: 0.25rem;
+    text-align: center;
 }
 
 .year {
-    font-size: 1rem;
+    font-size: 14px;
     color: #999;
-    margin-bottom: 1.5rem;
+    margin: 0 0 15px 0;
+    text-align: center;
 }
 
 .song-actions {
@@ -716,12 +721,6 @@ body.dark-mode .new-album-content {
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin: 0 auto 1rem;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
 }
 
 #overlay-message {
@@ -1156,31 +1155,6 @@ body.dark-mode .new-album-content {
     display: block !important;
 }
 
-/* Song info styling */
-.song-title {
-    font-size: 24px !important;
-    font-weight: 700 !important;
-    margin: 0 0 8px 0 !important;
-    color: #111 !important;
-    text-align: center !important;
-    line-height: 1.2 !important;
-}
-
-.album-name {
-    font-size: 16px !important;
-    font-weight: 500 !important;
-    margin: 0 0 4px 0 !important;
-    color: #666 !important;
-    text-align: center !important;
-}
-
-.year {
-    font-size: 14px !important;
-    color: #999 !important;
-    margin: 0 0 15px 0 !important;
-    text-align: center !important;
-}
-
 /* Comparison container layout */
 .comparison-container {
     display: flex !important;
@@ -1190,24 +1164,6 @@ body.dark-mode .new-album-content {
     margin: 30px auto !important;
     max-width: 1000px !important;
     position: relative !important;
-}
-
-/* Progress bar styling */
-.progress-bar {
-    width: 100% !important;
-    max-width: 600px !important;
-    height: 6px !important;
-    background: #e0e0e0 !important;
-    border-radius: 3px !important;
-    margin: 10px auto 30px !important;
-    overflow: hidden !important;
-}
-
-.progress-fill {
-    height: 100% !important;
-    background: #ff4444 !important;
-    transition: width 0.3s ease !important;
-    border-radius: 3px !important;
 }
 
 /* Header styling */

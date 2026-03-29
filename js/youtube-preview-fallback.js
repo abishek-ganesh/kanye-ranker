@@ -5,47 +5,18 @@ class YouTubePreviewFallback {
         this.currentModal = null;
         this.videoIds = {};
         
-        // Check if video data is already loaded
+        // Wait for video data from video-loader.js
         if (window.videoLinks && window.videoLinks.videoIds) {
             this.videoIds = window.videoLinks.videoIds;
             this.init();
-        } else {
-            // Load video data from JSON file
-            this.loadVideoData().then(() => {
+        } else if (window.videoLoaderPromise) {
+            window.videoLoaderPromise.then(() => {
+                this.videoIds = (window.videoLinks && window.videoLinks.videoIds) || {};
                 this.init();
             });
-        }
-    }
-    
-    async loadVideoData() {
-        try {
-            const response = await fetch('data/video-links.json');
-            
-            if (!response.ok) {
-                throw new Error(`Failed to load video data: ${response.status}`);
-            }
-            
-            const data = await response.json();
-            
-            this.videoIds = data.videoIds || {};
-            
-            // Only set globally if not already set by video-loader.js
-            if (!window.videoLinks) {
-                window.videoLinks = {
-                    videoIds: this.videoIds
-                };
-            }
-            
-        } catch (error) {
-            console.error('Failed to load video links:', error);
-            // Fallback to empty database if loading fails
-            this.videoIds = {};
-            
-            // Don't show error to user as previews are optional
-            if (window.KanyeUtils && window.KanyeUtils.handleError) {
-                // Log but don't show to user
-                console.warn('Video previews unavailable');
-            }
+        } else {
+            console.warn('Video previews unavailable: video-loader.js not loaded');
+            this.init();
         }
     }
     

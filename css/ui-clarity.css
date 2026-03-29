@@ -118,11 +118,6 @@
     }
 }
 
-/* Hide preview indicator - not needed anymore */
-.preview-indicator {
-    display: none !important;
-}
-
 /* Remove the separator - not needed with new design */
 
 /* VS divider enhancement */
