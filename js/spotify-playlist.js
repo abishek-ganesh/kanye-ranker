@@ -174,7 +174,11 @@
             })
         });
 
-        if (!response.ok) throw new Error('Failed to create playlist');
+        if (!response.ok) {
+            const errBody = await response.json().catch(() => ({}));
+            console.error('Spotify create playlist error:', response.status, errBody);
+            throw new Error(errBody?.error?.message || 'Failed to create playlist');
+        }
         return response.json();
     }
 
@@ -188,7 +192,11 @@
             body: JSON.stringify({ uris: trackUris })
         });
 
-        if (!response.ok) throw new Error('Failed to add tracks');
+        if (!response.ok) {
+            const errBody = await response.json().catch(() => ({}));
+            console.error('Spotify add tracks error:', response.status, errBody);
+            throw new Error(errBody?.error?.message || 'Failed to add tracks');
+        }
         return response.json();
     }
 
