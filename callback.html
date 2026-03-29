@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connecting to Spotify...</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: #000;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .message {
+            padding: 2rem;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #333;
+            border-top-color: #1DB954;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        h2 { margin-bottom: 0.5rem; }
+        p { color: #888; }
+    </style>
+</head>
+<body>
+    <div class="message">
+        <div class="spinner"></div>
+        <h2>Connecting to Spotify...</h2>
+        <p>This window will close automatically.</p>
+    </div>
+    <script>
+        // Extract the authorization code from the URL
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get('code');
+        const error = params.get('error');
+        const state = params.get('state');
+
+        if (error) {
+            document.querySelector('h2').textContent = 'Connection cancelled';
+            document.querySelector('p').textContent = 'You can close this window.';
+            document.querySelector('.spinner').style.display = 'none';
+        } else if (code) {
+            // Send the code back to the opener window
+            if (window.opener && !window.opener.closed) {
+                window.opener.postMessage({
+                    type: 'spotify-auth-callback',
+                    code: code,
+                    state: state
+                }, window.location.origin);
+            }
+
+            // Close this window after a brief delay
+            setTimeout(() => {
+                document.querySelector('h2').textContent = 'Connected!';
+                document.querySelector('p').textContent = 'Returning to Kanye Ranker...';
+                setTimeout(() => window.close(), 500);
+            }, 300);
+        } else {
+            document.querySelector('h2').textContent = 'Something went wrong';
+            document.querySelector('p').textContent = 'No authorization code received. Please try again.';
+            document.querySelector('.spinner').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

@@ -147,7 +147,8 @@
       "spotifyRank": 1,
       "spotifyStreams": 1703659856,
       "totalStreams": 1704961278,
-      "dailyStreams": 688527
+      "dailyStreams": 688527,
+      "spotifyUri": "spotify:track:4EWCNWgDS8707fNSZ1oaA5"
     },
     {
       "id": "wtt-3",
@@ -158,7 +159,8 @@
       "spotifyRank": 2,
       "spotifyStreams": 1653280180,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:1auxYwYrFRqZP7t3s7w4um"
     },
     {
       "id": "grad-3",
@@ -169,7 +171,8 @@
       "spotifyRank": 3,
       "spotifyStreams": 1617804444,
       "totalStreams": 1618682195,
-      "dailyStreams": 471201
+      "dailyStreams": 471201,
+      "spotifyUri": "spotify:track:0j2T0R9dR9qdJYsB7ciXhf"
     },
     {
       "id": "grad-9",
@@ -180,7 +183,8 @@
       "spotifyRank": 4,
       "spotifyStreams": 1419689793,
       "totalStreams": 1421163926,
-      "dailyStreams": 776719
+      "dailyStreams": 776719,
+      "spotifyUri": "spotify:track:5TRPicyLGbAF2LGBFbHGvO"
     },
     {
       "id": "lr-4",
@@ -191,7 +195,8 @@
       "spotifyRank": 5,
       "spotifyStreams": 1366080931,
       "totalStreams": 1366861683,
-      "dailyStreams": 400852
+      "dailyStreams": 400852,
+      "spotifyUri": "spotify:track:1PS1QMdUqOal0ai3Gt7sDQ"
     },
     {
       "id": "tlop-2",
@@ -202,7 +207,8 @@
       "spotifyRank": 6,
       "spotifyStreams": 1365716444,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:4KW1lqgSr8TKrvBII0Brf8"
     },
     {
       "id": "yeezus-10",
@@ -213,7 +219,8 @@
       "spotifyRank": 8,
       "spotifyStreams": 1182667292,
       "totalStreams": 1183649093,
-      "dailyStreams": 501008
+      "dailyStreams": 501008,
+      "spotifyUri": "spotify:track:3sNVsP50132BTNlImLx70i"
     },
     {
       "id": "mbdtf-3",
@@ -224,7 +231,8 @@
       "spotifyRank": 9,
       "spotifyStreams": 1061129135,
       "totalStreams": 1061676697,
-      "dailyStreams": 296019
+      "dailyStreams": 296019,
+      "spotifyUri": "spotify:track:2gZUPNdnz5Y45eiGxpHGSc"
     },
     {
       "id": "grad-4",
@@ -235,7 +243,8 @@
       "spotifyRank": 10,
       "spotifyStreams": 965849281,
       "totalStreams": 966869621,
-      "dailyStreams": 535654
+      "dailyStreams": 535654,
+      "spotifyUri": "spotify:track:7rbECVPkY5UODxoOUVKZnA"
     },
     {
       "id": "mbdtf-9",
@@ -246,7 +255,8 @@
       "spotifyRank": 11,
       "spotifyStreams": 960713094,
       "totalStreams": 961797532,
-      "dailyStreams": 571561
+      "dailyStreams": 571561,
+      "spotifyUri": "spotify:track:3DK6m7It6Pw857FcQftMds"
     },
     {
       "id": "grad-12",
@@ -257,7 +267,8 @@
       "spotifyRank": 13,
       "spotifyStreams": 883755986,
       "totalStreams": 884533173,
-      "dailyStreams": 409794
+      "dailyStreams": 409794,
+      "spotifyUri": "spotify:track:4iz9lGMjU1lXS51oPmUmTe"
     },
     {
       "id": "tcd-3",
@@ -268,7 +279,8 @@
       "spotifyRank": 14,
       "spotifyStreams": 881463162,
       "totalStreams": 882322011,
-      "dailyStreams": 430609
+      "dailyStreams": 430609,
+      "spotifyUri": "spotify:track:5SkRLpaGtvYPhw02vZhQQ9"
     },
     {
       "id": "mbdtf-5",
@@ -279,7 +291,8 @@
       "spotifyRank": 15,
       "spotifyStreams": 821348106,
       "totalStreams": 821934491,
-      "dailyStreams": 305299
+      "dailyStreams": 305299,
+      "spotifyUri": "spotify:track:22L7bfCiAkJo5xGSQgmiIO"
     },
     {
       "id": "ye-7",
@@ -290,7 +303,8 @@
       "spotifyRank": 16,
       "spotifyStreams": 812676995,
       "totalStreams": 813401317,
-      "dailyStreams": 375550
+      "dailyStreams": 375550,
+      "spotifyUri": "spotify:track:3s7MCdXyWmwjdcWh7GWXas"
     },
     {
       "id": "grad-6",
@@ -301,7 +315,8 @@
       "spotifyRank": 17,
       "spotifyStreams": 792747992,
       "totalStreams": 793597911,
-      "dailyStreams": 456497
+      "dailyStreams": 456497,
+      "spotifyUri": "spotify:track:0mEdbdeRFQwBhN4xfyIeUM"
     },
     {
       "id": "v1-12",
@@ -312,7 +327,8 @@
       "spotifyRank": 18,
       "spotifyStreams": 778447451,
       "totalStreams": 779217647,
-      "dailyStreams": 409135
+      "dailyStreams": 409135,
+      "spotifyUri": "spotify:track:2McT2fkH0VDqPsbiB9HWPq"
     },
     {
       "id": "yeezus-2",
@@ -323,7 +339,8 @@
       "spotifyRank": 21,
       "spotifyStreams": 672648490,
       "totalStreams": 672878259,
-      "dailyStreams": 124045
+      "dailyStreams": 124045,
+      "spotifyUri": "spotify:track:722tgOgdIbNe3BEyLnejw4"
     },
     {
       "id": "tlop-4",
@@ -334,7 +351,8 @@
       "spotifyRank": 22,
       "spotifyStreams": 663462566,
       "totalStreams": 663642607,
-      "dailyStreams": 83677
+      "dailyStreams": 83677,
+      "spotifyUri": "spotify:track:19a3JfW8BQwqHWUMbcqSx8"
     },
     {
       "id": "ye-6",
@@ -345,7 +363,8 @@
       "spotifyRank": 23,
       "spotifyStreams": 657756299,
       "totalStreams": 576754774,
-      "dailyStreams": 285606
+      "dailyStreams": 285606,
+      "spotifyUri": "spotify:track:7vgTNTaEz3CsBZ1N4YQalM"
     },
     {
       "id": "mbdtf-8",
@@ -356,7 +375,8 @@
       "spotifyRank": 25,
       "spotifyStreams": 599129950,
       "totalStreams": 413339048,
-      "dailyStreams": 349970
+      "dailyStreams": 349970,
+      "spotifyUri": "spotify:track:1UGD3lW3tDmgZfAVDh6w7r"
     },
     {
       "id": "ye-3",
@@ -367,7 +387,8 @@
       "spotifyRank": 26,
       "spotifyStreams": 558561823,
       "totalStreams": 298765432,
-      "dailyStreams": 145678
+      "dailyStreams": 145678,
+      "spotifyUri": "spotify:track:3U21A07gAloCc4P7J8rxcn"
     },
     {
       "id": "grad-5",
@@ -378,7 +399,8 @@
       "spotifyRank": 27,
       "spotifyStreams": 524117767,
       "totalStreams": 557665406,
-      "dailyStreams": 201763
+      "dailyStreams": 201763,
+      "spotifyUri": "spotify:track:4ZPdLEztrlZqbJkgHNw54L"
     },
     {
       "id": "donda-6",
@@ -389,7 +411,8 @@
       "spotifyRank": 28,
       "spotifyStreams": 521896956,
       "totalStreams": 473816475,
-      "dailyStreams": 135522
+      "dailyStreams": 135522,
+      "spotifyUri": "spotify:track:0WSEq9Ko4kFPt8yo3ICd6T"
     },
     {
       "id": "tlop-10",
@@ -400,7 +423,8 @@
       "spotifyRank": 29,
       "spotifyStreams": 494270654,
       "totalStreams": 573849421,
-      "dailyStreams": 136456
+      "dailyStreams": 136456,
+      "spotifyUri": "spotify:track:3nAq2hCr1oWsIU54tS98pL"
     },
     {
       "id": "jik-3",
@@ -411,7 +435,8 @@
       "spotifyRank": 30,
       "spotifyStreams": 489917477,
       "totalStreams": 569625259,
-      "dailyStreams": 121677
+      "dailyStreams": 121677,
+      "spotifyUri": "spotify:track:2QpGZOhTCHHiKmpSO9FW4h"
     },
     {
       "id": "wtt-1",
@@ -422,7 +447,8 @@
       "spotifyRank": 31,
       "spotifyStreams": 489372089,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:7r6PigmGzlB3YPB7wvBBbi"
     },
     {
       "id": "donda-5",
@@ -433,7 +459,8 @@
       "spotifyRank": 33,
       "spotifyStreams": 449594999,
       "totalStreams": 641531568,
-      "dailyStreams": 156798
+      "dailyStreams": 156798,
+      "spotifyUri": "spotify:track:44I7sqKYCAa7bQdVywkShO"
     },
     {
       "id": "lr-3",
@@ -444,7 +471,8 @@
       "spotifyRank": 35,
       "spotifyStreams": 437262415,
       "totalStreams": 627653906,
-      "dailyStreams": 303329
+      "dailyStreams": 303329,
+      "spotifyUri": "spotify:track:2dxjKgT0li4qBI3QwuN9Ih"
     },
     {
       "id": "tcd-18",
@@ -455,7 +483,8 @@
       "spotifyRank": 36,
       "spotifyStreams": 423721025,
       "totalStreams": 507308025,
-      "dailyStreams": 315668
+      "dailyStreams": 315668,
+      "spotifyUri": "spotify:track:4mmkhcEm1Ljy1U9nwtsxUo"
     },
     {
       "id": "mbdtf-6",
@@ -466,7 +495,8 @@
       "spotifyRank": 37,
       "spotifyStreams": 414728473,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:1ZHYJ2Wwgxes4m8Ba88PeK"
     },
     {
       "id": "tlop-1",
@@ -477,7 +507,8 @@
       "spotifyRank": 39,
       "spotifyStreams": 382774828,
       "totalStreams": 355547869,
-      "dailyStreams": 74745
+      "dailyStreams": 74745,
+      "spotifyUri": "spotify:track:1eQBEelI2NCy7AUTerX0KS"
     },
     {
       "id": "grad-1",
@@ -488,7 +519,8 @@
       "spotifyRank": 40,
       "spotifyStreams": 369027775,
       "totalStreams": 607021970,
-      "dailyStreams": 394594
+      "dailyStreams": 394594,
+      "spotifyUri": "spotify:track:6MXXY2eiWkpDCezVCc0cMH"
     },
     {
       "id": "donda2-1",
@@ -499,7 +531,8 @@
       "spotifyRank": 41,
       "spotifyStreams": 363288970,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:06JvOZ39sK8D8SqiqfaxDU"
     },
     {
       "id": "donda-13",
@@ -510,7 +543,8 @@
       "spotifyRank": 42,
       "spotifyStreams": 356009473,
       "totalStreams": 552421234,
-      "dailyStreams": 184970
+      "dailyStreams": 184970,
+      "spotifyUri": "spotify:track:7CC6UbCs4iGsePSzFxYxNn"
     },
     {
       "id": "donda-4",
@@ -521,7 +555,8 @@
       "spotifyRank": 46,
       "spotifyStreams": 304585431,
       "totalStreams": 463674319,
-      "dailyStreams": 116251
+      "dailyStreams": 116251,
+      "spotifyUri": "spotify:track:6LNoArVBBVZzUTUiAX2aKO"
     },
     {
       "id": "tcd-6",
@@ -532,7 +567,8 @@
       "spotifyRank": 47,
       "spotifyStreams": 302585879,
       "totalStreams": 498337290,
-      "dailyStreams": 242506
+      "dailyStreams": 242506,
+      "spotifyUri": "spotify:track:5g1vtHqi9uV7xtYeCcFOBx"
     },
     {
       "id": "grad-10",
@@ -543,7 +579,8 @@
       "spotifyRank": 48,
       "spotifyStreams": 301646541,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:0NrtwAmRAdLxua31SzHvXr"
     },
     {
       "id": "tlop-13",
@@ -554,7 +591,8 @@
       "spotifyRank": 49,
       "spotifyStreams": 299127312,
       "totalStreams": 321543210,
-      "dailyStreams": 62345
+      "dailyStreams": 62345,
+      "spotifyUri": "spotify:track:432hUIl3ISDeytYW5XBQ5h"
     },
     {
       "id": "grad-2",
@@ -565,7 +603,8 @@
       "spotifyRank": 50,
       "spotifyStreams": 297257543,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:4UQMOPSUVJVicIQzjAcRRZ"
     },
     {
       "id": "tlop-17",
@@ -576,7 +615,8 @@
       "spotifyRank": 51,
       "spotifyStreams": 293639502,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:0zLClc0emc6qUeV1p5nc99"
     },
     {
       "id": "wtt-4",
@@ -587,7 +627,8 @@
       "spotifyRank": 52,
       "spotifyStreams": 292425174,
       "totalStreams": 408668415,
-      "dailyStreams": 129642
+      "dailyStreams": 129642,
+      "spotifyUri": "spotify:track:14I61w6cyYUHiV2n28IYdP"
     },
     {
       "id": "tlop-3",
@@ -598,7 +639,8 @@
       "spotifyRank": 56,
       "spotifyStreams": 264531165,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:1Wsbr1d2BouNGk2q92mIj7"
     },
     {
       "id": "tcd-11",
@@ -609,7 +651,8 @@
       "spotifyRank": 57,
       "spotifyStreams": 261842114,
       "totalStreams": 416741988,
-      "dailyStreams": 220903
+      "dailyStreams": 220903,
+      "spotifyUri": "spotify:track:3A4cpTBPaIQdtPFb5JxtaX"
     },
     {
       "id": "mbdtf-2",
@@ -620,7 +663,8 @@
       "spotifyRank": 58,
       "spotifyStreams": 260731482,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:23SZWX2IaDnxmhFsSLvkG2"
     },
     {
       "id": "tlop-19",
@@ -631,7 +675,8 @@
       "spotifyRank": 59,
       "spotifyStreams": 260308396,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:3cCxoOgfi6hgt8MNteuiiD"
     },
     {
       "id": "wtt-5",
@@ -642,7 +687,8 @@
       "spotifyRank": 60,
       "spotifyStreams": 259014575,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:6JFLZH9vCzgqnUToBdiHQb"
     },
     {
       "id": "mbdtf-1",
@@ -653,7 +699,8 @@
       "spotifyRank": 62,
       "spotifyStreams": 255533255,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:7yNK27ZTpHew0c55VvIJgm"
     },
     {
       "id": "ye-2",
@@ -664,7 +711,8 @@
       "spotifyRank": 63,
       "spotifyStreams": 241609388,
       "totalStreams": 439126605,
-      "dailyStreams": 179719
+      "dailyStreams": 179719,
+      "spotifyUri": "spotify:track:1qsHYUd2c1wFGcn7e63QmG"
     },
     {
       "id": "v1-9",
@@ -675,7 +723,8 @@
       "spotifyRank": 64,
       "spotifyStreams": 240595207,
       "totalStreams": 371000000,
-      "dailyStreams": 195000
+      "dailyStreams": 195000,
+      "spotifyUri": "spotify:track:7BPadP3q9qwMkho3IMPU99"
     },
     {
       "id": "tlop-11",
@@ -686,7 +735,8 @@
       "spotifyRank": 65,
       "spotifyStreams": 237767184,
       "totalStreams": 491773975,
-      "dailyStreams": 126025
+      "dailyStreams": 126025,
+      "spotifyUri": "spotify:track:30Zcjs7pgEkmJA1lEbGSWT"
     },
     {
       "id": "tlop-20",
@@ -697,7 +747,8 @@
       "spotifyRank": 67,
       "spotifyStreams": 228098225,
       "totalStreams": 433602538,
-      "dailyStreams": 182036
+      "dailyStreams": 182036,
+      "spotifyUri": "spotify:track:1o0kWPueYo94LIjPYOE5Nf"
     },
     {
       "id": "tlop-12",
@@ -708,7 +759,8 @@
       "spotifyRank": 68,
       "spotifyStreams": 222685380,
       "totalStreams": 352151616,
-      "dailyStreams": 67666
+      "dailyStreams": 67666,
+      "spotifyUri": "spotify:track:66Q3fAmSX5eHamgbKa9alP"
     },
     {
       "id": "808s-5",
@@ -719,7 +771,8 @@
       "spotifyRank": 69,
       "spotifyStreams": 221491750,
       "totalStreams": 631421665,
-      "dailyStreams": 215507
+      "dailyStreams": 215507,
+      "spotifyUri": "spotify:track:1kxeWHF9PrCVZHvVskv8lg"
     },
     {
       "id": "yeezus-7",
@@ -730,7 +783,8 @@
       "spotifyRank": 71,
       "spotifyStreams": 213557386,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:42GcjriRK6srwHkfbkBqVl"
     },
     {
       "id": "wtt-12",
@@ -741,7 +795,8 @@
       "spotifyRank": 72,
       "spotifyStreams": 209729702,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:4bDPr2VAjcfgUDmN9dGOC3"
     },
     {
       "id": "v1-10",
@@ -752,7 +807,8 @@
       "spotifyRank": 73,
       "spotifyStreams": 204301204,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:0cbVD7WpHVdHUKwoolzhCZ"
     },
     {
       "id": "yeezus-1",
@@ -763,7 +819,8 @@
       "spotifyRank": 74,
       "spotifyStreams": 195505180,
       "totalStreams": 76543210,
-      "dailyStreams": 13210
+      "dailyStreams": 13210,
+      "spotifyUri": "spotify:track:1gqkRc9WtOpnGIqxf2Hvzr"
     },
     {
       "id": "jik-8",
@@ -774,7 +831,8 @@
       "spotifyRank": 75,
       "spotifyStreams": 185152131,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:6xRWoYwfwIKnT8bQGzKbxR"
     },
     {
       "id": "v2-2",
@@ -785,7 +843,8 @@
       "spotifyRank": 76,
       "spotifyStreams": 178227077,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:7vv89PswQvqGKCGJ1rw5on"
     },
     {
       "id": "808s-4",
@@ -796,7 +855,8 @@
       "spotifyRank": 77,
       "spotifyStreams": 178179631,
       "totalStreams": 187654321,
-      "dailyStreams": 65432
+      "dailyStreams": 65432,
+      "spotifyUri": "spotify:track:0m3Ze0cy8qBHSsV2exAfCw"
     },
     {
       "id": "lr-2",
@@ -807,7 +867,8 @@
       "spotifyRank": 81,
       "spotifyStreams": 163679316,
       "totalStreams": 198765432,
-      "dailyStreams": 76543
+      "dailyStreams": 76543,
+      "spotifyUri": "spotify:track:6yIjtVtnOBeC8SwdVHzAuF"
     },
     {
       "id": "yeezus-4",
@@ -818,7 +879,8 @@
       "spotifyRank": 83,
       "spotifyStreams": 159797098,
       "totalStreams": 176543210,
-      "dailyStreams": 54321
+      "dailyStreams": 54321,
+      "spotifyUri": "spotify:track:4cAgkb0ifwn0FSHGXnr4F6"
     },
     {
       "id": "donda-2",
@@ -829,7 +891,8 @@
       "spotifyRank": 85,
       "spotifyStreams": 149249989,
       "totalStreams": 449470498,
-      "dailyStreams": 113866
+      "dailyStreams": 113866,
+      "spotifyUri": "spotify:track:6d8HN8MqqbqrEUI2bvx0aG"
     },
     {
       "id": "yeezus-5",
@@ -840,7 +903,8 @@
       "spotifyRank": 87,
       "spotifyStreams": 143236393,
       "totalStreams": 87654321,
-      "dailyStreams": 14321
+      "dailyStreams": 14321,
+      "spotifyUri": "spotify:track:5nIu0VwPOsjkF61zfevLKh"
     },
     {
       "id": "donda-10",
@@ -851,7 +915,8 @@
       "spotifyRank": 88,
       "spotifyStreams": 141844072,
       "totalStreams": 392279674,
-      "dailyStreams": 126764
+      "dailyStreams": 126764,
+      "spotifyUri": "spotify:track:0JuSGEldfovcc8IS9va1wa"
     },
     {
       "id": "donda2-13",
@@ -862,7 +927,8 @@
       "spotifyRank": 91,
       "spotifyStreams": 133087694,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:4huBDGP4I3S0pYI0EaRN1c"
     },
     {
       "id": "tcd-19",
@@ -873,7 +939,8 @@
       "spotifyRank": 92,
       "spotifyStreams": 132473268,
       "totalStreams": 154321098,
-      "dailyStreams": 32109
+      "dailyStreams": 32109,
+      "spotifyUri": "spotify:track:5DBmXF7QO43Cuy9yqva116"
     },
     {
       "id": "tlop-16",
@@ -884,7 +951,8 @@
       "spotifyRank": 93,
       "spotifyStreams": 131998113,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:2CHmgtK8OCL28WtIK96u4N"
     },
     {
       "id": "tlop-5",
@@ -895,7 +963,8 @@
       "spotifyRank": 94,
       "spotifyStreams": 130843938,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:49fT6owWuknekShh9utsjv"
     },
     {
       "id": "tlop-9",
@@ -906,7 +975,8 @@
       "spotifyRank": 95,
       "spotifyStreams": 129809326,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:5CGS4UovzA7ftCJkLVXQju"
     },
     {
       "id": "ye-4",
@@ -917,7 +987,8 @@
       "spotifyRank": 96,
       "spotifyStreams": 128479370,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:1nGoy0cEj0extAwXYNYTWd"
     },
     {
       "id": "jik-4",
@@ -928,7 +999,8 @@
       "spotifyRank": 97,
       "spotifyStreams": 128464773,
       "totalStreams": 333147574,
-      "dailyStreams": 55094
+      "dailyStreams": 55094,
+      "spotifyUri": "spotify:track:3JWiDGQX2eTlFvKj3Yssj3"
     },
     {
       "id": "mbdtf-12",
@@ -939,7 +1011,8 @@
       "spotifyRank": 98,
       "spotifyStreams": 121416342,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:2Im64pIz6m0EJKdUe6eZ8r"
     },
     {
       "id": "ye-5",
@@ -950,7 +1023,8 @@
       "spotifyRank": 99,
       "spotifyStreams": 121194237,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:35KV2Nuib6jPMVN00O8iba"
     },
     {
       "id": "lr-16",
@@ -961,7 +1035,8 @@
       "spotifyRank": 100,
       "spotifyStreams": 120738569,
       "totalStreams": 165432109,
-      "dailyStreams": 43210
+      "dailyStreams": 43210,
+      "spotifyUri": "spotify:track:46OFHBw45fNi7QNjSetITR"
     },
     {
       "id": "tcd-5",
@@ -972,7 +1047,8 @@
       "spotifyRank": 101,
       "spotifyStreams": 120559781,
       "totalStreams": 143210987,
-      "dailyStreams": 21098
+      "dailyStreams": 21098,
+      "spotifyUri": "spotify:track:1ko2NuvWlQdxtNRc8QQzmT"
     },
     {
       "id": "ye-1",
@@ -983,7 +1059,8 @@
       "spotifyRank": 102,
       "spotifyStreams": 116887200,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:0yhxBvedRdGxsPZHJNI4VA"
     },
     {
       "id": "mbdtf-10",
@@ -994,7 +1071,8 @@
       "spotifyRank": 103,
       "spotifyStreams": 116060142,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:3rCNmRonlHN1TXQLcG3dSk"
     },
     {
       "id": "808s-6",
@@ -1005,7 +1083,8 @@
       "spotifyRank": 104,
       "spotifyStreams": 115600571,
       "totalStreams": 389491602,
-      "dailyStreams": 219127
+      "dailyStreams": 219127,
+      "spotifyUri": "spotify:track:0w2piYWj1F2bzUftzGJgK9"
     },
     {
       "id": "tcd-1",
@@ -1016,7 +1095,8 @@
       "spotifyRank": 105,
       "spotifyStreams": 114180765,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:0IW0qaeyxL5Et4UG2MrJKB"
     },
     {
       "id": "donda-23",
@@ -1027,7 +1107,8 @@
       "spotifyRank": 107,
       "spotifyStreams": 113013970,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:3hd6zLhnTlbJ8PupYt3cAI"
     },
     {
       "id": "v1-5",
@@ -1038,7 +1119,8 @@
       "spotifyRank": 108,
       "spotifyStreams": 112930831,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:3g9UquSEBErZiXSDa02YfG"
     },
     {
       "id": "tlop-7",
@@ -1049,7 +1131,8 @@
       "spotifyRank": 109,
       "spotifyStreams": 112925243,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:4qYLPta5HZ36idWiXtqh7B"
     },
     {
       "id": "donda2-15",
@@ -1060,7 +1143,8 @@
       "spotifyRank": 110,
       "spotifyStreams": 111814055,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:6Ab81Bs9fcOwaTYuBsUUpI"
     },
     {
       "id": "donda-19",
@@ -1071,7 +1155,8 @@
       "spotifyRank": 111,
       "spotifyStreams": 107027233,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:4KAsDy2wUBQCx41kseXU1L"
     },
     {
       "id": "wtt-9",
@@ -1082,7 +1167,8 @@
       "spotifyRank": 112,
       "spotifyStreams": 106927981,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:2eqOjSC8dY1iFrQiJGPDOX"
     },
     {
       "id": "jik-2",
@@ -1093,7 +1179,8 @@
       "spotifyRank": 115,
       "spotifyStreams": 105154357,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:39JRmdKFka1Oe09FoOCPI4"
     },
     {
       "id": "grad-11",
@@ -1104,7 +1191,8 @@
       "spotifyRank": 116,
       "spotifyStreams": 105042111,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:0lWjRSzq5chA9fps3pM8Zr"
     },
     {
       "id": "lr-6",
@@ -1115,7 +1203,8 @@
       "spotifyRank": 117,
       "spotifyStreams": 104681368,
       "totalStreams": 132109876,
-      "dailyStreams": 19876
+      "dailyStreams": 19876,
+      "spotifyUri": "spotify:track:6vB49BJ70zBpDrrAPwdaB8"
     },
     {
       "id": "tcd-10",
@@ -1126,7 +1215,8 @@
       "spotifyRank": 118,
       "spotifyStreams": 104189771,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:1Vp4St7JcXaUoJcIahtf3L"
     },
     {
       "id": "jik-5",
@@ -1137,7 +1227,8 @@
       "spotifyRank": 119,
       "spotifyStreams": 103636010,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:2SasoXZyv82yYgHiVOvxQn"
     },
     {
       "id": "donda-14",
@@ -1148,7 +1239,8 @@
       "spotifyRank": 120,
       "spotifyStreams": 101394984,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:2Y40huo5ewaKYxsFintYtF"
     },
     {
       "id": "tlop-18",
@@ -1159,7 +1251,8 @@
       "spotifyRank": 121,
       "spotifyStreams": 101318943,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:3MnbXlC1N7GdS9M8HzA6no"
     },
     {
       "id": "mbdtf-7",
@@ -1170,7 +1263,8 @@
       "spotifyRank": 122,
       "spotifyStreams": 100833361,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:6K07Ahf6V7CAQn0ikrOztl"
     },
     {
       "id": "donda-21",
@@ -1181,7 +1275,8 @@
       "spotifyRank": 123,
       "spotifyStreams": 100358001,
       "totalStreams": 389966447,
-      "dailyStreams": 128896
+      "dailyStreams": 128896,
+      "spotifyUri": "spotify:track:5aqUqSq0SqGBAqEn27PEzc"
     },
     {
       "id": "mbdtf-11",
@@ -1192,7 +1287,8 @@
       "spotifyRank": 125,
       "spotifyStreams": 100323551,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:4EndPA8b6FDWYp1RgsnLEB"
     },
     {
       "id": "jik-10",
@@ -1203,7 +1299,8 @@
       "spotifyRank": 126,
       "spotifyStreams": 98498251,
       "totalStreams": 221098765,
-      "dailyStreams": 32109
+      "dailyStreams": 32109,
+      "spotifyUri": "spotify:track:0oPOuDmmkVp3h6puekhs6P"
     },
     {
       "id": "808s-2",
@@ -1214,7 +1311,8 @@
       "spotifyRank": 128,
       "spotifyStreams": 91356050,
       "totalStreams": 210987654,
-      "dailyStreams": 87654
+      "dailyStreams": 87654,
+      "spotifyUri": "spotify:track:3F18I7LhWKxlf1PytSoTBH"
     },
     {
       "id": "jik-6",
@@ -1225,7 +1323,8 @@
       "spotifyRank": 129,
       "spotifyStreams": 91185726,
       "totalStreams": 232109876,
-      "dailyStreams": 43210
+      "dailyStreams": 43210,
+      "spotifyUri": "spotify:track:24bnCCysWnbNRNUT4LpHcP"
     },
     {
       "id": "808s-8",
@@ -1236,7 +1335,8 @@
       "spotifyRank": 130,
       "spotifyStreams": 90943001,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:6j8gTlbhj9KJSeypNcNAS9"
     },
     {
       "id": "tlop-14",
@@ -1247,7 +1347,8 @@
       "spotifyRank": 132,
       "spotifyStreams": 90485239,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:20r94xA0bsYNLtYSiOE6r3"
     },
     {
       "id": "v1-7",
@@ -1258,7 +1359,8 @@
       "spotifyRank": 133,
       "spotifyStreams": 90382750,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:1oNaDXXu9I4UCJ8Fh0Hfjg"
     },
     {
       "id": "tcd-7",
@@ -1269,7 +1371,8 @@
       "spotifyRank": 134,
       "spotifyStreams": 89668713,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:34j4OxJxKznBs88cjSL2j9"
     },
     {
       "id": "tlop-8",
@@ -1280,7 +1383,8 @@
       "spotifyRank": 136,
       "spotifyStreams": 87496051,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:6wfzokDylbrJzrJcpnBkcy"
     },
     {
       "id": "yeezus-3",
@@ -1291,7 +1395,8 @@
       "spotifyRank": 137,
       "spotifyStreams": 87467824,
       "totalStreams": 98765432,
-      "dailyStreams": 15432
+      "dailyStreams": 15432,
+      "spotifyUri": "spotify:track:0HMCdlOPJkAGlB0MlSWIcO"
     },
     {
       "id": "lr-9",
@@ -1302,7 +1407,8 @@
       "spotifyRank": 138,
       "spotifyStreams": 87103382,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:2DHNCWZYmVr1Lv08q5b0kB"
     },
     {
       "id": "lr-13",
@@ -1313,7 +1419,8 @@
       "spotifyRank": 139,
       "spotifyStreams": 86738262,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:34KUIBsIUiPV7oCIzSdDAU"
     },
     {
       "id": "donda-11",
@@ -1324,7 +1431,8 @@
       "spotifyRank": 140,
       "spotifyStreams": 86173694,
       "totalStreams": 355968871,
-      "dailyStreams": 85766
+      "dailyStreams": 85766,
+      "spotifyUri": "spotify:track:68RhNM8ehkarnEKnCkqlsp"
     },
     {
       "id": "v1-1",
@@ -1335,7 +1443,8 @@
       "spotifyRank": 143,
       "spotifyStreams": 84392420,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:5ogdIq5F70xEPB3kwiiecr"
     },
     {
       "id": "grad-13",
@@ -1346,7 +1455,8 @@
       "spotifyRank": 144,
       "spotifyStreams": 81919293,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:2L47m9erkB5KBZcaqWtYen"
     },
     {
       "id": "lr-14",
@@ -1357,7 +1467,8 @@
       "spotifyRank": 145,
       "spotifyStreams": 81320917,
       "totalStreams": 109876543,
-      "dailyStreams": 16543
+      "dailyStreams": 16543,
+      "spotifyUri": "spotify:track:46fk9wjYcPm0sgym2b7EEE"
     },
     {
       "id": "mbdtf-4",
@@ -1368,7 +1479,8 @@
       "spotifyRank": 146,
       "spotifyStreams": 80631171,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:4D6TpthzUVNTjWQqfBW5Kb"
     },
     {
       "id": "grad-7",
@@ -1379,7 +1491,8 @@
       "spotifyRank": 148,
       "spotifyStreams": 78406024,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:7387VaiHpOsSIZ5nmjseya"
     },
     {
       "id": "donda-7",
@@ -1390,7 +1503,8 @@
       "spotifyRank": 150,
       "spotifyStreams": 76421320,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:35acXjupfWHgtchiS6yAjC"
     },
     {
       "id": "donda-22",
@@ -1401,7 +1515,8 @@
       "spotifyRank": 151,
       "spotifyStreams": 76115677,
       "totalStreams": 328765899,
-      "dailyStreams": 75432
+      "dailyStreams": 75432,
+      "spotifyUri": "spotify:track:5xvXeuxISyXJDRbZZf4uzd"
     },
     {
       "id": "donda-12",
@@ -1412,7 +1527,8 @@
       "spotifyRank": 153,
       "spotifyStreams": 73112190,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:45N9i9QraLWD6GW7xBqxnx"
     },
     {
       "id": "yeezus-9",
@@ -1423,7 +1539,8 @@
       "spotifyRank": 154,
       "spotifyStreams": 72429520,
       "totalStreams": 65432109,
-      "dailyStreams": 12109
+      "dailyStreams": 12109,
+      "spotifyUri": "spotify:track:3RKblQNJs8HPvWBgXmq6nn"
     },
     {
       "id": "yeezus-6",
@@ -1434,7 +1551,8 @@
       "spotifyRank": 155,
       "spotifyStreams": 71456389,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:52NmkyHsGsHGb1UX8fTkMg"
     },
     {
       "id": "tlop-6",
@@ -1445,7 +1563,8 @@
       "spotifyRank": 156,
       "spotifyStreams": 70735823,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:36o4taPyOdnOMf01ERmn9a"
     },
     {
       "id": "donda-24",
@@ -1456,7 +1575,8 @@
       "spotifyRank": 157,
       "spotifyStreams": 70104819,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:2H8jWuNmluerTEsuh8Gu6y"
     },
     {
       "id": "donda-18",
@@ -1467,7 +1587,8 @@
       "spotifyRank": 158,
       "spotifyStreams": 69313531,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:75QktuEju5vz9lyXiLaUao"
     },
     {
       "id": "wtt-2",
@@ -1478,7 +1599,8 @@
       "spotifyRank": 159,
       "spotifyStreams": 68778814,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:4TRUsIZw92IhJjAtxtiC4e"
     },
     {
       "id": "tcd-17",
@@ -1489,7 +1611,8 @@
       "spotifyRank": 160,
       "spotifyStreams": 68346181,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:62wtttQzoIA9HnNmGVd9Yq"
     },
     {
       "id": "grad-8",
@@ -1500,7 +1623,8 @@
       "spotifyRank": 161,
       "spotifyStreams": 67461183,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:7DRuzSlhjKadgdsQRYZ0tr"
     },
     {
       "id": "tcd-8",
@@ -1511,7 +1635,8 @@
       "spotifyRank": 162,
       "spotifyStreams": 66804395,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:5b2FFKC64kxqcfaFnIZxoM"
     },
     {
       "id": "donda2-11",
@@ -1522,7 +1647,8 @@
       "spotifyRank": 163,
       "spotifyStreams": 66734075,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:7sZCAHP2duHwr5M5K7lHsb"
     },
     {
       "id": "donda-9",
@@ -1533,7 +1659,8 @@
       "spotifyRank": 165,
       "spotifyStreams": 66118389,
       "totalStreams": 265432109,
-      "dailyStreams": 87654
+      "dailyStreams": 87654,
+      "spotifyUri": "spotify:track:1jgcODbfAL3tV7tikF6n1j"
     },
     {
       "id": "donda-16",
@@ -1544,7 +1671,8 @@
       "spotifyRank": 166,
       "spotifyStreams": 66032695,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:7EagormFign5ag6f16ua3I"
     },
     {
       "id": "v1-4",
@@ -1555,7 +1683,8 @@
       "spotifyRank": 167,
       "spotifyStreams": 65839541,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:2os3F2ZKbj02ZWXWAdWGFD"
     },
     {
       "id": "donda-8",
@@ -1566,7 +1695,8 @@
       "spotifyRank": 168,
       "spotifyStreams": 63814705,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:5LuXsO34x6KVlL8OWsxRqk"
     },
     {
       "id": "wtt-14",
@@ -1577,7 +1707,8 @@
       "spotifyRank": 169,
       "spotifyStreams": 63624324,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:64rnghzDMy4cAEMZhSOp9h"
     },
     {
       "id": "v1-3",
@@ -1588,7 +1719,8 @@
       "spotifyRank": 170,
       "spotifyStreams": 63005559,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:1OFgEELgwfTOt3WcBuOPxk"
     },
     {
       "id": "v1-11",
@@ -1599,7 +1731,8 @@
       "spotifyRank": 171,
       "spotifyStreams": 62558467,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:3w9WvHLKSXOsW6aAw0yr1n"
     },
     {
       "id": "wtt-10",
@@ -1610,7 +1743,8 @@
       "spotifyRank": 172,
       "spotifyStreams": 61950724,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:3Gjc2FE6BEMMHURUjlMXvX"
     },
     {
       "id": "jik-1",
@@ -1621,7 +1755,8 @@
       "spotifyRank": 174,
       "spotifyStreams": 61387691,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:1WnqWQcWcuQbVzgE7ecfCY"
     },
     {
       "id": "tcd-20",
@@ -1632,7 +1767,8 @@
       "spotifyRank": 175,
       "spotifyStreams": 60627052,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:7iOhWWYjhhQiXzF4o4HhXN"
     },
     {
       "id": "jik-7",
@@ -1643,7 +1779,8 @@
       "spotifyRank": 176,
       "spotifyStreams": 60591138,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:454Epa1vrCGFddHXKyC1kb"
     },
     {
       "id": "donda-20",
@@ -1654,7 +1791,8 @@
       "spotifyRank": 177,
       "spotifyStreams": 60042783,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:5Iq6pIudd4KfuxZqf8872b"
     },
     {
       "id": "yeezus-8",
@@ -1665,7 +1803,8 @@
       "spotifyRank": 178,
       "spotifyStreams": 59904512,
       "totalStreams": 54321098,
-      "dailyStreams": 11098
+      "dailyStreams": 11098,
+      "spotifyUri": "spotify:track:5nPOM0nFRAJ3XI8xCxNAzO"
     },
     {
       "id": "v1-8",
@@ -1676,7 +1815,8 @@
       "spotifyRank": 179,
       "spotifyStreams": 58083820,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:2jf0ooqmXMqaGqh0bdYsHR"
     },
     {
       "id": "jik-9",
@@ -1687,7 +1827,8 @@
       "spotifyRank": 181,
       "spotifyStreams": 56961807,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:7r6aR2f57resC5r93LwMfK"
     },
     {
       "id": "lr-19",
@@ -1698,7 +1839,8 @@
       "spotifyRank": 183,
       "spotifyStreams": 56057575,
       "totalStreams": 121098765,
-      "dailyStreams": 18765
+      "dailyStreams": 18765,
+      "spotifyUri": "spotify:track:5RjbFGeWVsCpw8EcE8OrvZ"
     },
     {
       "id": "donda-3",
@@ -1709,7 +1851,8 @@
       "spotifyRank": 184,
       "spotifyStreams": 55123317,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:5JaSg0AYyAMMLjyGGDrrCm"
     },
     {
       "id": "808s-11",
@@ -1720,7 +1863,8 @@
       "spotifyRank": 185,
       "spotifyStreams": 54808356,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:2RRFTLIglxHgAYQzsSLI4Y"
     },
     {
       "id": "donda-17",
@@ -1731,7 +1875,8 @@
       "spotifyRank": 187,
       "spotifyStreams": 54323068,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:1LwdWIbfuqlOo8vlHxkyna"
     },
     {
       "id": "lr-11",
@@ -1742,7 +1887,8 @@
       "spotifyRank": 189,
       "spotifyStreams": 52968257,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:5VzeI5JM2y9t21JwrWAnkH"
     },
     {
       "id": "ksg-1",
@@ -1753,7 +1899,8 @@
       "spotifyRank": 200,
       "spotifyStreams": 85000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:3aUFrxO1B8EW63QchEl3wX"
     },
     {
       "id": "ksg-2",
@@ -1764,7 +1911,8 @@
       "spotifyRank": 210,
       "spotifyStreams": 45000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:7oHkit3F3vimtsBbnZkU0G"
     },
     {
       "id": "ksg-3",
@@ -1775,7 +1923,8 @@
       "spotifyRank": 205,
       "spotifyStreams": 60000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:6JyEh4kl9DLwmSAoNDRn5b"
     },
     {
       "id": "ksg-4",
@@ -1786,7 +1935,8 @@
       "spotifyRank": 215,
       "spotifyStreams": 40000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:7GRTrWsP3yo2Fx8umJfA1X"
     },
     {
       "id": "ksg-5",
@@ -1797,7 +1947,8 @@
       "spotifyRank": 195,
       "spotifyStreams": 120000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:4RVbK6cV0VqWdpCDcx3hiT"
     },
     {
       "id": "ksg-6",
@@ -1808,7 +1959,8 @@
       "spotifyRank": 220,
       "spotifyStreams": 35000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:2I3dW2dCBZAJGj5X21E53k"
     },
     {
       "id": "ksg-7",
@@ -1819,7 +1971,8 @@
       "spotifyRank": 225,
       "spotifyStreams": 30000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:4kUZvXB3LC3an3HX6h0s17"
     },
     {
       "id": "v2-1",
@@ -1830,7 +1983,8 @@
       "spotifyRank": 230,
       "spotifyStreams": 25000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:5MGMXOhVvwzCjFgdQsFokR"
     },
     {
       "id": "v2-3",
@@ -1841,7 +1995,8 @@
       "spotifyRank": 240,
       "spotifyStreams": 18000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:4Qay2jEWJYjXmJ8eNOGtaD"
     },
     {
       "id": "v2-4",
@@ -1852,7 +2007,8 @@
       "spotifyRank": 245,
       "spotifyStreams": 15000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:36XrocrUkmem00MPm2kIst"
     },
     {
       "id": "v2-5",
@@ -1863,7 +2019,8 @@
       "spotifyRank": 250,
       "spotifyStreams": 22000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:2tPNj9sUt3FbjEUqBzZazv"
     },
     {
       "id": "v2-6",
@@ -1874,7 +2031,8 @@
       "spotifyRank": 255,
       "spotifyStreams": 16000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:488lIy4J0jJdPUiWqa0doB"
     },
     {
       "id": "v2-7",
@@ -1885,7 +2043,8 @@
       "spotifyRank": 260,
       "spotifyStreams": 14000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:1MTpRBLniy6298BCdyKUfQ"
     },
     {
       "id": "v2-8",
@@ -1896,7 +2055,8 @@
       "spotifyRank": 265,
       "spotifyStreams": 12000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:2kgxyflhiicDbF8SDrBxqy"
     },
     {
       "id": "v2-9",
@@ -1907,7 +2067,8 @@
       "spotifyRank": 270,
       "spotifyStreams": 13000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:5RzSnxqTx4vYEp9re5E0ud"
     },
     {
       "id": "v2-10",
@@ -1918,7 +2079,8 @@
       "spotifyRank": 275,
       "spotifyStreams": 11000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:6LHeisjoP8eHrtu45UbTPO"
     },
     {
       "id": "v2-11",
@@ -1929,7 +2091,8 @@
       "spotifyRank": 280,
       "spotifyStreams": 10000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:40FRxwg8SEMO3fbMjFfphU"
     },
     {
       "id": "v2-12",
@@ -1940,7 +2103,8 @@
       "spotifyRank": 285,
       "spotifyStreams": 9000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:0JgassGI6jNxpX82jGpcuJ"
     },
     {
       "id": "v2-13",
@@ -1951,7 +2115,8 @@
       "spotifyRank": 290,
       "spotifyStreams": 8500000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:3bTkWuPGJ1ueGXBHWVUwAI"
     },
     {
       "id": "v2-14",
@@ -1962,7 +2127,8 @@
       "spotifyRank": 295,
       "spotifyStreams": 8000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:7a0tTD7xdvKsNcJfMIDWp4"
     },
     {
       "id": "v2-15",
@@ -1973,7 +2139,8 @@
       "spotifyRank": 300,
       "spotifyStreams": 7500000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:0KXIsj1KjSNlGvNora6BA4"
     },
     {
       "id": "cruel-1",
@@ -1984,7 +2151,8 @@
       "spotifyRank": 180,
       "spotifyStreams": 15981680,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:3sNVsP50132BTNlImLx70i"
     },
     {
       "id": "cruel-2",
@@ -1995,7 +2163,8 @@
       "spotifyRank": 35,
       "spotifyStreams": 348369157,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:65rRB2mspD309xE6YimZTl"
     },
     {
       "id": "cruel-3",
@@ -2006,7 +2175,8 @@
       "spotifyRank": 25,
       "spotifyStreams": 439273066,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:4qikXelSRKvoCqFcHLB2H2"
     },
     {
       "id": "cruel-4",
@@ -2017,7 +2187,8 @@
       "spotifyRank": 140,
       "spotifyStreams": 31819704,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:1DbeslBYnckTqqTcc1Y2Tg"
     },
     {
       "id": "cruel-5",
@@ -2028,7 +2199,8 @@
       "spotifyRank": 120,
       "spotifyStreams": 120000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:4jBfUB4kQJCWOrjGLQqhO0"
     },
     {
       "id": "cruel-6",
@@ -2039,7 +2211,8 @@
       "spotifyRank": 160,
       "spotifyStreams": 20908464,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:4eOJxoVUcN0kFX3ymAoREV"
     },
     {
       "id": "cruel-7",
@@ -2050,7 +2223,8 @@
       "spotifyRank": 200,
       "spotifyStreams": 40000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:3yldvwyhm4WKrPyoJHSx99"
     },
     {
       "id": "cruel-8",
@@ -2061,7 +2235,8 @@
       "spotifyRank": 180,
       "spotifyStreams": 55000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:3BkPFyejx6Qf4otNHMvxap"
     },
     {
       "id": "cruel-9",
@@ -2072,7 +2247,8 @@
       "spotifyRank": 195,
       "spotifyStreams": 11641059,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:6uG4BxL4qqSIOXfEiGdpBf"
     },
     {
       "id": "cruel-10",
@@ -2083,7 +2259,8 @@
       "spotifyRank": 210,
       "spotifyStreams": 35000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:6vO5OZ18h33ZO40S9plFDx"
     },
     {
       "id": "cruel-11",
@@ -2094,7 +2271,8 @@
       "spotifyRank": 220,
       "spotifyStreams": 30000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:1ZHYJ2Wwgxes4m8Ba88PeK"
     },
     {
       "id": "cruel-12",
@@ -2105,7 +2283,8 @@
       "spotifyRank": 45,
       "spotifyStreams": 265810011,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:3YqJ0iaDWM0aqEDQExd2j3"
     },
     {
       "id": "bully-1",
@@ -2116,7 +2295,8 @@
       "spotifyRank": 200,
       "spotifyStreams": 20000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:4LP6bmyAxdMNrqUrMpaVQ8"
     },
     {
       "id": "bully-2",
@@ -2127,7 +2307,8 @@
       "spotifyRank": 216,
       "spotifyStreams": 2500000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:41e8XO5tcG6Uesk2FhdsWm"
     },
     {
       "id": "bully-3",
@@ -2138,7 +2319,8 @@
       "spotifyRank": 201,
       "spotifyStreams": 22000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:4KW1lqgSr8TKrvBII0Brf8"
     },
     {
       "id": "bully-4",
@@ -2149,7 +2331,8 @@
       "spotifyRank": 204,
       "spotifyStreams": 18000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:2SjnvpedDUU0Ga69bxnoCa"
     },
     {
       "id": "bully-5",
@@ -2160,7 +2343,8 @@
       "spotifyRank": 217,
       "spotifyStreams": 2303044,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:4bWZz15GR1EE8E8x23rDWV"
     },
     {
       "id": "bully-6",
@@ -2171,7 +2355,8 @@
       "spotifyRank": 218,
       "spotifyStreams": 2000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:7GVuAK4EmYP7gvlXA4JXqU"
     },
     {
       "id": "bully-7",
@@ -2182,7 +2367,8 @@
       "spotifyRank": 220,
       "spotifyStreams": 1500000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:25fLIFbAV7zBetOH077pDl"
     },
     {
       "id": "bully-8",
@@ -2193,7 +2379,8 @@
       "spotifyRank": 219,
       "spotifyStreams": 1500000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:1FpjiEapAG8XJdVSI0tvdc"
     },
     {
       "id": "bully-9",
@@ -2204,7 +2391,8 @@
       "spotifyRank": 210,
       "spotifyStreams": 5000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:6KhDb86ThnlKirRw1UBZGb"
     },
     {
       "id": "bully-10",
@@ -2215,7 +2403,8 @@
       "spotifyRank": 215,
       "spotifyStreams": 2000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:565G1vHZu2xoxrnTyF06Qw"
     },
     {
       "id": "bully-11",
@@ -2226,7 +2415,8 @@
       "spotifyRank": 211,
       "spotifyStreams": 5000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:163l4Itf8oDEK7ZYdVm22N"
     },
     {
       "id": "bully-12",
@@ -2237,7 +2427,8 @@
       "spotifyRank": 213,
       "spotifyStreams": 3000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:3bbjDFVu9BtFtGD2fZpVfz"
     },
     {
       "id": "bully-13",
@@ -2248,7 +2439,8 @@
       "spotifyRank": 212,
       "spotifyStreams": 4000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:1udGa2Ww3YIVSp5X4OMHFQ"
     },
     {
       "id": "bully-14",
@@ -2259,7 +2451,8 @@
       "spotifyRank": 200,
       "spotifyStreams": 28475566,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:0fD7KBtQgPR1YCtuPAsyZJ"
     },
     {
       "id": "bully-15",
@@ -2270,7 +2463,8 @@
       "spotifyRank": 203,
       "spotifyStreams": 19628337,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:6pxHjkpwGmg97Yn5HcwNTn"
     },
     {
       "id": "bully-16",
@@ -2281,7 +2475,8 @@
       "spotifyRank": 206,
       "spotifyStreams": 13051096,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:4dm2VMjIs1JlGZp2TePJaE"
     },
     {
       "id": "bully-17",
@@ -2292,7 +2487,8 @@
       "spotifyRank": 205,
       "spotifyStreams": 14951275,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:13CvK7typ0qYle19p9Vahn"
     },
     {
       "id": "bully-18",
@@ -2303,7 +2499,8 @@
       "spotifyRank": 214,
       "spotifyStreams": 3000000,
       "totalStreams": 0,
-      "dailyStreams": 0
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:7uGrdyEErKPSA3oiJQHxQ6"
     }
   ],
   "totalSongs": 199,
