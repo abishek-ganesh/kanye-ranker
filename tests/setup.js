@@ -78,7 +78,6 @@ document.body.innerHTML = `
       <span id="year-a"></span>
       <button id="preview-a"></button>
       <a id="youtube-a" href="#"></a>
-      <a id="lyrics-a" href="#"></a>
       <button id="choose-a"></button>
     </div>
     <div id="song-b" class="song-card">
@@ -88,7 +87,6 @@ document.body.innerHTML = `
       <span id="year-b"></span>
       <button id="preview-b"></button>
       <a id="youtube-b" href="#"></a>
-      <a id="lyrics-b" href="#"></a>
       <button id="choose-b"></button>
     </div>
     <button id="skip-comparison"></button>

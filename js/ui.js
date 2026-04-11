@@ -40,7 +40,6 @@ class UI {
                     year: document.getElementById('year-a'),
                     previewBtn: document.getElementById('preview-a'),
                     youtubeLink: document.getElementById('youtube-a'),
-                    lyricsLink: document.getElementById('lyrics-a'),
                     chooseBtn: document.getElementById('choose-a')
                 },
                 b: {
@@ -51,7 +50,6 @@ class UI {
                     year: document.getElementById('year-b'),
                     previewBtn: document.getElementById('preview-b'),
                     youtubeLink: document.getElementById('youtube-b'),
-                    lyricsLink: document.getElementById('lyrics-b'),
                     chooseBtn: document.getElementById('choose-b')
                 }
             },
@@ -504,27 +502,7 @@ class UI {
         } else {
         }
         
-        
-        // Check if we have a direct Genius URL for this song
-        if (card.lyricsLink) {
-            // Debug: log what we're looking for
-            
-            // Try case-sensitive first, then case-insensitive lookup
-            let directGeniusUrl = null;
-            if (window.lyricsLinks) {
-                directGeniusUrl = KanyeUtils.getCaseInsensitiveValue(window.lyricsLinks, song.title);
-            }
-            
-            if (directGeniusUrl) {
-                card.lyricsLink.href = directGeniusUrl;
-            } else {
-                // Fallback to search if no direct URL
-                const lyricsQuery = encodeURIComponent(`${song.title} ${artistName}`);
-                card.lyricsLink.href = `https://genius.com/search?q=${lyricsQuery}`;
-            }
-        } else {
-        }
-        
+
         if (card.previewBtn) {
             // Always apply album-specific colors first
             if (window.getAlbumColors) {
@@ -564,28 +542,6 @@ class UI {
                 card.previewBtn.textContent = 'Unavailable';
             }
         } else {
-        }
-        
-        // Apply album-specific colors to lyrics link (always, not just when preview exists)
-        if (card.lyricsLink && window.getAlbumColors) {
-            const albumColors = window.getAlbumColors(song.albumId);
-            card.lyricsLink.style.setProperty('background-color', 'transparent', 'important');
-            card.lyricsLink.style.setProperty('color', albumColors.tertiary || albumColors.primary, 'important');
-            card.lyricsLink.style.setProperty('border', `2px solid ${albumColors.tertiary || albumColors.primary}`, 'important');
-            
-            // Add hover effect
-            card.lyricsLink.onmouseenter = function() {
-                this.style.setProperty('background-color', albumColors.tertiary || albumColors.primary, 'important');
-                this.style.setProperty('color', '#FFFFFF', 'important');
-                this.style.setProperty('transform', 'translateY(-1px)', 'important');
-                this.style.setProperty('box-shadow', `0 4px 12px ${albumColors.tertiary || albumColors.primary}40`, 'important');
-            };
-            card.lyricsLink.onmouseleave = function() {
-                this.style.setProperty('background-color', 'transparent', 'important');
-                this.style.setProperty('color', albumColors.tertiary || albumColors.primary, 'important');
-                this.style.setProperty('transform', 'none', 'important');
-                this.style.setProperty('box-shadow', 'none', 'important');
-            };
         }
         
         if (card.chooseBtn) {
@@ -673,11 +629,6 @@ class UI {
             ? window.videoLinks.videoIds[song.title] 
             : null;
         
-        // Get lyrics URL - lyrics are keyed by song title
-        const lyricsUrl = window.lyricsLinks && window.lyricsLinks[song.title]
-            ? window.lyricsLinks[song.title]
-            : null;
-        
         // Censor specific titles for display
         const displayTitle = KanyeUtils.getCensoredTitle(song.title);
         
@@ -689,18 +640,12 @@ class UI {
                 <div class="result-album">${album ? album.name : ''}</div>
             </div>
             <div class="result-actions">
-                <button class="btn-small preview-btn ${videoId ? 'has-preview' : ''}" 
+                <button class="btn-small preview-btn ${videoId ? 'has-preview' : ''}"
                         data-video-id="${videoId || ''}"
                         data-album-id="${song.albumId || ''}"
                         ${!videoId ? 'disabled' : ''}>
                     ▶ Listen
                 </button>
-                <a class="btn-small lyrics-btn" 
-                   href="${lyricsUrl || '#'}"
-                   target="_blank"
-                   ${!lyricsUrl ? 'style="pointer-events: none; opacity: 0.5;"' : ''}>
-                    Lyrics
-                </a>
             </div>
         `;
         
@@ -726,31 +671,6 @@ class UI {
                 this.style.setProperty('transform', 'none', 'important');
                 this.style.setProperty('box-shadow', 'none', 'important');
             };
-        }
-        
-        // Apply album-specific colors to lyrics button
-        const lyricsBtn = div.querySelector('.lyrics-btn');
-        if (lyricsBtn && window.getAlbumColors) {
-            const albumColors = window.getAlbumColors(song.albumId);
-            if (!lyricsBtn.style.pointerEvents || lyricsBtn.style.pointerEvents !== 'none') {
-                lyricsBtn.style.setProperty('background-color', 'transparent', 'important');
-                lyricsBtn.style.setProperty('color', albumColors.tertiary || albumColors.primary, 'important');
-                lyricsBtn.style.setProperty('border', `2px solid ${albumColors.tertiary || albumColors.primary}`, 'important');
-                
-                // Add hover effect
-                lyricsBtn.onmouseenter = function() {
-                    this.style.setProperty('background-color', albumColors.tertiary || albumColors.primary, 'important');
-                    this.style.setProperty('color', '#FFFFFF', 'important');
-                    this.style.setProperty('transform', 'translateY(-1px)', 'important');
-                    this.style.setProperty('box-shadow', `0 4px 12px ${albumColors.tertiary || albumColors.primary}40`, 'important');
-                };
-                lyricsBtn.onmouseleave = function() {
-                    this.style.setProperty('background-color', 'transparent', 'important');
-                    this.style.setProperty('color', albumColors.tertiary || albumColors.primary, 'important');
-                    this.style.setProperty('transform', 'none', 'important');
-                    this.style.setProperty('box-shadow', 'none', 'important');
-                };
-            }
         }
         
         // The preview system uses a global click handler that looks for .preview-btn

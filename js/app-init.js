@@ -2,13 +2,9 @@
 window.addEventListener('load', async function() {
     const loadStartTime = performance.now();
     
-    // Wait for lyrics and videos to load first
+    // Wait for videos to load first
     const loadPromises = [];
-    
-    if (window.lyricsLoaderPromise) {
-        loadPromises.push(window.lyricsLoaderPromise);
-    }
-    
+
     if (window.videoLoaderPromise) {
         loadPromises.push(window.videoLoaderPromise);
     }

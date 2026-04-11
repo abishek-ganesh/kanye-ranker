@@ -293,16 +293,7 @@ class KanyeRankerApp {
                 }
             }
             
-            // Track Lyrics link clicks
-            if (e.target.id && (e.target.id === 'lyrics-a' || e.target.id === 'lyrics-b')) {
-                const songCard = e.target.closest('.song-card');
-                const songTitle = songCard?.querySelector('.song-title')?.textContent || '';
-                const albumName = songCard?.querySelector('.album-name')?.textContent || '';
-                
-                if (window.analytics) {
-                    window.analytics.trackExternalLinkClick('lyrics', songTitle, albumName);
-                }
-            }
+
         });
         
     }

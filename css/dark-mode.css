@@ -253,18 +253,6 @@ body.dark-mode {
     color: #666 !important;
 }
 
-.dark-mode .result-actions .lyrics-btn {
-    background: transparent !important;
-    color: #ffffff !important;
-    border: 2px solid #ffffff !important;
-}
-
-.dark-mode .result-actions .lyrics-btn:hover {
-    background: #ffffff !important;
-    color: #1a1a1a !important;
-    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2) !important;
-}
-
 /* Fix Start Over button visibility in dark mode */
 .dark-mode .btn-secondary {
     background-color: transparent !important;
