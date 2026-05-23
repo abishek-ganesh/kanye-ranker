@@ -81,7 +81,7 @@
         min-height: 180px !important;
         display: grid !important;
         grid-template-columns: min(30vw, 120px) 1fr !important;
-        grid-template-rows: auto auto auto auto !important;
+        grid-template-rows: auto auto auto auto auto !important;
         grid-column-gap: 15px !important;
         grid-row-gap: 0 !important;
         align-items: center !important;
@@ -192,6 +192,17 @@
         font-size: clamp(12px, 3vw, 14px) !important;
         border-radius: 20px !important;
         font-weight: 600 !important;
+    }
+
+    /* Clip descriptor caption - row 5, column 2 (under the Watch button) */
+    #comparison-screen .clip-label {
+        grid-column: 2 !important;
+        grid-row: 5 !important;
+        margin: 4px 0 0 !important;
+        font-size: 11px !important;
+        line-height: 1.2 !important;
+        text-align: center !important;
+        width: 100% !important;
     }
     
     

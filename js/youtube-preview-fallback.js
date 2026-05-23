@@ -279,15 +279,24 @@ class YouTubePreviewFallback {
             }
             
             const songTitle = titleElement.textContent.trim();
-            let videoId = KanyeUtils.getCaseInsensitiveValue(this.videoIds, songTitle);
-            
+            const rawEntry = KanyeUtils.getCaseInsensitiveValue(this.videoIds, songTitle);
+            const entry = KanyeUtils.resolveVideoEntry(rawEntry);
+            const videoId = entry ? entry.id : null;
+
+            // Update the clip-label caption inside the card, if present
+            const cardSuffix = card.id ? card.id.slice(-1) : '';
+            const clipLabelEl = cardSuffix ? document.getElementById(`clip-label-${cardSuffix}`) : null;
+            if (clipLabelEl) {
+                clipLabelEl.textContent = entry && entry.label ? entry.label : '';
+            }
+
             if (videoId) {
                 card.classList.add('has-preview');
-                
+
                 // Remove any existing indicators
                 const existingIndicator = card.querySelector('.preview-indicator');
                 if (existingIndicator) existingIndicator.remove();
-                
+
                 // Update preview button
                 const previewBtn = card.querySelector('.preview-btn');
                 if (previewBtn) {
@@ -295,7 +304,7 @@ class YouTubePreviewFallback {
                     if (!previewBtn.classList.contains('has-preview') || previewBtn.textContent.includes('Unavailable')) {
                         previewBtn.classList.remove('disabled');
                         previewBtn.classList.add('has-preview');
-                        previewBtn.textContent = '▶ Listen';
+                        previewBtn.textContent = '▶ Watch';
                         // Remove any inline styles
                         previewBtn.removeAttribute('style');
                         // Remove any existing onclick to prevent duplicates
@@ -331,8 +340,10 @@ class YouTubePreviewFallback {
     
     playPreview(songTitle) {
         try {
-            let videoId = KanyeUtils.getCaseInsensitiveValue(this.videoIds, songTitle);
-            
+            const rawEntry = KanyeUtils.getCaseInsensitiveValue(this.videoIds, songTitle);
+            const entry = KanyeUtils.resolveVideoEntry(rawEntry);
+            const videoId = entry ? entry.id : null;
+
             if (!videoId) {
                 // Show error message in modal
                 this.modal.querySelector('.preview-title').textContent = 'Preview Not Available';

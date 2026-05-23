@@ -524,17 +524,26 @@ class UI {
             }
             
             
-            // Check if we have a YouTube video ID for this song
-            let videoId = null;
+            // Check if we have a YouTube video entry for this song
+            let entry = null;
             if (window.videoLinks && window.videoLinks.videoIds) {
-                videoId = KanyeUtils.getCaseInsensitiveValue(window.videoLinks.videoIds, song.title);
+                const raw = KanyeUtils.getCaseInsensitiveValue(window.videoLinks.videoIds, song.title);
+                entry = KanyeUtils.resolveVideoEntry(raw);
             }
-            
+            const videoId = entry ? entry.id : null;
+
+            // Update the per-card clip-label caption (e.g., "Live at Coachella '11")
+            const cardSuffix = card.previewBtn.id.slice(-1);
+            const clipLabelEl = document.getElementById(`clip-label-${cardSuffix}`);
+            if (clipLabelEl) {
+                clipLabelEl.textContent = entry && entry.label ? entry.label : '';
+            }
+
             if (videoId) {
                 card.previewBtn.dataset.videoId = videoId;
                 card.previewBtn.classList.remove('disabled');
                 card.previewBtn.classList.add('has-preview');  // Add this class for YouTube preview fallback
-                card.previewBtn.textContent = '▶ Listen';
+                card.previewBtn.textContent = '▶ Watch';
             } else {
                 delete card.previewBtn.dataset.videoId;
                 card.previewBtn.classList.add('disabled');
@@ -624,14 +633,16 @@ class UI {
             ? `assets/album-covers/${album.coverArt}` 
             : 'assets/album-covers/placeholder.svg';
         
-        // Get video ID for preview - videos are keyed by song title
-        const videoId = window.videoLinks && window.videoLinks.videoIds && window.videoLinks.videoIds[song.title] 
-            ? window.videoLinks.videoIds[song.title] 
+        // Get video entry for preview - videos are keyed by song title
+        const rawEntry = window.videoLinks && window.videoLinks.videoIds
+            ? window.videoLinks.videoIds[song.title]
             : null;
-        
+        const entry = KanyeUtils.resolveVideoEntry(rawEntry);
+        const videoId = entry ? entry.id : null;
+
         // Censor specific titles for display
         const displayTitle = KanyeUtils.getCensoredTitle(song.title);
-        
+
         div.innerHTML = `
             <div class="result-rank">#${rank}</div>
             <img class="result-album-art" src="${albumArtPath}" alt="${album ? album.name : 'Album'} album cover" onerror="this.onerror=null; this.src='assets/album-covers/placeholder.svg';">
@@ -644,7 +655,7 @@ class UI {
                         data-video-id="${videoId || ''}"
                         data-album-id="${song.albumId || ''}"
                         ${!videoId ? 'disabled' : ''}>
-                    ▶ Listen
+                    ▶ Watch
                 </button>
             </div>
         `;

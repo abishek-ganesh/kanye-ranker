@@ -46,6 +46,21 @@ function getCaseInsensitiveValue(obj, key) {
 }
 
 /**
+ * Normalize a video-links entry to {id, label}.
+ * Accepts either a plain YouTube ID string or {id, label} object.
+ * @param {string|{id: string, label?: string}|undefined} entry
+ * @returns {{id: string, label: string}|null}
+ */
+function resolveVideoEntry(entry) {
+    if (!entry) return null;
+    if (typeof entry === 'string') return { id: entry, label: '' };
+    if (typeof entry === 'object' && entry.id) {
+        return { id: entry.id, label: entry.label || '' };
+    }
+    return null;
+}
+
+/**
  * Get censored version of song title if needed
  * @param {string} title - The song title
  * @returns {string} The censored title
@@ -193,6 +208,7 @@ function withErrorHandling(fn, context) {
 window.KanyeUtils = {
     applyAlbumButtonColors,
     getCaseInsensitiveValue,
+    resolveVideoEntry,
     getCensoredTitle,
     trackAnalytics,
     safeQuerySelector,

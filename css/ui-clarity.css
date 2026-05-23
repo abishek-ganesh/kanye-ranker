@@ -10,6 +10,17 @@
     display: none !important;
 }
 
+/* Curated clip descriptor under the Watch button */
+.clip-label {
+    margin: 4px 0 0;
+    min-height: 14px;
+    font-size: 12px;
+    font-style: italic;
+    color: #888;
+    text-align: center;
+    line-height: 1.2;
+}
+
 /* Style the song actions section */
 .song-actions {
     background: transparent;
