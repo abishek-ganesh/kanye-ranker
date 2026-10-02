@@ -91,63 +91,6 @@ body {
     );
 }
 
-/* Featured new album banner */
-.new-album-feature {
-    margin-bottom: 2.5rem;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.new-album-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem 1.5rem;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    width: 100%;
-    gap: 1rem;
-}
-
-.new-album-label {
-    font-size: 1.1rem;
-    font-weight: 900;
-    letter-spacing: 0.25em;
-    color: #555;
-    text-transform: uppercase;
-    margin: 0;
-}
-
-.new-album-art {
-    width: 220px;
-    height: 220px;
-    object-fit: cover;
-    display: block;
-}
-
-.new-album-title {
-    font-size: 4rem;
-    font-weight: 900;
-    letter-spacing: -0.02em;
-    color: var(--primary-color);
-    line-height: 1;
-    margin: 0;
-}
-
-.new-album-meta {
-    font-size: 0.75rem;
-    color: #888;
-    letter-spacing: 0.12em;
-    font-weight: 600;
-    margin: 0;
-}
-
-body.dark-mode .new-album-content {
-    background: #111;
-    border-color: #333;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-}
-
 .app-title {
     font-size: 5rem;
     font-weight: 900;
