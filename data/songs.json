@@ -132,9 +132,9 @@
       "id": "bully",
       "name": "Bully",
       "year": 2026,
-      "trackCount": 18,
+      "trackCount": 19,
       "type": "studio",
-      "coverArt": "bully.png"
+      "coverArt": "bully-deluxe.jpg"
     }
   ],
   "songs": [
@@ -2501,8 +2501,20 @@
       "totalStreams": 0,
       "dailyStreams": 0,
       "spotifyUri": "spotify:track:7uGrdyEErKPSA3oiJQHxQ6"
+    },
+    {
+      "id": "bully-19",
+      "title": "OK",
+      "albumId": "bully",
+      "trackNumber": 19,
+      "initialRating": 1500,
+      "spotifyRank": 221,
+      "spotifyStreams": 1500000,
+      "totalStreams": 0,
+      "dailyStreams": 0,
+      "spotifyUri": "spotify:track:5UNo2nitxVTkBA9QYmnHJx"
     }
   ],
-  "totalSongs": 199,
+  "totalSongs": 198,
   "lastFiltered": "2026-03-28T00:00:00.000Z"
 }
