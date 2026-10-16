@@ -6,6 +6,9 @@ const { test, expect } = require('@playwright/test');
  * All tests use an iPhone-like viewport (375x812).
  */
 
+// Firefox can't emulate a phone (isMobile is unsupported); phones are covered by the Mobile Safari and Android Chrome projects
+test.skip(({ browserName }) => browserName === 'firefox', 'isMobile emulation is not supported in Firefox');
+
 // Set mobile viewport for every test in this file
 test.use({
   viewport: { width: 375, height: 812 },

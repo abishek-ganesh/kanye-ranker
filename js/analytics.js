@@ -163,6 +163,45 @@ class Analytics {
         });
     }
 
+    // Track song request modal opens
+    trackSongRequestModalOpened() {
+        this.track('song_request_modal_opened', {
+            event_category: 'engagement',
+            event_label: 'song_request'
+        });
+    }
+
+    // Track a song being added to the request queue
+    trackSongRequested(songTitle, albumName, queueLength) {
+        this.track('song_requested', {
+            event_category: 'engagement',
+            event_label: 'song_request',
+            song_title: songTitle,
+            album_name: albumName,
+            queue_length: queueLength
+        });
+    }
+
+    // Track each appearance of a requested song in a comparison
+    trackRequestedSongShown(songTitle, appearanceNumber) {
+        this.track('requested_song_shown', {
+            event_category: 'engagement',
+            event_label: 'song_request',
+            song_title: songTitle,
+            appearance_number: appearanceNumber
+        });
+    }
+
+    // Track a request being removed from the queue before it finished its appearances
+    trackSongRequestRemoved(songTitle, timesShown) {
+        this.track('song_request_removed', {
+            event_category: 'engagement',
+            event_label: 'song_request',
+            song_title: songTitle,
+            times_shown: timesShown
+        });
+    }
+
     // Track external link clicks
     trackExternalLinkClick(linkType, songTitle, albumName) {
         this.track('external_link_clicked', {

@@ -62,6 +62,8 @@ class KanyeRankerApp {
         this.newAlbumComparisonsShown = 0;
         this.shownNewAlbumSongs = new Set();
 
+        this.songRequests = typeof SongRequestQueue !== 'undefined' ? new SongRequestQueue() : null;
+
         this.init();
     }
     
@@ -315,6 +317,7 @@ class KanyeRankerApp {
             // Clear any previous comparison history for a fresh start
             this.elo = new EloRating(32);
             this.currentPairIndex = 0;
+            this.songRequests?.clear();
             
             // Clear any cached data that might have old paths
             try {
@@ -765,9 +768,52 @@ class KanyeRankerApp {
         return [songId, opponentId];
     }
 
+    // Pairs a user-requested song (when the queue says it's due) against a similarly rated opponent
+    generateRequestedPairing() {
+        if (!this.songRequests) return null;
+
+        const completedComparisons = this.elo.getCompletedComparisons();
+        if (!this.songRequests.shouldInject(completedComparisons)) return null;
+
+        const songId = this.songRequests.takeNext(completedComparisons);
+        if (!songId) return null;
+
+        // Always draw from all songs so a fresh 1500-rated request works in any phase
+        let opponentId = this.selectOpponentForWinner(songId, this.allSongsArray);
+        if (!opponentId) {
+            const songRating = this.songRatings.get(songId);
+            let closestDiff = Infinity;
+            for (const id of this.allSongsArray) {
+                if (id === songId) continue;
+                const diff = Math.abs(this.songRatings.get(id) - songRating);
+                if (diff < closestDiff) {
+                    closestDiff = diff;
+                    opponentId = id;
+                }
+            }
+        }
+        if (!opponentId) return null;
+
+        const entry = this.songRequests.getQueue().find(e => e.songId === songId);
+        const appearancesLeft = entry ? entry.appearancesLeft : 0;
+        const appearanceNumber = this.songRequests.appearancesPerRequest - appearancesLeft;
+        const songTitle = this.songs.find(s => s.id === songId)?.title || songId;
+        window.analytics?.trackRequestedSongShown?.(songTitle, appearanceNumber);
+
+        return Math.random() < 0.5 ? [songId, opponentId] : [opponentId, songId];
+    }
+
     generateNextPairing() {
         const { phase, pool, poolName } = this.getCurrentPhase();
         const completedComparisons = this.elo.getCompletedComparisons();
+
+        // SONG REQUESTS: pre-empts the new album boost and winner carry-over
+        const requestedPair = this.generateRequestedPairing();
+        if (requestedPair) {
+            this.comparisonsSinceBreak++;
+            this.consecutiveWins = 0;
+            return requestedPair;
+        }
 
         // NEW ALBUM BOOST: inject new album songs on every other comparison in the boost window
         if (
@@ -1844,6 +1890,16 @@ class KanyeRankerApp {
         if (feedbackModal && feedbackModal.classList.contains('show')) {
             return;
         }
+
+        const songRequestModal = document.getElementById('song-request-modal');
+        if (songRequestModal && songRequestModal.classList.contains('show')) {
+            return;
+        }
+
+        const tagName = event.target?.tagName;
+        if (tagName === 'INPUT' || tagName === 'TEXTAREA') {
+            return;
+        }
         
         if (this.ui.screens.comparison.classList.contains('active')) {
             switch(event.key) {
@@ -1934,6 +1990,8 @@ class KanyeRankerApp {
         // Reset new album boost state
         this.newAlbumComparisonsShown = 0;
         this.shownNewAlbumSongs.clear();
+
+        this.songRequests?.clear();
         
         this.ui.showScreen('landing');
         

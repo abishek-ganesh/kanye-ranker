@@ -53,6 +53,31 @@ module.exports = defineConfig({
         ...devices['iPhone 13'],
       },
     },
+    {
+      name: 'Desktop Firefox',
+      use: {
+        ...devices['Desktop Firefox'],
+      },
+    },
+    {
+      name: 'Desktop Safari',
+      use: {
+        ...devices['Desktop Safari'],
+      },
+    },
+    {
+      name: 'Android Chrome',
+      use: {
+        ...devices['Pixel 7'],
+      },
+    },
+    {
+      // Touch device wide enough to get the desktop-style drawer
+      name: 'iPad',
+      use: {
+        ...devices['iPad (gen 7)'],
+      },
+    },
   ],
 
   // Start the static file server before tests

@@ -141,6 +141,9 @@ window.KanyeMessages = {
 // Load ui.js (needed by app.js constructor, depends on KanyeUtils + DOM)
 loadSource('js/ui.js');
 
+// Load song-request.js (SongRequestQueue, used by app.js)
+loadSource('js/song-request.js');
+
 // Load app.js to make KanyeRankerApp class available on window.
 // The class definition is safe to eval — the constructor is never called
 // here because there is no auto-instantiation trigger in the source.
