@@ -106,7 +106,7 @@ kanye-ranker/
 5. **Results**: Top 10 songs and top 5 albums (album formula in `docs/ALGORITHMS.md`)
 6. **Insights** (`js/share-incentive-simple.js`): songs get an underrated pick, "Just Missed the Cut" (#11), and era preference; albums get "Your Kanye Timeline" and the album that just missed the top 5
 7. **Sharing/export**: Canvas-generated images; Web Share API on mobile, Clipboard API on desktop
-8. **Back button**: undo last comparison with rating rollback (on mobile, 768px and below, it only appears once 2 comparisons are done)
+8. **Back button**: undo last comparison, rolling back ratings and all pairing state, in-memory history cleared on start/restart (on mobile, 768px and below, it only appears once 2 comparisons are done)
 9. **Dark mode, feedback form, rotating Kanye quotes**
 
 ### Spotify Playlist Export (disabled)

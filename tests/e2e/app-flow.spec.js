@@ -354,4 +354,64 @@ test.describe('Back button', () => {
     // Should still be on the comparison screen
     await expect(page.locator('#comparison-screen')).toBeVisible();
   });
+
+  test('undo restores ratings and re-shows the same pair', async ({ page }) => {
+    await page.goto('/');
+    await waitForAppReady(page);
+    await page.locator('#start-ranking').click();
+    await page.locator('#comparison-screen').waitFor({ state: 'visible', timeout: 5000 });
+    await page.waitForFunction(
+      () => document.getElementById('song-title-a')?.textContent?.length > 0,
+      { timeout: 5000 }
+    );
+
+    await makeComparisons(page, 2);
+    await expect(page.locator('#current-comparison')).toHaveText('2', { timeout: 5000 });
+
+    // Capture the pair and every rating as the third comparison is shown
+    const before = await page.evaluate(() => ({
+      titleA: document.getElementById('song-title-a').textContent,
+      titleB: document.getElementById('song-title-b').textContent,
+      ratings: Object.fromEntries(window.kanyeApp.songRatings)
+    }));
+
+    await makeComparisons(page, 1);
+    await expect(page.locator('#current-comparison')).toHaveText('3', { timeout: 5000 });
+    await page.waitForFunction(() => !window.kanyeApp.isProcessingChoice, { timeout: 5000 });
+
+    await page.locator('#back-button').click();
+    await expect(page.locator('#current-comparison')).toHaveText('2', { timeout: 5000 });
+
+    const after = await page.evaluate(() => ({
+      titleA: document.getElementById('song-title-a').textContent,
+      titleB: document.getElementById('song-title-b').textContent,
+      ratings: Object.fromEntries(window.kanyeApp.songRatings),
+      pairings: window.kanyeApp.pairings.length,
+      index: window.kanyeApp.currentPairIndex
+    }));
+
+    expect(after.titleA).toBe(before.titleA);
+    expect(after.titleB).toBe(before.titleB);
+    expect(after.ratings).toEqual(before.ratings);
+    expect(after.pairings).toBe(after.index + 1);
+  });
+
+  test('restart clears undo history', async ({ page }) => {
+    await page.goto('/');
+    await waitForAppReady(page);
+    await page.locator('#start-ranking').click();
+    await page.locator('#comparison-screen').waitFor({ state: 'visible', timeout: 5000 });
+    await makeComparisons(page, 3);
+    await page.waitForFunction(() => !window.kanyeApp.isProcessingChoice, { timeout: 5000 });
+
+    await page.evaluate(() => window.kanyeApp.restart());
+
+    const state = await page.evaluate(() => ({
+      history: window.kanyeApp.backButton.history.length,
+      stored: localStorage.getItem('comparison-history')
+    }));
+    expect(state.history).toBe(0);
+    expect(state.stored).toBeNull();
+    await expect(page.locator('#back-button')).not.toBeVisible();
+  });
 });

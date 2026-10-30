@@ -485,13 +485,13 @@ describe('EloRating', () => {
   });
 
   // ====================================================================
-  // removeComparison
+  // removeLastComparison
   // ====================================================================
-  describe('removeComparison', () => {
+  describe('removeLastComparison', () => {
     test('removes the correct pair', () => {
       elo.recordComparison('a', 'b', 'a');
       elo.recordComparison('c', 'd', 'c');
-      elo.removeComparison('a', 'b');
+      expect(elo.removeLastComparison('a', 'b')).toBe(true);
 
       expect(elo.hasBeenCompared('a', 'b')).toBe(false);
       expect(elo.hasBeenCompared('c', 'd')).toBe(true);
@@ -500,7 +500,7 @@ describe('EloRating', () => {
 
     test('removes in reverse order (B,A)', () => {
       elo.recordComparison('a', 'b', 'a');
-      elo.removeComparison('b', 'a');
+      elo.removeLastComparison('b', 'a');
       expect(elo.hasBeenCompared('a', 'b')).toBe(false);
     });
 
@@ -508,25 +508,36 @@ describe('EloRating', () => {
       elo.recordComparison('a', 'b', 'a');
       elo.recordComparison('a', 'c', 'a');
       elo.recordComparison('b', 'c', 'b');
-      elo.removeComparison('a', 'b');
+      elo.removeLastComparison('a', 'b');
 
       expect(elo.hasBeenCompared('a', 'c')).toBe(true);
       expect(elo.hasBeenCompared('b', 'c')).toBe(true);
       expect(elo.getCompletedComparisons()).toBe(2);
     });
 
-    test('removes associated skip count', () => {
+    test('removes only the most recent meeting of a repeated pair', () => {
+      elo.recordComparison('a', 'b', 'a', 1);
+      elo.recordComparison('c', 'd', 'c', 2);
+      elo.recordComparison('b', 'a', 'b', 3);
+      elo.removeLastComparison('a', 'b');
+
+      expect(elo.getCompletedComparisons()).toBe(2);
+      expect(elo.hasBeenCompared('a', 'b')).toBe(true);
+      expect(elo.comparisons.find(c => c.songIdA === 'a').winnerId).toBe('a');
+    });
+
+    test('keeps skip counts', () => {
       elo.recordSkip('a', 'b');
       elo.recordSkip('a', 'b');
       elo.recordComparison('a', 'b', 'a');
-      elo.removeComparison('a', 'b');
+      elo.removeLastComparison('a', 'b');
 
-      expect(elo.getSkipCount('a', 'b')).toBe(0);
+      expect(elo.getSkipCount('a', 'b')).toBe(2);
     });
 
     test('removing non-existent comparison is a no-op', () => {
       elo.recordComparison('a', 'b', 'a');
-      elo.removeComparison('x', 'y');
+      expect(elo.removeLastComparison('x', 'y')).toBe(false);
       expect(elo.getCompletedComparisons()).toBe(1);
     });
   });

@@ -8,7 +8,13 @@ class BackButtonManager {
     
     init() {
         this.addBackButton();
-        this.restoreHistory();
+        // History is in-memory only (rankings don't survive reloads either);
+        // drop any key left by older versions that persisted it
+        try {
+            localStorage.removeItem('comparison-history');
+        } catch (storageError) {
+            // Storage unavailable - nothing to clean up
+        }
     }
     
     addBackButton() {
@@ -92,26 +98,17 @@ class BackButtonManager {
         document.body.appendChild(backBtn);
     }
     
-    saveComparison(songIdA, songIdB, winnerId) {
+    // state comes from app.captureUndoState(), taken before the choice was applied
+    saveComparison(songIdA, songIdB, winnerId, state) {
         try {
-            const comparison = {
+            this.history.push({
                 songIdA,
                 songIdB,
                 winnerId,
-                timestamp: Date.now(),
-                pairIndex: this.app.currentPairIndex
-            };
-            
-            this.history.push(comparison);
-            
-            // Try to save to localStorage
-            try {
-                localStorage.setItem('comparison-history', JSON.stringify(this.history));
-            } catch (storageError) {
-                console.warn('Could not save comparison history:', storageError);
-                // Continue anyway - history still works for this session
-            }
-            
+                pairIndex: this.app.currentPairIndex,
+                state
+            });
+
             // Show back button after first comparison (but not on mobile for first comparison)
             const isMobile = window.innerWidth <= 768;
             const backButton = document.getElementById('back-button');
@@ -124,63 +121,19 @@ class BackButtonManager {
         }
     }
     
-    restoreHistory() {
-        try {
-            const saved = localStorage.getItem('comparison-history');
-            if (saved) {
-                this.history = JSON.parse(saved);
-                // Only show back button if we have history AND we're not on the landing screen
-                // AND follow mobile rules (hide on first comparison for mobile)
-                const isMobile = window.innerWidth <= 768;
-                const landingScreen = document.getElementById('landing-screen');
-                const backButton = document.getElementById('back-button');
-                
-                if (backButton && this.history.length > 0 && 
-                    (!landingScreen || !landingScreen.classList.contains('active')) && 
-                    (!isMobile || this.history.length > 1)) {
-                    backButton.classList.add('visible');
-                }
-            }
-        } catch (error) {
-            console.warn('Could not restore comparison history:', error);
-            this.history = [];
-        }
-    }
-    
     goBack() {
+        // A choice is still animating; its delayed advance would skip past the undone pair
+        if (this.history.length === 0 || this.app.isProcessingChoice) return;
+
+        let lastComparison = null;
         try {
-            if (this.history.length === 0) return;
-            
-            // Get last comparison
-            const lastComparison = this.history.pop();
-            
-            if (!lastComparison || !lastComparison.songIdA || !lastComparison.songIdB) {
+            lastComparison = this.history.pop();
+
+            if (!lastComparison || !lastComparison.songIdA || !lastComparison.songIdB || !lastComparison.state) {
                 throw new Error('Invalid comparison history');
             }
-            
-            // Revert the ratings
-            const { songIdA, songIdB, winnerId } = lastComparison;
-            const loserId = winnerId === songIdA ? songIdB : songIdA;
-            
-            // Get the stored ratings from before this comparison
-            const storedRatings = this.getStoredRatingsBeforeComparison(lastComparison.pairIndex);
-            if (storedRatings) {
-                this.app.songRatings.set(songIdA, storedRatings[songIdA]);
-                this.app.songRatings.set(songIdB, storedRatings[songIdB]);
-            }
-            
-            // Update comparison history in ELO system
-            if (this.app.elo && typeof this.app.elo.removeComparison === 'function') {
-                this.app.elo.removeComparison(songIdA, songIdB);
-            }
-            
-            // Go back to the previous comparison
-            this.app.currentPairIndex = Math.max(0, lastComparison.pairIndex);
-            
-            // Clear processing flag
-            this.app.isProcessingChoice = false;
-            
-            // Show the comparison again
+
+            this.app.restoreUndoState(lastComparison);
             this.app.showNextComparison();
 
             if (window.analytics) {
@@ -191,14 +144,7 @@ class BackButtonManager {
             setTimeout(() => {
                 this.app.ui.enableComparisonButtons();
             }, 100);
-            
-            // Update history storage
-            try {
-                localStorage.setItem('comparison-history', JSON.stringify(this.history));
-            } catch (storageError) {
-                console.warn('Could not update history:', storageError);
-            }
-            
+
         } catch (error) {
             console.error('Failed to go back:', error);
             // Re-add the comparison to history since we failed
@@ -218,18 +164,9 @@ class BackButtonManager {
         }
     }
     
-    getStoredRatingsBeforeComparison(pairIndex) {
-        // Session storage removed - get ratings from app's rating snapshots
-        if (this.app.ratingSnapshots && this.app.ratingSnapshots[pairIndex - 1]) {
-            return this.app.ratingSnapshots[pairIndex - 1];
-        }
-        return null;
-    }
-    
     clear() {
         this.history = [];
-        localStorage.removeItem('comparison-history');
-        document.getElementById('back-button').classList.remove('visible');
+        document.getElementById('back-button')?.classList.remove('visible');
     }
 }
 

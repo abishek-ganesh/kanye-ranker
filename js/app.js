@@ -37,7 +37,6 @@ class KanyeRankerApp {
         this.minComparisons = 50;
         this.maxComparisons = 150;
         this.isProcessingChoice = false;
-        this.ratingSnapshots = {};
         this.backButton = null;
         
         // Exploration/Exploitation tracking
@@ -303,7 +302,8 @@ class KanyeRankerApp {
             this.elo = new EloRating(32);
             this.currentPairIndex = 0;
             this.songRequests?.clear();
-            
+            this.backButton?.clear();
+
             // Clear any cached data that might have old paths
             try {
                 localStorage.removeItem('albumCache');
@@ -1507,10 +1507,7 @@ class KanyeRankerApp {
         } else {
             this.ui.updateProgressBar(this.currentPairIndex, this.pairings.length, completedCount);
         }
-        
-        // Save rating snapshot before comparison
-        this.saveRatingSnapshot();
-        
+
         // Ensure buttons are enabled for interaction
         if (!this.isProcessingChoice) {
             this.ui.enableComparisonButtons();
@@ -1549,7 +1546,10 @@ class KanyeRankerApp {
             const [songIdA, songIdB] = this.pairings[this.currentPairIndex];
         const winnerId = side === 'a' ? songIdA : songIdB;
         const loserId = side === 'a' ? songIdB : songIdA;
-        
+
+        // Must run before anything below mutates state
+        const undoState = this.captureUndoState(songIdA, songIdB, winnerId);
+
         // Get song details for tracking
         const winnerSong = this.songs.find(s => s.id === winnerId);
         const loserSong = this.songs.find(s => s.id === loserId);
@@ -1615,7 +1615,7 @@ class KanyeRankerApp {
         
         // Save this comparison to history
         if (this.backButton) {
-            this.backButton.saveComparison(songIdA, songIdB, winnerId);
+            this.backButton.saveComparison(songIdA, songIdB, winnerId, undoState);
         }
         
         this.animateChoice(side);
@@ -1912,13 +1912,55 @@ class KanyeRankerApp {
         }
     }
     
-    saveRatingSnapshot() {
-        // Save current ratings state
-        const snapshot = {};
-        this.songRatings.forEach((rating, songId) => {
-            snapshot[songId] = rating;
-        });
-        this.ratingSnapshots[this.currentPairIndex] = snapshot;
+    // Everything a choice (and the pair generated right after it) can change,
+    // captured before the choice is applied so undo can rewind it exactly
+    captureUndoState(songIdA, songIdB, winnerId) {
+        return {
+            ratings: {
+                [songIdA]: this.songRatings.get(songIdA),
+                [songIdB]: this.songRatings.get(songIdB)
+            },
+            winnerWasFavorite: this.userFavorites.has(winnerId),
+            lastWinnerId: this.lastWinnerId,
+            lastWinnerPosition: this.lastWinnerPosition,
+            consecutiveWins: this.consecutiveWins,
+            comparisonsSinceBreak: this.comparisonsSinceBreak,
+            newAlbumComparisonsShown: this.newAlbumComparisonsShown,
+            shownNewAlbumSongs: [...this.shownNewAlbumSongs],
+            songRequests: this.songRequests?.snapshot() ?? null
+        };
+    }
+
+    // Rewinds a choice made at pairIndex and discards any pairs generated after it
+    restoreUndoState(entry) {
+        const { songIdA, songIdB, winnerId, pairIndex, state } = entry;
+
+        for (const [songId, rating] of Object.entries(state.ratings)) {
+            this.songRatings.set(songId, rating);
+        }
+        this.elo.removeLastComparison(songIdA, songIdB);
+
+        if (!state.winnerWasFavorite) {
+            this.userFavorites.delete(winnerId);
+        }
+        this.lastWinnerId = state.lastWinnerId;
+        this.lastWinnerPosition = state.lastWinnerPosition;
+        this.consecutiveWins = state.consecutiveWins;
+        this.comparisonsSinceBreak = state.comparisonsSinceBreak;
+        this.newAlbumComparisonsShown = state.newAlbumComparisonsShown;
+        this.shownNewAlbumSongs = new Set(state.shownNewAlbumSongs);
+
+        // Pairs after pairIndex were generated from the outcome being undone
+        const discarded = this.useDynamicPairing ? this.pairings.slice(pairIndex + 1) : [];
+        if (this.useDynamicPairing) {
+            this.pairings.length = pairIndex + 1;
+        }
+
+        if (this.songRequests && state.songRequests) {
+            this.songRequests.restore(state.songRequests, discarded.flat());
+        }
+
+        this.currentPairIndex = pairIndex;
     }
     
     preloadNextComparison() {
@@ -1965,8 +2007,8 @@ class KanyeRankerApp {
         this.pairings = [];
         this.currentPairIndex = 0;
         this.sessionStartTime = Date.now();
-        this.ratingSnapshots = {};
-        
+        this.backButton?.clear();
+
         // Clear exploration/exploitation data
         this.userFavorites.clear();
         this.explorationPhase = 'popular';

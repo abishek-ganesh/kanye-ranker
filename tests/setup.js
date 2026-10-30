@@ -148,3 +148,6 @@ loadSource('js/song-request.js');
 // The class definition is safe to eval — the constructor is never called
 // here because there is no auto-instantiation trigger in the source.
 loadSource('js/app.js');
+
+// Load back-button.js (BackButtonManager, used by app.js for undo)
+loadSource('js/back-button.js');

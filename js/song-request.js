@@ -71,6 +71,32 @@ class SongRequestQueue {
         return entry.songId;
     }
 
+    // Undo support: copy of queue state at the moment a choice is made
+    snapshot() {
+        return {
+            entries: this.entries.map(entry => ({ ...entry })),
+            lastInjectedAt: this.lastInjectedAt
+        };
+    }
+
+    // Undo support: rewinds to a snapshot while keeping user edits made since.
+    // consumedSongIds are songs injected after the snapshot; a snapshot entry
+    // missing now was either exhausted by that injection (restore it) or
+    // removed by the user (keep it removed). Requests added since are kept.
+    restore(snapshot, consumedSongIds = []) {
+        const currentIds = new Set(this.entries.map(entry => entry.songId));
+        const snapshotIds = new Set(snapshot.entries.map(entry => entry.songId));
+
+        const restored = snapshot.entries
+            .filter(entry => currentIds.has(entry.songId) || consumedSongIds.includes(entry.songId))
+            .map(entry => ({ ...entry }));
+        const addedSince = this.entries.filter(entry => !snapshotIds.has(entry.songId));
+
+        this.entries = [...restored, ...addedSince];
+        this.lastInjectedAt = snapshot.lastInjectedAt;
+        this._changed();
+    }
+
     // Drops a request entirely, whatever appearances it had left; returns true if it was queued
     remove(songId) {
         const index = this.entries.findIndex(entry => entry.songId === songId);

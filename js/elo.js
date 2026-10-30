@@ -162,16 +162,18 @@ class EloRating {
         return count > 0 ? totalRating / count : 1500;
     }
     
-    removeComparison(songIdA, songIdB) {
-        // Remove the comparison from history
-        this.comparisons = this.comparisons.filter(comp => 
-            !((comp.songIdA === songIdA && comp.songIdB === songIdB) ||
-              (comp.songIdA === songIdB && comp.songIdB === songIdA))
-        );
-        
-        // Remove skip count if any
-        const key = [songIdA, songIdB].sort().join('-');
-        delete this.skipCount[key];
+    // Undo support: removes only the most recent comparison between two songs.
+    // Earlier meetings of the same pair and skip counts are left intact.
+    removeLastComparison(songIdA, songIdB) {
+        for (let i = this.comparisons.length - 1; i >= 0; i--) {
+            const comp = this.comparisons[i];
+            if ((comp.songIdA === songIdA && comp.songIdB === songIdB) ||
+                (comp.songIdA === songIdB && comp.songIdB === songIdA)) {
+                this.comparisons.splice(i, 1);
+                return true;
+            }
+        }
+        return false;
     }
     
     reset() {
