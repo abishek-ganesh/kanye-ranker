@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "analytics-mcp": {
+      "type": "stdio",
+      "command": "/Users/abishek/.local/bin/uvx",
+      "args": [
+        "google-analytics-mcp"
+      ],
+      "env": {}
+    }
+  }
+}
