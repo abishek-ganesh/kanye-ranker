@@ -762,7 +762,11 @@
             if (!window.kanyeApp) {
                 throw new Error('App not ready. Please try again.');
             }
-            
+
+            if (window.analytics) {
+                window.analytics.trackShareClicked(platform, shareType);
+            }
+
             // Handle stories screenshot mode
             if (platform === 'stories') {
                 showStoryPreview(shareType);
@@ -888,6 +892,9 @@
                     
                     try {
                         await navigator.share(shareData);
+                        if (window.analytics) {
+                            window.analytics.trackShareCompleted('native', shareType);
+                        }
                         // Successfully shared - hide overlay before returning
                         if (overlay) {
                             overlay.style.display = 'none';
@@ -1162,12 +1169,7 @@
                 window.removeEventListener('focus', handleFocus);
                 previewOverlay.remove();
             });
-            
-            // Track analytics
-            if (window.analytics) {
-                window.analytics.trackShare('stories', shareType);
-            }
-            
+
         } catch (error) {
             // Don't show alert - the preview likely still worked
             

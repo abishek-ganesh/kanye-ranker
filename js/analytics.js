@@ -49,13 +49,12 @@ class Analytics {
         gtag('event', eventName, enhancedParams);
     }
 
-    // Track page views with custom parameters
-    trackPageView(pageName, additionalParams = {}) {
+    // Track in-app screen changes. This is a single-URL app, so GA4's automatic
+    // page_view only fires once; sending page_view here too double-counted landings.
+    trackScreenView(screenName, additionalParams = {}) {
         this.pageViewTime = Date.now();
-        this.track('page_view', {
-            page_title: pageName,
-            page_location: window.location.href,
-            page_path: window.location.pathname,
+        this.track('screen_viewed', {
+            screen_name: screenName,
             ...additionalParams
         });
     }
@@ -84,10 +83,13 @@ class Analytics {
         });
     }
 
-    trackRankingCompleted(totalComparisons, topAlbum, topSong) {
+    // Fires every time results are shown. completion_type distinguishes a user
+    // pressing "I'm Done" (early_exit) from running out of pairs (all_pairs_exhausted).
+    trackRankingCompleted(totalComparisons, topAlbum, topSong, completionType) {
         this.track('ranking_completed', {
             event_category: 'engagement',
-            event_label: 'complete',
+            event_label: completionType,
+            completion_type: completionType,
             total_comparisons: totalComparisons,
             top_album: topAlbum,
             top_song: topSong
@@ -110,11 +112,29 @@ class Analytics {
         });
     }
 
-    trackShareClicked(platform) {
+    trackShareClicked(platform, shareType) {
         this.track('share_clicked', {
             event_category: 'social',
             event_label: platform,
-            platform: platform
+            platform: platform,
+            share_type: shareType
+        });
+    }
+
+    // Only the Web Share API tells us a share actually went through
+    trackShareCompleted(platform, shareType) {
+        this.track('share_completed', {
+            event_category: 'social',
+            event_label: platform,
+            platform: platform,
+            share_type: shareType
+        });
+    }
+
+    trackComparisonUndone(comparisonNumber) {
+        this.track('comparison_undone', {
+            event_category: 'engagement',
+            comparison_number: comparisonNumber
         });
     }
 
@@ -135,11 +155,15 @@ class Analytics {
     }
 
     trackDarkModeToggled(isDarkMode) {
+        const theme = isDarkMode ? 'dark' : 'light';
         this.track('dark_mode_toggled', {
             event_category: 'ui',
-            event_label: isDarkMode ? 'dark' : 'light',
+            event_label: theme,
             is_dark_mode: isDarkMode
         });
+        if (this.isEnabled) {
+            gtag('set', 'user_properties', { theme_preference: theme });
+        }
     }
 
     // Session tracking removed - no longer saving/loading sessions
@@ -252,16 +276,6 @@ class Analytics {
         return 0;
     }
 
-    // Track results interaction
-    trackResultsInteraction(action, details = {}) {
-        this.track('results_interaction', {
-            event_category: 'results',
-            event_label: action,
-            action: action,
-            ...details
-        });
-    }
-
     // Track album performance
     trackAlbumRanking(albumRankings) {
         this.track('album_rankings_generated', {
@@ -269,20 +283,6 @@ class Analytics {
             event_label: 'album_rankings',
             top_album: albumRankings[0]?.name || 'Unknown',
             top_3_albums: albumRankings.slice(0, 3).map(a => a.name).join(', ')
-        });
-    }
-
-    // Track user preferences
-    trackUserPreference(preference, value) {
-        this.track('user_preference_changed', {
-            event_category: 'preferences',
-            preference_type: preference,
-            preference_value: value
-        });
-        
-        // Update user properties
-        gtag('set', 'user_properties', {
-            [preference]: value
         });
     }
 

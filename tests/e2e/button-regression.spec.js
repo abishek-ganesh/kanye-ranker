@@ -2,7 +2,7 @@
 const { test, expect } = require('@playwright/test');
 
 /**
- * Button regression tests — PRIORITY per TESTING_GUIDE.md
+ * Button regression tests — PRIORITY per docs/TESTING.md
  *
  * The app has had recurring issues with buttons breaking.
  * These tests ensure every user-facing button works correctly.

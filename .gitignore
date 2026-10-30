@@ -36,6 +36,9 @@ logs
 # Testing
 coverage/
 .nyc_output
+.playwright-mcp/
+test-results/
+playwright-report/
 
 # Build files
 dist/
@@ -77,6 +80,4 @@ credentials.json
 analytics-reports/
 
 # Project documentation - keep private
-AI_INTEGRATION_IDEAS.md
-ALGORITHMS.md
-TESTING_GUIDE.md
+docs/

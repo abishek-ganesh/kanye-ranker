@@ -28,7 +28,7 @@ Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 
 // Mock analytics (used by app.js)
 window.analytics = {
-  trackPageView: jest.fn(),
+  trackScreenView: jest.fn(),
   trackEvent: jest.fn(),
   trackTiming: jest.fn()
 };

@@ -182,7 +182,11 @@ class BackButtonManager {
             
             // Show the comparison again
             this.app.showNextComparison();
-        
+
+            if (window.analytics) {
+                window.analytics.trackComparisonUndone(lastComparison.pairIndex + 1);
+            }
+
             // Force enable comparison buttons after a short delay
             setTimeout(() => {
                 this.app.ui.enableComparisonButtons();

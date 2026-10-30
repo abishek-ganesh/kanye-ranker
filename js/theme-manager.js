@@ -21,8 +21,10 @@ class ThemeManager {
         } else {
             this.enableDarkMode();
         }
-        
-        // No longer need to update separate button text
+
+        if (window.analytics) {
+            window.analytics.trackDarkModeToggled(this.isDarkMode);
+        }
     }
     
     enableDarkMode() {
