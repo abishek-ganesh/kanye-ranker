@@ -4,7 +4,7 @@ Hi! This file provides guidance to Claude Code (claude.ai/code) when working wit
 
 ## Project Overview
 
-This is a Kanye West Song Ranking App: an HTML-based web application that uses an ELO rating system to rank Kanye West songs through pairwise comparisons. Live at www.kanyeranker.com (custom domain via `CNAME`).
+This is a Kanye West Song Ranking App: an HTML-based web application that uses an ELO rating system to rank Kanye West songs through pairwise comparisons. Live at www.kanyeranker.com (custom domain configured in Vercel; the `CNAME` file is a leftover from GitHub Pages).
 
 ## Tech Stack
 
@@ -129,8 +129,17 @@ kanye-ranker/
   - `npm run test:all`: both
 - Details and manual release checklist: `docs/TESTING.md`
 
+## Deployment
+
+- **Hosted on Vercel**, not GitHub Pages: DNS for kanyeranker.com points at Vercel, and Vercel builds every push to `main`
+- **Gated on CI**: `.github/workflows/ci.yml` runs Jest plus Playwright (Desktop Chrome, Mobile Safari) on every push and PR. A Vercel Deployment Check requires the `test` job to pass before a build is promoted to the custom domain, so a red build never goes live
+- **Don't rename the `test` job** without updating the Deployment Check in Vercel (Project Settings > Build and Deployment > Deployment Checks); Vercel matches checks by job name and would hold every deploy
+- Emergency bypass: **Force Promote** on the Vercel deployment page
+- GitHub Pages was turned off 2026-10-30 (it was a redundant build nothing pointed at)
+
 ## Recent Updates
 
+- CI with deploys gated on tests (Vercel Deployment Checks); undo rewritten to restore exact state; ~640 lines of dead pairing code removed; 26 broken Watch videos replaced; analytics tracking fixed
 - Mid-session song requests with queue management, plus cross-browser E2E coverage
 - Added Bully (2026) with a new-album boost in early pairings; switched to the deluxe cover and added "OK"; removed the landing page Bully banner and featured-artist tags from titles
 - Renamed "Listen" to "Watch" and added curated clip labels; removed the lyrics button
