@@ -1,0 +1,22 @@
+name: Watch clip check
+
+# Weekly check that every Watch video still exists and plays in embeds.
+# Separate from CI: it hits YouTube, so it never gates deploys.
+on:
+  schedule:
+    - cron: '0 15 * * 1' # Mondays 15:00 UTC
+  workflow_dispatch:
+
+jobs:
+  clip-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check YouTube IDs in data/video-links.json
+        run: node scripts/check-video-links.js

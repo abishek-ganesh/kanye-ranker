@@ -135,6 +135,7 @@ kanye-ranker/
 - **Gated on CI**: `.github/workflows/ci.yml` runs Jest plus Playwright (Desktop Chrome, Mobile Safari) on every push and PR. A Vercel Deployment Check requires the `test` job to pass before a build is promoted to the custom domain, so a red build never goes live
 - **Don't rename the `test` job** without updating the Deployment Check in Vercel (Project Settings > Build and Deployment > Deployment Checks); Vercel matches checks by job name and would hold every deploy
 - Emergency bypass: **Force Promote** on the Vercel deployment page
+- `.github/workflows/clip-check.yml` runs `scripts/check-video-links.js` weekly to catch dead Watch videos; it is not a deployment check
 - GitHub Pages was turned off 2026-10-30 (it was a redundant build nothing pointed at)
 
 ## Recent Updates
