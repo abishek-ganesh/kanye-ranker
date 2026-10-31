@@ -31,8 +31,9 @@ node scripts/check-video-links.js
 - **Input**: `data/video-links.json`; needs network access and Node 18+ (global `fetch`)
 - **Output**: prints broken clips with the song titles that use them, exits 1 if any are broken; writes nothing
 - oEmbed catches removed, private and embedding-disabled videos; the watch page's player response catches age restriction (oEmbed misses it)
-- When YouTube answers with a bot check instead of a player response, the clip is listed as "could not verify" and not counted as a failure
+- If YouTube answers a watch page with a 429 or a bot check, the script stops requesting watch pages for the rest of the run and reports how many clips skipped the age-restriction check (not a failure)
 - Runs weekly in GitHub Actions (`.github/workflows/clip-check.yml`, Mondays 15:00 UTC, or manually from the Actions tab). It is separate from CI, so a dead clip never blocks a deploy; GitHub emails on failure
+- On GitHub's runners YouTube bot-checks nearly every watch page, so the weekly run only catches removed, private and embed-disabled videos. Run it locally now and then for age restriction too
 - Takes about a minute for ~140 videos
 
 ## Adding a new album

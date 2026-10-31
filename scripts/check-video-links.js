@@ -32,18 +32,31 @@ async function checkOembed(id) {
     return { unknown: true, reason: `oEmbed HTTP ${res.status}` };
 }
 
+// Set once YouTube rate-limits or bot-checks us; later watch pages are skipped
+let watchPageBlocked = null;
+
 // Watch page player response catches age restriction, which oEmbed does not.
-// YouTube sometimes serves a bot check instead (common on CI runners), so anything
-// that is not a definite answer comes back as unknown rather than failing.
+// YouTube often answers with a 429 or a bot check instead (always on CI runners),
+// so anything that is not a definite answer is skipped or unknown, never a failure.
 async function checkPlayability(id) {
+    if (watchPageBlocked) return { skipped: true };
     const res = await fetch(`https://www.youtube.com/watch?v=${id}`, {
         headers: { 'User-Agent': UA, 'Accept-Language': 'en-US' }
     });
+    if (res.status === 429) {
+        watchPageBlocked = 'rate limited (HTTP 429)';
+        return { skipped: true };
+    }
     if (!res.ok) return { unknown: true, reason: `watch page HTTP ${res.status}` };
     const html = await res.text();
     const status = html.match(/"playabilityStatus":\{"status":"([A-Z_]+)"/)?.[1];
     const reason = html.match(/"playabilityStatus":\{[^}]*?"reason":"([^"]*)"/)?.[1] || '';
     const embeddable = html.match(/"playableInEmbed":(true|false)/)?.[1];
+
+    if (/not a bot/i.test(reason)) {
+        watchPageBlocked = 'bot check';
+        return { skipped: true };
+    }
 
     if (!status) return { unknown: true, reason: 'no player response' };
     if (status === 'OK') {
@@ -59,7 +72,8 @@ async function checkId(id) {
     if (oembed.ok === false) return oembed;
     const play = await checkPlayability(id);
     if (play.ok === false || play.unknown) return play;
-    return oembed.unknown ? oembed : { ok: true };
+    if (oembed.unknown) return oembed;
+    return play.skipped ? { ok: true, ageUnchecked: true } : { ok: true };
 }
 
 async function main() {
@@ -83,15 +97,17 @@ async function main() {
 
     const bad = ids.filter(id => results.get(id).ok === false);
     const unknown = ids.filter(id => results.get(id).unknown);
+    const ageUnchecked = ids.filter(id => results.get(id).ageUnchecked);
     const line = id => `  ${id}  ${byId.get(id).join(' / ')}: ${results.get(id).reason}`;
 
     console.log(`Checked ${ids.length} videos (${[...byId.values()].flat().length} titles)`);
+    if (ageUnchecked.length) console.log(`\nAge restriction not checked for ${ageUnchecked.length}: YouTube ${watchPageBlocked}, so only oEmbed ran for those (normal on CI; try again later locally)`);
     if (unknown.length) console.log(`\nCould not verify ${unknown.length} (not counted as failures):\n${unknown.map(line).join('\n')}`);
     if (bad.length) {
         console.log(`\nBroken ${bad.length}:\n${bad.map(line).join('\n')}`);
         process.exit(1);
     }
-    console.log('\nAll verifiable videos are playable in embeds');
+    console.log('\nNo broken videos found');
 }
 
 main().catch(err => {
