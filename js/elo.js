@@ -3,7 +3,6 @@ class EloRating {
         this.k = k;
         this.comparisons = [];
         this.skipCount = {};
-        this.songComparisons = new Map(); // Track comparisons per song
     }
 
     getExpectedScore(ratingA, ratingB) {
@@ -97,20 +96,6 @@ class EloRating {
         return this.getSkipCount(songIdA, songIdB) >= maxSkips;
     }
 
-    exportData() {
-        return {
-            comparisons: this.comparisons,
-            skipCount: this.skipCount,
-            k: this.k
-        };
-    }
-
-    importData(data) {
-        this.comparisons = data.comparisons || [];
-        this.skipCount = data.skipCount || {};
-        this.k = data.k || 32;
-    }
-    
     getRatingConfidence(songId) {
         const comparisonCount = this.getComparisonCount(songId);
         const winRate = this.getWinRate(songId);

@@ -13,7 +13,6 @@
     let justMissedPick = null;
     let eraPreference = null;
     let kanyeTimeline = null;
-    let hiddenAlbumGem = null;
     let albumJustMissed = null;
     
     // Initialize
@@ -77,7 +76,6 @@
         justMissedPick = null;
         eraPreference = null;
         kanyeTimeline = null;
-        hiddenAlbumGem = null;
         albumJustMissed = null;
     }
     
@@ -307,7 +305,6 @@
         
         // Reset album-specific data
         kanyeTimeline = null;
-        hiddenAlbumGem = null;
         albumJustMissed = null;
         
         const topAlbums = window.kanyeApp.getTopAlbums();

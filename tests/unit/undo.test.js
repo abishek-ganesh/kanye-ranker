@@ -43,7 +43,6 @@ function createApp() {
     pairings: [],
     currentPairIndex: 0,
     isProcessingChoice: false,
-    useDynamicPairing: true,
     minComparisons: 50,
     userFavorites: new Set(),
     lastWinnerId: null,

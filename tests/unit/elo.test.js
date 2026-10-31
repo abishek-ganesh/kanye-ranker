@@ -430,61 +430,6 @@ describe('EloRating', () => {
   });
 
   // ====================================================================
-  // Export / Import
-  // ====================================================================
-  describe('Export / Import', () => {
-    test('exportData captures current state', () => {
-      elo.recordComparison('a', 'b', 'a');
-      elo.recordSkip('c', 'd');
-      const data = elo.exportData();
-
-      expect(data.comparisons).toHaveLength(1);
-      expect(data.comparisons[0].songIdA).toBe('a');
-      expect(data.skipCount).toHaveProperty('c-d');
-      expect(data.k).toBe(32);
-    });
-
-    test('importData restores state', () => {
-      const data = {
-        comparisons: [{ songIdA: 'x', songIdB: 'y', winnerId: 'x', timestamp: 999 }],
-        skipCount: { 'a-b': 2 },
-        k: 64
-      };
-      elo.importData(data);
-
-      expect(elo.comparisons).toHaveLength(1);
-      expect(elo.comparisons[0].songIdA).toBe('x');
-      expect(elo.getSkipCount('a', 'b')).toBe(2);
-      expect(elo.k).toBe(64);
-    });
-
-    test('round-trip preserves comparisons and skip counts', () => {
-      elo.recordComparison('a', 'b', 'a', 1000);
-      elo.recordComparison('c', 'd', 'd', 2000);
-      elo.recordSkip('e', 'f');
-      elo.recordSkip('e', 'f');
-
-      const exported = elo.exportData();
-
-      const elo2 = new window.EloRating(32);
-      elo2.importData(exported);
-
-      expect(elo2.getCompletedComparisons()).toBe(2);
-      expect(elo2.hasBeenCompared('a', 'b')).toBe(true);
-      expect(elo2.hasBeenCompared('c', 'd')).toBe(true);
-      expect(elo2.getSkipCount('e', 'f')).toBe(2);
-      expect(elo2.k).toBe(32);
-    });
-
-    test('importData handles missing fields gracefully', () => {
-      elo.importData({});
-      expect(elo.comparisons).toEqual([]);
-      expect(elo.skipCount).toEqual({});
-      expect(elo.k).toBe(32); // default
-    });
-  });
-
-  // ====================================================================
   // removeLastComparison
   // ====================================================================
   describe('removeLastComparison', () => {

@@ -35,13 +35,11 @@ class KanyeRankerApp {
         this.currentPairIndex = 0;
         this.sessionStartTime = Date.now();
         this.minComparisons = 50;
-        this.maxComparisons = 150;
         this.isProcessingChoice = false;
         this.backButton = null;
         
         // Exploration/Exploitation tracking
         this.userFavorites = new Set(); // Track songs user has chosen as winners
-        this.explorationPhase = 'popular'; // 'popular', 'mixed', 'exploitation'
         
         // Dynamic pairing properties
         this.lastWinnerId = null; // Track the last winner for carry-over
@@ -49,7 +47,6 @@ class KanyeRankerApp {
         this.consecutiveWins = 0; // Track consecutive wins by the same song
         this.carryOverProbability = 0.75; // 75% chance to carry over winner
         this.comparisonsSinceBreak = 0; // Track comparisons for fatigue prevention
-        this.useDynamicPairing = true; // Flag to use new dynamic system
 
         // New album boost: surface new album songs in early comparisons
         // To update for a future album, change albumId here only
@@ -389,7 +386,6 @@ class KanyeRankerApp {
         this.top50SongIds = new Set(top50Songs.map(s => s.id));
         this.top100SongIds = new Set(top100Songs.map(s => s.id));
         this.classicAlbumSongIds = new Set(classicAlbumSongs.map(s => s.id));
-        this.allSongIds = new Set(songIds);
         
         // Also keep arrays for random selection
         this.top20Array = Array.from(this.top20SongIds);
@@ -435,9 +431,6 @@ class KanyeRankerApp {
                 this.albumTopSongs.set(albumId, finalSongs.map(s => s.id));
             }
         });
-        
-        // Flatten all top album songs into a single array
-        this.allAlbumTopSongs = Array.from(this.albumTopSongs.values()).flat();
         
         
         // Track which albums have been shown
@@ -984,494 +977,31 @@ class KanyeRankerApp {
         // Initialize the tier system
         this.initializeSongTiers();
         
-        if (!this.useDynamicPairing) {
-            // Use the old pre-generated system
-            this.generateAllPairingsLegacy();
-            return;
-        }
-        
-        // For dynamic pairing, just generate the first pairing
+        // Pairs are generated one at a time; start with the first
         this.pairings = [];
         const firstPair = this.generateNextPairing();
         if (firstPair) {
             this.pairings.push(firstPair);
-        } else {
         }
     }
-    
-    generateAllPairingsLegacy() {
-        // Legacy pre-generated pairing system
-        this.initializeSongTiers();
-        
-        const songIds = Array.from(this.songRatings.keys());
-        const songsWithStreams = this.songs
-            .filter(song => songIds.includes(song.id))
-            .map(song => ({
-                id: song.id,
-                title: song.title,
-                spotifyStreams: song.spotifyStreams || 0,
-                spotifyRank: song.spotifyRank || 999,
-                song: song
-            }))
-            .sort((a, b) => b.spotifyStreams - a.spotifyStreams);
-        
-        const top20Songs = songsWithStreams.slice(0, 20);
-        const top50Songs = songsWithStreams.slice(0, 50);
-        const top100Songs = songsWithStreams.slice(0, 100);
-        
-        const top20SongIds = new Set(top20Songs.map(s => s.id));
-        const top50SongIds = new Set(top50Songs.map(s => s.id));
-        const top100SongIds = new Set(top100Songs.map(s => s.id));
-        
-        const top20Array = Array.from(top20SongIds);
-        const top50Array = Array.from(top50SongIds);
-        const top100Array = Array.from(top100SongIds);
-        
-        const totalPairings = this.minComparisons + Math.floor(Math.random() * (this.maxComparisons - this.minComparisons));
-        
-        this.pairings = [];
-        const recentPairs = new Map();
-        
-        // Phase 1: Top 20 songs only (comparisons 0-14)
-        const phase1End = 15;
-        // Phase 2: Top 50 songs (comparisons 15-29)
-        const phase2End = 30;
-        // Phase 3: Top 100 songs (comparisons 30-49)
-        const phase3End = 50;
-        // Phase 4: All songs with user preference weighting (50+)
-        
-        let pairingIndex = 0;
-        
-        // PHASE 1: Generate pairings ONLY from top 20 songs
-        while (pairingIndex < phase1End && pairingIndex < totalPairings) {
-            let bestPair = null;
-            let bestScore = -Infinity;
-            
-            for (let attempt = 0; attempt < 100; attempt++) {
-                const indexA = Math.floor(Math.random() * top20Array.length);
-                let indexB = Math.floor(Math.random() * top20Array.length);
-                
-                while (indexB === indexA) {
-                    indexB = Math.floor(Math.random() * top20Array.length);
-                }
-                
-                const songIdA = top20Array[indexA];
-                const songIdB = top20Array[indexB];
-                
-                // STRICT VALIDATION - these MUST be in top 20
-                if (!top20SongIds.has(songIdA) || !top20SongIds.has(songIdB)) {
-                    continue;
-                }
-                
-                if (this.elo.hasBeenCompared(songIdA, songIdB)) continue;
-                if (this.elo.shouldSkipPairing(songIdA, songIdB)) continue;
-                
-                const ratingA = this.songRatings.get(songIdA);
-                const ratingB = this.songRatings.get(songIdB);
-                const ratingDiff = Math.abs(ratingA - ratingB);
-                
-                const pairKey = [songIdA, songIdB].sort().join('-');
-                const lastSeen = recentPairs.get(pairKey) || -Infinity;
-                const recency = pairingIndex - lastSeen;
-                
-                const score = 1000 - ratingDiff + recency * 10;
-                
-                if (score > bestScore) {
-                    bestScore = score;
-                    bestPair = [songIdA, songIdB];
-                }
-            }
-            
-            if (bestPair) {
-                this.pairings.push(bestPair);
-                const pairKey = bestPair.sort().join('-');
-                recentPairs.set(pairKey, pairingIndex);
-                pairingIndex++;
-                
-                if (pairingIndex <= 3) {
-                }
-            } else {
-                break;
-            }
-        }
-        
-        // PHASE 2: Top 50 songs ONLY (with smart inclusion of user preferences)
-        while (pairingIndex < phase2End && pairingIndex < totalPairings) {
-            let bestPair = null;
-            let bestScore = -Infinity;
-            
-            // Get user's highly-rated songs that are STRICTLY in top 50
-            const highlyRatedInTop50 = Array.from(this.songRatings.entries())
-                .filter(([id, rating]) => rating > 1550 && top50SongIds.has(id))
-                .map(([id]) => id);
-            
-            // 30% chance to prioritize a highly-rated song IF it's in top 50
-            const includeHighRated = highlyRatedInTop50.length > 0 && Math.random() < 0.30;
-            
-            
-            for (let attempt = 0; attempt < 100; attempt++) {
-                let songIdA, songIdB;
-                
-                if (includeHighRated && highlyRatedInTop50.length > 0) {
-                    // Pick one highly-rated song from top 50 and another from top 50
-                    songIdA = highlyRatedInTop50[Math.floor(Math.random() * highlyRatedInTop50.length)];
-                    
-                    // For songB, pick from top 50 excluding songA
-                    const top50Excluding = top50Array.filter(id => id !== songIdA);
-                    songIdB = top50Excluding[Math.floor(Math.random() * top50Excluding.length)];
-                } else {
-                    // Pick two random songs from top 50
-                    const indexA = Math.floor(Math.random() * top50Array.length);
-                    let indexB = Math.floor(Math.random() * top50Array.length);
-                    
-                    while (indexB === indexA) {
-                        indexB = Math.floor(Math.random() * top50Array.length);
-                    }
-                    
-                    songIdA = top50Array[indexA];
-                    songIdB = top50Array[indexB];
-                }
-                
-                // STRICT VALIDATION - both songs MUST be in top 50
-                if (!top50SongIds.has(songIdA) || !top50SongIds.has(songIdB)) {
-                    const songA = this.songs.find(s => s.id === songIdA);
-                    const songB = this.songs.find(s => s.id === songIdB);
-                    continue;
-                }
-                
-                if (this.elo.hasBeenCompared(songIdA, songIdB)) continue;
-                if (this.elo.shouldSkipPairing(songIdA, songIdB)) continue;
-                
-                const ratingA = this.songRatings.get(songIdA);
-                const ratingB = this.songRatings.get(songIdB);
-                const ratingDiff = Math.abs(ratingA - ratingB);
-                
-                const pairKey = [songIdA, songIdB].sort().join('-');
-                const lastSeen = recentPairs.get(pairKey) || -Infinity;
-                const recency = pairingIndex - lastSeen;
-                
-                // Bonus for including highly-rated songs
-                const highRatedBonus = includeHighRated && 
-                    (highlyRatedInTop50.includes(songIdA) || highlyRatedInTop50.includes(songIdB)) ? 100 : 0;
-                
-                const score = 1000 - ratingDiff + recency * 10 + highRatedBonus;
-                
-                if (score > bestScore) {
-                    bestScore = score;
-                    bestPair = [songIdA, songIdB];
-                }
-            }
-            
-            if (bestPair) {
-                // Final validation before adding
-                if (!top50SongIds.has(bestPair[0]) || !top50SongIds.has(bestPair[1])) {
-                    continue;
-                }
-                
-                this.pairings.push(bestPair);
-                const pairKey = bestPair.sort().join('-');
-                recentPairs.set(pairKey, pairingIndex);
-                pairingIndex++;
-                
-                // Log some comparisons for debugging
-                if (pairingIndex === 20 || pairingIndex === 23 || pairingIndex === 25) {
-                }
-            } else {
-                pairingIndex++;
-            }
-        }
-        
-        // PHASE 3: Top 100 songs (with increased focus on user preferences)
-        while (pairingIndex < phase3End && pairingIndex < totalPairings) {
-            let bestPair = null;
-            let bestScore = -Infinity;
-            
-            // Get user's highly-rated songs that are STRICTLY in top 100
-            const highlyRatedInTop100 = Array.from(this.songRatings.entries())
-                .filter(([id, rating]) => rating > 1550 && top100SongIds.has(id))
-                .map(([id]) => id);
-            
-            // 50% chance to prioritize highly-rated songs in top 100
-            const includeHighRated = highlyRatedInTop100.length > 0 && Math.random() < 0.50;
-            
-            
-            for (let attempt = 0; attempt < 100; attempt++) {
-                let songIdA, songIdB;
-                
-                if (includeHighRated && highlyRatedInTop100.length > 0) {
-                    // Pick one highly-rated song from top 100
-                    songIdA = highlyRatedInTop100[Math.floor(Math.random() * highlyRatedInTop100.length)];
-                    
-                    // For songB, pick from top 100 excluding songA
-                    const top100Excluding = top100Array.filter(id => id !== songIdA);
-                    songIdB = top100Excluding[Math.floor(Math.random() * top100Excluding.length)];
-                } else {
-                    // Pick two random songs from top 100
-                    const indexA = Math.floor(Math.random() * top100Array.length);
-                    let indexB = Math.floor(Math.random() * top100Array.length);
-                    
-                    while (indexB === indexA) {
-                        indexB = Math.floor(Math.random() * top100Array.length);
-                    }
-                    
-                    songIdA = top100Array[indexA];
-                    songIdB = top100Array[indexB];
-                }
-                
-                // STRICT VALIDATION - both songs MUST be in top 100
-                if (!top100SongIds.has(songIdA) || !top100SongIds.has(songIdB)) {
-                    continue;
-                }
-                
-                if (this.elo.hasBeenCompared(songIdA, songIdB)) continue;
-                if (this.elo.shouldSkipPairing(songIdA, songIdB)) continue;
-                
-                const ratingA = this.songRatings.get(songIdA);
-                const ratingB = this.songRatings.get(songIdB);
-                const ratingDiff = Math.abs(ratingA - ratingB);
-                
-                const pairKey = [songIdA, songIdB].sort().join('-');
-                const lastSeen = recentPairs.get(pairKey) || -Infinity;
-                const recency = pairingIndex - lastSeen;
-                
-                // Bonus for including highly-rated songs
-                const highRatedBonus = includeHighRated && 
-                    (highlyRatedInTop100.includes(songIdA) || highlyRatedInTop100.includes(songIdB)) ? 150 : 0;
-                
-                const score = 1000 - ratingDiff + recency * 10 + highRatedBonus;
-                
-                if (score > bestScore) {
-                    bestScore = score;
-                    bestPair = [songIdA, songIdB];
-                }
-            }
-            
-            if (bestPair) {
-                // Final validation
-                if (!top100SongIds.has(bestPair[0]) || !top100SongIds.has(bestPair[1])) {
-                    continue;
-                }
-                
-                this.pairings.push(bestPair);
-                const pairKey = bestPair.sort().join('-');
-                recentPairs.set(pairKey, pairingIndex);
-                pairingIndex++;
-            } else {
-                pairingIndex++;
-            }
-        }
-        
-        // PHASE 4: All songs with strong preference for refining user's top picks
-        
-        // Track which songs have been shown to the user
-        const shownSongs = new Set();
-        this.pairings.forEach(pair => {
-            shownSongs.add(pair[0]);
-            shownSongs.add(pair[1]);
-        });
-        
-        const unshownSongs = songIds.filter(id => !shownSongs.has(id));
-        
-        for (let i = pairingIndex; i < totalPairings; i++) {
-            let bestPair = null;
-            let bestScore = -Infinity;
-            
-            // Get user's top-rated songs (dynamic threshold based on progress)
-            const ratingThreshold = 1500 + (i - phase3End) * 2; // Gradually increase threshold
-            const highlyRatedSongs = Array.from(this.songRatings.entries())
-                .filter(([id, rating]) => rating > ratingThreshold)
-                .sort((a, b) => b[1] - a[1]) // Sort by rating
-                .slice(0, 30) // Top 30 rated songs
-                .map(([id]) => id);
-            
-            // Strategy for phase 4:
-            // - 70% chance to include a highly-rated song to refine rankings
-            // - 20% chance to introduce an unshown song
-            // - 10% chance for two unshown songs (discovery)
-            const strategy = Math.random();
-            const useHighRated = strategy < 0.70 && highlyRatedSongs.length > 0;
-            const introduceNew = strategy >= 0.70 && strategy < 0.90 && unshownSongs.length > 0;
-            
-            for (let attempt = 0; attempt < 100; attempt++) {
-                let songIdA, songIdB;
-                
-                if (useHighRated) {
-                    // Refine rankings: highly-rated vs another song
-                    songIdA = highlyRatedSongs[Math.floor(Math.random() * Math.min(10, highlyRatedSongs.length))];
-                    
-                    // 50% chance to compare against another highly-rated song
-                    if (Math.random() < 0.5 && highlyRatedSongs.length > 1) {
-                        const othersHighlyRated = highlyRatedSongs.filter(id => id !== songIdA);
-                        songIdB = othersHighlyRated[Math.floor(Math.random() * othersHighlyRated.length)];
-                    } else {
-                        // Compare against any song
-                        const otherSongs = songIds.filter(id => id !== songIdA);
-                        songIdB = otherSongs[Math.floor(Math.random() * otherSongs.length)];
-                    }
-                } else if (introduceNew) {
-                    // Introduce new song vs known song
-                    songIdA = unshownSongs[Math.floor(Math.random() * unshownSongs.length)];
-                    const shownSongsArray = Array.from(shownSongs);
-                    songIdB = shownSongsArray[Math.floor(Math.random() * shownSongsArray.length)];
-                } else if (unshownSongs.length >= 2) {
-                    // Two unshown songs for discovery
-                    const indexA = Math.floor(Math.random() * unshownSongs.length);
-                    let indexB = Math.floor(Math.random() * unshownSongs.length);
-                    while (indexB === indexA) {
-                        indexB = Math.floor(Math.random() * unshownSongs.length);
-                    }
-                    songIdA = unshownSongs[indexA];
-                    songIdB = unshownSongs[indexB];
-                } else {
-                    // Fallback to any two songs
-                    const indexA = Math.floor(Math.random() * songIds.length);
-                    let indexB = Math.floor(Math.random() * songIds.length);
-                    while (indexB === indexA) {
-                        indexB = Math.floor(Math.random() * songIds.length);
-                    }
-                    songIdA = songIds[indexA];
-                    songIdB = songIds[indexB];
-                }
-                
-                if (this.elo.hasBeenCompared(songIdA, songIdB)) continue;
-                if (this.elo.shouldSkipPairing(songIdA, songIdB)) continue;
-                
-                const ratingA = this.songRatings.get(songIdA);
-                const ratingB = this.songRatings.get(songIdB);
-                const ratingDiff = Math.abs(ratingA - ratingB);
-                
-                const pairKey = [songIdA, songIdB].sort().join('-');
-                const lastSeen = recentPairs.get(pairKey) || -Infinity;
-                const recency = i - lastSeen;
-                
-                // Scoring bonuses
-                let bonuses = 0;
-                if (highlyRatedSongs.includes(songIdA) || highlyRatedSongs.includes(songIdB)) {
-                    bonuses += 200; // Bonus for including highly-rated songs
-                }
-                if (unshownSongs.includes(songIdA) || unshownSongs.includes(songIdB)) {
-                    bonuses += 50; // Small bonus for introducing new songs
-                }
-                
-                const score = 1000 - ratingDiff + recency * 10 + bonuses;
-                
-                if (score > bestScore) {
-                    bestScore = score;
-                    bestPair = [songIdA, songIdB];
-                }
-            }
-            
-            if (bestPair) {
-                this.pairings.push(bestPair);
-                const pairKey = bestPair.sort().join('-');
-                recentPairs.set(pairKey, i);
-                
-                // Update shown songs
-                shownSongs.add(bestPair[0]);
-                shownSongs.add(bestPair[1]);
-                
-                // Remove from unshown if they were there
-                const idx0 = unshownSongs.indexOf(bestPair[0]);
-                const idx1 = unshownSongs.indexOf(bestPair[1]);
-                if (idx0 >= 0) unshownSongs.splice(idx0, 1);
-                if (idx1 >= 0 && idx1 < unshownSongs.length) {
-                    unshownSongs.splice(unshownSongs.indexOf(bestPair[1]), 1);
-                }
-            }
-        }
-        
-        // Validate pairings
-        for (let i = 0; i < Math.min(5, this.pairings.length); i++) {
-            const [idA, idB] = this.pairings[i];
-            const songA = this.songs.find(s => s.id === idA);
-            const songB = this.songs.find(s => s.id === idB);
-            
-            if (songA?.spotifyStreams < 500000000 || songB?.spotifyStreams < 500000000) {
-            }
-        }
-    }
-    
-    choosePairingStrategy(pairingIndex, favoritesCount) {
-        if (favoritesCount < 5) {
-            return 'explore'; // Not enough favorites yet, keep exploring
-        }
-        
-        // After we have enough favorites, use strategic mixing
-        const random = Math.random();
-        if (random < 0.4) {
-            return 'exploit'; // 40% - Favorites vs Favorites (refine top rankings)
-        } else if (random < 0.7) {
-            return 'mixed'; // 30% - Favorites vs New Songs (test favorites against unknowns)
-        } else {
-            return 'explore'; // 30% - New Songs vs New Songs (discover new favorites)
-        }
-    }
-    
-    generateStrategicPair(strategy, favoritesArray, allSongIds) {
-        const nonFavorites = allSongIds.filter(id => !this.userFavorites.has(id));
-        
-        switch (strategy) {
-            case 'exploit':
-                // Favorites vs Favorites - refine top rankings
-                if (favoritesArray.length >= 2) {
-                    const idxA = Math.floor(Math.random() * favoritesArray.length);
-                    let idxB = Math.floor(Math.random() * favoritesArray.length);
-                    while (idxB === idxA && favoritesArray.length > 1) {
-                        idxB = Math.floor(Math.random() * favoritesArray.length);
-                    }
-                    return [favoritesArray[idxA], favoritesArray[idxB]];
-                }
-                return null;
-                
-            case 'mixed':
-                // Favorites vs New Songs - test favorites against unknowns
-                if (favoritesArray.length > 0 && nonFavorites.length > 0) {
-                    const favoriteId = favoritesArray[Math.floor(Math.random() * favoritesArray.length)];
-                    const newSongId = nonFavorites[Math.floor(Math.random() * nonFavorites.length)];
-                    return [favoriteId, newSongId];
-                }
-                return null;
-                
-            case 'explore':
-            default:
-                // New Songs vs New Songs - discover new favorites
-                if (nonFavorites.length >= 2) {
-                    const idxA = Math.floor(Math.random() * nonFavorites.length);
-                    let idxB = Math.floor(Math.random() * nonFavorites.length);
-                    while (idxB === idxA && nonFavorites.length > 1) {
-                        idxB = Math.floor(Math.random() * nonFavorites.length);
-                    }
-                    return [nonFavorites[idxA], nonFavorites[idxB]];
-                }
-                return null;
-        }
+
+    // Progress-bar denominator: pairs are generated on demand, so this is an estimate
+    getEstimatedTotalComparisons() {
+        return Math.max(this.minComparisons, this.pairings.length + 10);
     }
     
     // ==============================
     // COMPARISON DISPLAY & PROCESSING
     // ==============================
     showNextComparison() {
-        // Dynamic pairing: generate next pair if needed
-        if (this.useDynamicPairing) {
-            // Generate next pairing if we're at the end of current pairings
-            // Don't automatically show results - let the user decide
-            
-            // Generate next pairing if we're at the end of current pairings
-            if (this.currentPairIndex >= this.pairings.length) {
-                const nextPair = this.generateNextPairing();
-                if (nextPair) {
-                    this.pairings.push(nextPair);
-                } else {
-                    // No more valid pairings possible
-                    this.ui.showSuccess('You\'ve compared all possible song combinations!');
-                    this.showResults('all_pairs_exhausted');
-                    return;
-                }
-            }
-        } else {
-            // Legacy behavior: check pre-generated pairings
-            if (this.currentPairIndex >= this.pairings.length) {
-                // For legacy system, automatically show results when done
+        // Generate the next pair if we're at the end; don't auto-show results
+        if (this.currentPairIndex >= this.pairings.length) {
+            const nextPair = this.generateNextPairing();
+            if (nextPair) {
+                this.pairings.push(nextPair);
+            } else {
+                // No more valid pairings possible
+                this.ui.showSuccess('You\'ve compared all possible song combinations!');
                 this.showResults('all_pairs_exhausted');
                 return;
             }
@@ -1500,13 +1030,7 @@ class KanyeRankerApp {
             window.analytics.startComparisonTimer();
         }
         
-        // For dynamic pairing, show progress based on minimum comparisons
-        if (this.useDynamicPairing) {
-            const totalEstimate = Math.max(this.minComparisons, this.pairings.length + 10);
-            this.ui.updateProgressBar(completedCount, totalEstimate, completedCount);
-        } else {
-            this.ui.updateProgressBar(this.currentPairIndex, this.pairings.length, completedCount);
-        }
+        this.ui.updateProgressBar(completedCount, this.getEstimatedTotalComparisons(), completedCount);
 
         // Ensure buttons are enabled for interaction
         if (!this.isProcessingChoice) {
@@ -1561,7 +1085,7 @@ class KanyeRankerApp {
         if (window.analytics) {
             window.analytics.trackComparisonMade(
                 completedCount,
-                this.useDynamicPairing ? Math.max(this.minComparisons, this.pairings.length + 10) : this.pairings.length
+                this.getEstimatedTotalComparisons()
             );
             
             // Track detailed song comparison
@@ -1576,17 +1100,15 @@ class KanyeRankerApp {
         // Track user's favorite songs for exploration/exploitation
         this.userFavorites.add(winnerId);
         
-        // Track winner for dynamic pairing
-        if (this.useDynamicPairing) {
-            if (this.lastWinnerId === winnerId) {
-                this.consecutiveWins++;
-            } else {
-                this.consecutiveWins = 1;
-            }
-            this.lastWinnerId = winnerId;
-            // Track which position the winner was in (a = left/top, b = right/bottom)
-            this.lastWinnerPosition = (winnerId === songIdA) ? 'a' : 'b';
+        // Track winner for carry-over
+        if (this.lastWinnerId === winnerId) {
+            this.consecutiveWins++;
+        } else {
+            this.consecutiveWins = 1;
         }
+        this.lastWinnerId = winnerId;
+        // Track which position the winner was in (a = left/top, b = right/bottom)
+        this.lastWinnerPosition = (winnerId === songIdA) ? 'a' : 'b';
         
         const winnerRating = this.songRatings.get(winnerId);
         const loserRating = this.songRatings.get(loserId);
@@ -1659,11 +1181,9 @@ class KanyeRankerApp {
         this.elo.recordSkip(songIdA, songIdB);
         
         // Reset carry-over when skipping
-        if (this.useDynamicPairing) {
-            this.lastWinnerId = null;
-            this.lastWinnerPosition = null;
-            this.consecutiveWins = 0;
-        }
+        this.lastWinnerId = null;
+        this.lastWinnerPosition = null;
+        this.consecutiveWins = 0;
         
         this.currentPairIndex++;
         
@@ -1704,10 +1224,7 @@ class KanyeRankerApp {
             if (window.analytics) {
                 window.analytics.trackScreenView('results');
                 if (completionType === 'early_exit') {
-                    const totalPossible = this.useDynamicPairing ?
-                        Math.max(this.minComparisons, this.pairings.length + 10) :
-                        this.pairings.length;
-                    window.analytics.trackEarlyExit(completedComparisons, totalPossible);
+                    window.analytics.trackEarlyExit(completedComparisons, this.getEstimatedTotalComparisons());
                 }
             }
             
@@ -1852,10 +1369,6 @@ class KanyeRankerApp {
         
         // Comparison count is now shown in the milestone progress
         
-        if (topSongs[0].spotifyId) {
-            setTimeout(() => this.ui.playPreview(topSongs[0].spotifyId), 1000);
-        }
-        
         // Share buttons are now handled by share-simple.js which watches for results screen
         
         // Session saving removed - no clearing needed
@@ -1864,15 +1377,6 @@ class KanyeRankerApp {
             KanyeUtils.handleError(error, 'results');
             // Try to at least show the results screen
             this.ui.showScreen('results');
-        }
-    }
-    
-    handlePreview(event) {
-        const spotifyId = event.target.dataset.spotifyId;
-        if (event.target.classList.contains('playing')) {
-            this.ui.stopPreview();
-        } else if (spotifyId) {
-            this.ui.playPreview(spotifyId);
         }
     }
     
@@ -1951,10 +1455,8 @@ class KanyeRankerApp {
         this.shownNewAlbumSongs = new Set(state.shownNewAlbumSongs);
 
         // Pairs after pairIndex were generated from the outcome being undone
-        const discarded = this.useDynamicPairing ? this.pairings.slice(pairIndex + 1) : [];
-        if (this.useDynamicPairing) {
-            this.pairings.length = pairIndex + 1;
-        }
+        const discarded = this.pairings.slice(pairIndex + 1);
+        this.pairings.length = pairIndex + 1;
 
         if (this.songRequests && state.songRequests) {
             this.songRequests.restore(state.songRequests, discarded.flat());
@@ -2011,15 +1513,12 @@ class KanyeRankerApp {
 
         // Clear exploration/exploitation data
         this.userFavorites.clear();
-        this.explorationPhase = 'popular';
         
         // Reset dynamic pairing state
-        if (this.useDynamicPairing) {
-            this.lastWinnerId = null;
-            this.lastWinnerPosition = null;
-            this.consecutiveWins = 0;
-            this.comparisonsSinceBreak = 0;
-        }
+        this.lastWinnerId = null;
+        this.lastWinnerPosition = null;
+        this.consecutiveWins = 0;
+        this.comparisonsSinceBreak = 0;
 
         // Reset new album boost state
         this.newAlbumComparisonsShown = 0;
@@ -2059,25 +1558,6 @@ class KanyeRankerApp {
         } catch (error) {
             KanyeUtils.handleError(error, 'export');
         }
-    }
-    
-    copyResults() {
-        const topSongs = this.getTopSongs();
-        const text = topSongs
-            .map((song, index) => {
-                const album = this.albums.get(song.albumId);
-                const albumName = album ? album.name : 'Unknown Album';
-                return `${index + 1}. ${song.title} - ${albumName}`;
-            })
-            .join('\n');
-        
-        const fullText = `My Top 10 Kanye Songs:\n\n${text}\n\nRanked with Kanye Ranker`;
-        
-        navigator.clipboard.writeText(fullText).then(() => {
-            this.ui.showSuccess('Results copied to clipboard!');
-        }).catch(() => {
-            this.ui.showError('Failed to copy results');
-        });
     }
     
     // ==============================

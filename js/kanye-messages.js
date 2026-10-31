@@ -107,42 +107,9 @@ const KanyeMessages = {
     ],
     
     // Done button messages based on comparison count
-    doneMessages: {
-        early: "Graduate Early - Show Results",
-        medium: "I'm Good - Show Results", 
-        late: "Finish Strong - Show Results",
-        veryEarly: "Dropout Now - Show Results",
-        almostDone: "One More Hour - Show Results",
-        marathon: "Ultramarathon Complete - Show Results"
-    },
-    
     // Get random message from array
     getRandom(messageArray) {
         return messageArray[Math.floor(Math.random() * messageArray.length)];
-    },
-    
-    // Get milestone message
-    getMilestone(count) {
-        const milestones = Object.keys(this.milestones)
-            .map(Number)
-            .sort((a, b) => a - b);
-        
-        for (let milestone of milestones) {
-            if (count === milestone) {
-                return this.milestones[milestone];
-            }
-        }
-        return null;
-    },
-    
-    // Get done button text based on progress
-    getDoneButtonText(count) {
-        if (count < 10) return this.doneMessages.veryEarly;
-        if (count < 30) return this.doneMessages.early;
-        if (count < 60) return this.doneMessages.medium;
-        if (count < 100) return this.doneMessages.late;
-        if (count < 150) return this.doneMessages.almostDone;
-        return this.doneMessages.marathon;
     },
     
     // Get random message by category
