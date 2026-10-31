@@ -24,7 +24,9 @@ kanye-ranker/
 ├── index.html                  # Single page: landing, comparison, results screens
 ├── callback.html               # Spotify OAuth redirect (only used by the disabled playlist feature)
 ├── serve.py                    # Local dev server (python3 serve.py, port 8000)
-├── CNAME, robots.txt, sitemap.xml
+├── robots.txt, sitemap.xml, llms.txt   # llms.txt: plain-text summary for AI crawlers
+├── .vercelignore               # Keeps tests/, scripts/, CLAUDE.md etc. off the live site
+├── CNAME                       # Leftover from GitHub Pages
 ├── package.json                # Test scripts only (Jest, Playwright)
 ├── jest.config.js
 ├── playwright.config.js
@@ -71,7 +73,7 @@ kanye-ranker/
 ├── tests/
 │   ├── setup.js                # Jest setup: mocks + loads source files into jsdom
 │   ├── fixtures/test-data.js
-│   ├── unit/                   # Jest: elo, pairing, results, song-request
+│   ├── unit/                   # Jest: elo, pairing, results, song-request, undo, seo
 │   └── e2e/                    # Playwright: app-flow, button-regression, mobile, song-request
 └── docs/                       # Gitignored, local only
     ├── ROADMAP.md
@@ -115,6 +117,7 @@ kanye-ranker/
 ## Development Notes
 
 - **Run locally**: `python3 serve.py` (port 8000). Opening `index.html` directly will fail to fetch the JSON data.
+- **SEO copy is static**: the landing "About" section (albums, FAQ), the JSON-LD (WebApplication + FAQPage), the meta description and `llms.txt` repeat song/album counts and the album list from `songs.json`. `tests/unit/seo.test.js` fails when they drift, so update them when the catalog changes
 - **Mobile-First**: Touch-friendly interface with large tap targets (44px minimum, enforced in E2E tests)
 - **Performance**: next comparison's album art is preloaded; YouTube iframes are only created when "Watch" is clicked
 - **Storage**: no ranking progress is persisted; every session starts fresh. localStorage holds the theme, back-button history, song request queue, share-incentive state, and the internal-user analytics flag

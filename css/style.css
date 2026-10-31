@@ -195,6 +195,77 @@ body {
     line-height: 1.5;
 }
 
+/* About section: crawlable landing copy (albums, FAQ) */
+.about-section {
+    text-align: left;
+}
+
+.about-section h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    text-align: center;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.5rem;
+}
+
+.about-lead {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.about-section h3 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    letter-spacing: 0.05em;
+    margin: 0 0 1rem;
+}
+
+.about-albums {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem;
+    column-count: 2;
+    column-gap: 2rem;
+}
+
+.about-albums li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid #e8e8e8;
+    font-size: 0.95rem;
+    color: #444;
+    break-inside: avoid;
+}
+
+.about-year {
+    color: var(--secondary-color);
+    font-weight: 700;
+}
+
+.about-faq {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.faq-item h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.35rem;
+}
+
+.faq-item p {
+    font-size: 0.95rem;
+    color: #666;
+    line-height: 1.6;
+}
+
 /* Buttons */
 .btn {
     padding: 1rem 2rem;
@@ -855,6 +926,10 @@ body {
     
     .step-number {
         font-size: 2rem;
+    }
+
+    .about-albums {
+        column-count: 1;
     }
     
     .comparison-container {

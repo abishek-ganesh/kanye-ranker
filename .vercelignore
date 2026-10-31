@@ -1,0 +1,12 @@
+# Repo tooling that should not be served on kanyeranker.com
+.claude
+.github
+.mcp.json
+CLAUDE.md
+README.md
+CNAME
+jest.config.js
+playwright.config.js
+serve.py
+scripts
+tests

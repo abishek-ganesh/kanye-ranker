@@ -45,3 +45,4 @@ The old `filter-songs.js`, `parse-top-songs.js` and `download-album-covers.sh` w
 3. Add the album's colors to `js/album-colors.js`; to feature it as the new album, change `newAlbumConfig.albumId` in `js/app.js`
 4. Run `fetch-spotify-uris.js` for the new songs
 5. Add Watch clips to `data/video-links.json`, then run `check-video-links.js`
+6. Update the static SEO copy: the album list, counts and FAQ in `index.html` (visible section and JSON-LD), the meta description, and `llms.txt`. `npm test` fails until they match `songs.json`

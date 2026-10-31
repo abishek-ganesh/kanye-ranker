@@ -61,6 +61,32 @@ test.describe('Landing page loads', () => {
     await expect(landing).toBeVisible();
     await expect(landing).toHaveClass(/active/);
   });
+
+  test('about section renders below the steps without sideways scroll', async ({ page }) => {
+    await page.goto('/');
+    await waitForAppReady(page);
+    const about = page.locator('.about-section');
+    await about.scrollIntoViewIfNeeded();
+    await expect(about).toBeVisible();
+    await expect(page.locator('.about-albums li')).toHaveCount(17);
+    await expect(page.locator('.faq-item').first()).toBeVisible();
+
+    // Footer must not overlap the new section
+    const aboutBox = await about.boundingBox();
+    const footerBox = await page.locator('.app-footer').boundingBox();
+    expect(footerBox.y).toBeGreaterThanOrEqual(aboutBox.y + aboutBox.height);
+
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow).toBeLessThanOrEqual(0);
+  });
+
+  test('about section hides once ranking starts', async ({ page }) => {
+    await page.goto('/');
+    await waitForAppReady(page);
+    await page.locator('#start-ranking').click();
+    await page.locator('#comparison-screen').waitFor({ state: 'visible', timeout: 5000 });
+    await expect(page.locator('.about-section')).toBeHidden();
+  });
 });
 
 // ============================================================

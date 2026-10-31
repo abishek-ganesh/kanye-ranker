@@ -193,6 +193,23 @@ body.dark-mode {
     color: #ffffff !important;
 }
 
+/* About section */
+.dark-mode .about-section h2,
+.dark-mode .about-section h3,
+.dark-mode .faq-item h4 {
+    color: #ffffff !important;
+}
+
+.dark-mode .about-lead,
+.dark-mode .about-albums li,
+.dark-mode .faq-item p {
+    color: #b0b0b0 !important;
+}
+
+.dark-mode .about-albums li {
+    border-bottom-color: #444 !important;
+}
+
 /* Modal and Overlays */
 .dark-mode .preview-modal {
     background: rgba(0, 0, 0, 0.95) !important;

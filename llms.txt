@@ -1,0 +1,39 @@
+# Kanye Ranker
+
+> Kanye Ranker (https://www.kanyeranker.com/) is a free web app that ranks Kanye West songs by personal taste. It shows two songs at a time, the user picks one, and an Elo rating turns those picks into a personal Top 10 songs and Top 5 albums that can be shared as an image. No account or sign-up.
+
+## How it works
+
+- Each comparison shows two Kanye West songs; pick one or skip. Keyboard: Left/1, Right/2, Space/S to skip
+- Every song starts at the same rating; picks move ratings using Elo, the system used for chess players
+- Results unlock after 20 comparisons; ranking can continue as long as the user wants
+- Popular songs appear first, then closer matchups as the list takes shape
+- Users can request specific songs mid-session, undo the last pick, and watch a YouTube clip for many songs
+- Nothing is saved to a server; each visit starts fresh
+
+## Coverage
+
+198 of Kanye West's most-streamed songs across 17 albums:
+
+- The College Dropout (2004)
+- Late Registration (2005)
+- Graduation (2007)
+- 808s & Heartbreak (2008)
+- My Beautiful Dark Twisted Fantasy (2010)
+- Watch the Throne (2011)
+- Cruel Summer (2012)
+- Yeezus (2013)
+- The Life of Pablo (2016)
+- ye (2018)
+- Kids See Ghosts (2018)
+- Jesus Is King (2019)
+- Donda (2021)
+- Donda 2 (2022)
+- Vultures 1 (2024)
+- Vultures 2 (2024)
+- Bully (2026)
+
+## Links
+
+- [Kanye Ranker](https://www.kanyeranker.com/): the app
+- [Source code](https://github.com/abishek-ganesh/kanye-ranker): open source on GitHub
