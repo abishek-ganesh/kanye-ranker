@@ -112,6 +112,9 @@ class UI {
         // Show the requested screen
         this.screens[screenName].style.display = 'block';
         this.screens[screenName].classList.add('active');
+
+        // Lets Clarity recordings be filtered by landing / comparison / results
+        window.clarity?.('set', 'screen', screenName);
         
         // Safari fix: Force progress bar initialization when showing comparison screen
         if (screenName === 'comparison') {
@@ -194,7 +197,8 @@ class UI {
     }
     
     updateMilestoneProgress(current) {
-        const milestones = [0, 20, 50, 100];
+        const unlockAt = KanyeUtils.RESULTS_UNLOCK_AT;
+        const milestones = [0, unlockAt, 50, 100];
         const maxMilestone = 100;
         
         // Calculate progress percentage (capped at 100)
@@ -264,10 +268,10 @@ class UI {
         const progressMessage = document.getElementById('progress-message');
         if (progressMessage) {
             if (current === 0) {
-                progressMessage.textContent = 'Start your journey • 20 comparisons to unlock results';
+                progressMessage.textContent = `Start your journey • ${unlockAt} comparisons to unlock results`;
                 progressMessage.classList.remove('unlocked');
-            } else if (current < 20) {
-                progressMessage.textContent = `Keep going! ${20 - current} more to unlock results`;
+            } else if (current < unlockAt) {
+                progressMessage.textContent = `Keep going! ${unlockAt - current} more to unlock results`;
                 progressMessage.classList.remove('unlocked');
             } else if (current < 50) {
                 progressMessage.textContent = 'You can stop anytime • Keep ranking or view your results';
@@ -361,7 +365,7 @@ class UI {
     }
     
     updateShowResultsButton(currentComparisons) {
-        const minComparisons = 20;
+        const minComparisons = KanyeUtils.RESULTS_UNLOCK_AT;
         const showResultsBtn = this.elements.showResultsButton;
         const lockIcon = showResultsBtn.querySelector('.btn-lock-icon');
         const btnText = showResultsBtn.querySelector('.btn-text');

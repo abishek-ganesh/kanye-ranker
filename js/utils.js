@@ -206,6 +206,8 @@ function withErrorHandling(fn, context) {
 
 // Export utilities for use in other modules
 window.KanyeUtils = {
+    // Comparisons needed before "I'm Done" unlocks results (index.html hard-codes the 20 milestone label)
+    RESULTS_UNLOCK_AT: 20,
     applyAlbumButtonColors,
     getCaseInsensitiveValue,
     resolveVideoEntry,

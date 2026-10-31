@@ -308,3 +308,40 @@ describe('showResults album consistency', () => {
     expect(expected.slice(0, 2)).toEqual(['mbdtf', 'cd']);
   });
 });
+
+describe('results unlock threshold', () => {
+  let savedAnalytics, savedUnlock;
+  beforeAll(() => { savedAnalytics = window.analytics; window.analytics = null; });
+  afterAll(() => { window.analytics = savedAnalytics; });
+  beforeEach(() => { savedUnlock = KanyeUtils.RESULTS_UNLOCK_AT; });
+  afterEach(() => { KanyeUtils.RESULTS_UNLOCK_AT = savedUnlock; });
+
+  function appWithComparisons(n) {
+    const ctx = Object.assign(Object.create(KanyeRankerApp.prototype), createMockContext(new Map(RATING_SCENARIOS.clearRankings)));
+    const ids = TEST_SONGS.map(s => s.id);
+    for (let i = 0; i < n; i++) {
+      ctx.elo.recordComparison(ids[i % ids.length], ids[(i + 1) % ids.length], ids[i % ids.length]);
+    }
+    ctx.ui = { displayResults: jest.fn(), showScreen: jest.fn(), showWarning: jest.fn() };
+    return ctx;
+  }
+
+  test('is 20 comparisons', () => {
+    expect(KanyeUtils.RESULTS_UNLOCK_AT).toBe(20);
+  });
+
+  test('showResults refuses one comparison short of the threshold', () => {
+    const ctx = appWithComparisons(KanyeUtils.RESULTS_UNLOCK_AT - 1);
+    ctx.showResults('early_exit');
+    expect(ctx.ui.showWarning).toHaveBeenCalledWith(expect.stringContaining(`Need ${KanyeUtils.RESULTS_UNLOCK_AT}+`));
+    expect(ctx.ui.displayResults).not.toHaveBeenCalled();
+  });
+
+  test('showResults opens exactly at the threshold, wherever it is set', () => {
+    KanyeUtils.RESULTS_UNLOCK_AT = 5;
+    const ctx = appWithComparisons(5);
+    ctx.showResults('early_exit');
+    expect(ctx.ui.showWarning).not.toHaveBeenCalled();
+    expect(ctx.ui.displayResults).toHaveBeenCalled();
+  });
+});

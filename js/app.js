@@ -1216,8 +1216,9 @@ class KanyeRankerApp {
         try {
             // Check minimum comparisons
             const completedComparisons = this.elo.getCompletedComparisons();
-            if (completedComparisons < 20) {
-                this.ui.showWarning(`Need 20+ comparisons for results (${completedComparisons} done)`);
+            const unlockAt = KanyeUtils.RESULTS_UNLOCK_AT;
+            if (completedComparisons < unlockAt) {
+                this.ui.showWarning(`Need ${unlockAt}+ comparisons for results (${completedComparisons} done)`);
                 return;
             }
 
@@ -1588,7 +1589,7 @@ class KanyeRankerApp {
             window.analytics.trackContinueRanking(this.elo.getCompletedComparisons());
         }
         
-        // Reset the "I'm Done" button threshold if user wants to continue
+        // Push the progress bar's estimated total out; results stay unlocked
         this.minComparisons = this.elo.getCompletedComparisons() + 20;
         
         // Return to comparison screen

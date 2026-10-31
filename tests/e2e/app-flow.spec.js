@@ -280,6 +280,15 @@ test.describe('Early exit to results', () => {
   test('show results button unlocks after 20 comparisons and navigates to results', async ({ page }) => {
     test.setTimeout(120_000); // This test makes many comparisons
 
+    // Record Clarity calls instead of loading the real tag
+    await page.route('**/*clarity.ms/**', route => route.abort());
+    await page.addInitScript(() => {
+      window.__clarityScreens = [];
+      window.clarity = (...args) => {
+        if (args[0] === 'set' && args[1] === 'screen') window.__clarityScreens.push(args[2]);
+      };
+    });
+
     await page.goto('/');
     await waitForAppReady(page);
     await page.locator('#start-ranking').click();
@@ -322,6 +331,11 @@ test.describe('Early exit to results', () => {
       window.kanyeApp.getTopAlbums().slice(0, 5).map(a => a.album.name)
     );
     expect(shownAlbums.map(t => t.trim())).toEqual(sharedAlbums);
+
+    // Each screen change is tagged in Clarity
+    const screens = await page.evaluate(() => window.__clarityScreens);
+    expect(screens).toEqual(expect.arrayContaining(['comparison', 'results']));
+    expect(screens[screens.length - 1]).toBe('results');
   });
 });
 

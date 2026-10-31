@@ -119,7 +119,7 @@
                 college: 0,    // 2004-2007: CD, LR, Graduation
                 experimental: 0, // 2008-2013: 808s, MBDTF, WTT, Yeezus
                 modern: 0,     // 2016-2019: TLOP, ye, KSG, JIK
-                new: 0         // 2021-2024: Donda, Donda 2, Vultures
+                new: 0         // 2021+: Donda, Donda 2, Vultures 1 & 2, Bully
             };
             
             topSongs.slice(0, 10).forEach(song => {
@@ -321,7 +321,7 @@
                 college: 0,      // 2004-2007
                 experimental: 0, // 2008-2013
                 modern: 0,       // 2016-2019
-                new: 0          // 2021-2024
+                new: 0          // 2021+ (no releases in 2014-2015 or 2020)
             };
             
             topAlbums.slice(0, 5).forEach(albumStats => {
