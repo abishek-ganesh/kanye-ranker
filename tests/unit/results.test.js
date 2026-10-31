@@ -1,5 +1,6 @@
 /**
- * Tests for ranking/sorting logic: getTopSongs, album averages, tie handling.
+ * Tests for ranking/sorting logic: getTopSongs, getTopAlbums, tie handling,
+ * and that the results screen and sharing show the same album ranking.
  *
  * Like pairing.test.js, we test the pure-logic methods from KanyeRankerApp
  * by calling them with a mocked `this` context rather than instantiating the
@@ -112,96 +113,6 @@ describe('getTopSongs', () => {
 });
 
 // ======================================================================
-// calculateAlbumStats
-// ======================================================================
-describe('calculateAlbumStats', () => {
-  const calculateAlbumStats = KanyeRankerApp
-    ? KanyeRankerApp.prototype.calculateAlbumStats
-    : () => new Map();
-
-  test('calculates correct average rating per album', () => {
-    const ctx = createMockContext(RATING_SCENARIOS.clearRankings);
-    const songsWithRatings = TEST_SONGS.map(s => ({
-      ...s,
-      rating: RATING_SCENARIOS.clearRankings.get(s.id)
-    }));
-
-    const stats = calculateAlbumStats.call(ctx, songsWithRatings);
-
-    // College Dropout songs: jesus-walks (1700), through-the-wire (1480), all-falls-down (1650)
-    const cdStats = stats.get('cd');
-    expect(cdStats).toBeDefined();
-    expect(cdStats.songCount).toBe(3);
-    expect(cdStats.totalRating).toBe(1700 + 1480 + 1650);
-    expect(cdStats.averageRating).toBeCloseTo((1700 + 1480 + 1650) / 3, 2);
-  });
-
-  test('includes all albums that have songs', () => {
-    const ctx = createMockContext(RATING_SCENARIOS.clearRankings);
-    const songsWithRatings = TEST_SONGS.map(s => ({
-      ...s,
-      rating: RATING_SCENARIOS.clearRankings.get(s.id)
-    }));
-
-    const stats = calculateAlbumStats.call(ctx, songsWithRatings);
-    const albumIds = new Set(TEST_SONGS.map(s => s.albumId));
-    albumIds.forEach(albumId => {
-      expect(stats.has(albumId)).toBe(true);
-    });
-  });
-
-  test('songCount is correct for each album', () => {
-    const ctx = createMockContext(RATING_SCENARIOS.clearRankings);
-    const songsWithRatings = TEST_SONGS.map(s => ({
-      ...s,
-      rating: RATING_SCENARIOS.clearRankings.get(s.id)
-    }));
-
-    const stats = calculateAlbumStats.call(ctx, songsWithRatings);
-
-    // MBDTF has 3 songs in test data
-    expect(stats.get('mbdtf').songCount).toBe(3);
-    // Yeezus has 2 songs in test data
-    expect(stats.get('yeezus').songCount).toBe(2);
-    // Vultures 1 has 2 songs in test data
-    expect(stats.get('v1').songCount).toBe(2);
-  });
-
-  test('averageRating is totalRating / songCount', () => {
-    const ctx = createMockContext(RATING_SCENARIOS.clearRankings);
-    const songsWithRatings = TEST_SONGS.map(s => ({
-      ...s,
-      rating: RATING_SCENARIOS.clearRankings.get(s.id)
-    }));
-
-    const stats = calculateAlbumStats.call(ctx, songsWithRatings);
-
-    stats.forEach((albumData, albumId) => {
-      expect(albumData.averageRating).toBeCloseTo(
-        albumData.totalRating / albumData.songCount,
-        5
-      );
-    });
-  });
-
-  test('empty song list returns empty map', () => {
-    const ctx = createMockContext(RATING_SCENARIOS.clearRankings);
-    const stats = calculateAlbumStats.call(ctx, []);
-    expect(stats.size).toBe(0);
-  });
-
-  test('single song produces correct stats', () => {
-    const ctx = createMockContext(RATING_SCENARIOS.clearRankings);
-    const singleSong = [{ ...TEST_SONGS[0], rating: 1800, albumId: 'cd' }];
-    const stats = calculateAlbumStats.call(ctx, singleSong);
-
-    expect(stats.get('cd').songCount).toBe(1);
-    expect(stats.get('cd').totalRating).toBe(1800);
-    expect(stats.get('cd').averageRating).toBe(1800);
-  });
-});
-
-// ======================================================================
 // Tie handling and sorting stability
 // ======================================================================
 describe('Tie handling', () => {
@@ -249,39 +160,151 @@ describe('Tie handling', () => {
 });
 
 // ======================================================================
-// Album averages with RATING_SCENARIOS
+// getTopAlbums (the single album ranking used by results, export and share)
 // ======================================================================
-describe('Album averages with fixture scenarios', () => {
-  const calculateAlbumStats = KanyeRankerApp
-    ? KanyeRankerApp.prototype.calculateAlbumStats
-    : () => new Map();
+describe('getTopAlbums', () => {
+  const app = () => Object.create(KanyeRankerApp.prototype);
 
-  test('MBDTF has highest average in clearRankings scenario', () => {
-    const ctx = createMockContext(RATING_SCENARIOS.clearRankings);
-    const songsWithRatings = TEST_SONGS.map(s => ({
-      ...s,
-      rating: RATING_SCENARIOS.clearRankings.get(s.id)
-    }));
-    const stats = calculateAlbumStats.call(ctx, songsWithRatings);
+  // Marks songs as compared by recording a comparison for each consecutive pair
+  function compareAll(ctx, ids) {
+    for (let i = 0; i < ids.length; i += 2) {
+      const a = ids[i];
+      const b = ids[i + 1] || ids[0];
+      ctx.elo.recordComparison(a, b, a);
+    }
+  }
 
-    // MBDTF: runaway(1800) + power(1750) + all-of-the-lights(1500) = 5050/3 ≈ 1683
-    // CD: jesus-walks(1700) + through-the-wire(1480) + all-falls-down(1650) = 4830/3 = 1610
-    const mbdtfAvg = stats.get('mbdtf').averageRating;
-    const cdAvg = stats.get('cd').averageRating;
-    expect(mbdtfAvg).toBeGreaterThan(cdAvg);
+  function rankedContext(ratings, comparedIds) {
+    const ctx = Object.assign(app(), createMockContext(ratings));
+    compareAll(ctx, comparedIds || TEST_SONGS.map(s => s.id));
+    return ctx;
+  }
+
+  test('ranks MBDTF first in the clearRankings scenario', () => {
+    const ctx = rankedContext(RATING_SCENARIOS.clearRankings);
+    const albums = ctx.getTopAlbums();
+    expect(albums[0].album.id).toBe('mbdtf');
   });
 
-  test('allEqual scenario gives same average for all albums', () => {
-    const ctx = createMockContext(RATING_SCENARIOS.allEqual);
-    const songsWithRatings = TEST_SONGS.map(s => ({
-      ...s,
-      rating: 1500
-    }));
-    const stats = calculateAlbumStats.call(ctx, songsWithRatings);
+  test('is sorted by finalScore descending', () => {
+    const albums = rankedContext(RATING_SCENARIOS.clearRankings).getTopAlbums();
+    for (let i = 1; i < albums.length; i++) {
+      expect(albums[i - 1].finalScore).toBeGreaterThanOrEqual(albums[i].finalScore);
+    }
+  });
 
-    const averages = new Set();
-    stats.forEach(data => averages.add(data.averageRating));
-    expect(averages.size).toBe(1);
-    expect(averages.has(1500)).toBe(true);
+  test('ignores uncompared songs entirely', () => {
+    const compared = TEST_SONGS.map(s => s.id).filter(id => id !== 'all-of-the-lights');
+    const ratings = new Map(RATING_SCENARIOS.clearRankings);
+    ratings.set('all-of-the-lights', 2500);
+    const ctx = rankedContext(ratings, compared);
+    const mbdtf = ctx.getTopAlbums().find(a => a.album.id === 'mbdtf');
+    expect(mbdtf.songs.map(s => s.id)).not.toContain('all-of-the-lights');
+    expect(mbdtf.comparedSongCount).toBe(2);
+  });
+
+  test('percentile cut-offs are not diluted by uncompared songs', () => {
+    const base = rankedContext(RATING_SCENARIOS.clearRankings).getTopAlbums();
+
+    // Same compared songs, plus 150 never-compared songs sitting at the default 1500
+    const ctx = rankedContext(RATING_SCENARIOS.clearRankings);
+    const extra = Array.from({ length: 150 }, (_, i) => ({ id: `filler-${i}`, albumId: 'cd', initialRating: 1500 }));
+    ctx.songs = [...TEST_SONGS, ...extra];
+    extra.forEach(s => ctx.songRatings.set(s.id, 1500));
+
+    const withFiller = ctx.getTopAlbums();
+    expect(withFiller.map(a => [a.album.id, a.finalScore])).toEqual(base.map(a => [a.album.id, a.finalScore]));
+  });
+
+  test('requires at least 2 compared songs per album', () => {
+    // Only one Donda song compared
+    const compared = TEST_SONGS.map(s => s.id).filter(id => id !== 'jail');
+    const albums = rankedContext(RATING_SCENARIOS.clearRankings, compared).getTopAlbums();
+    expect(albums.map(a => a.album.id)).not.toContain('donda');
+    albums.forEach(a => expect(a.comparedSongCount).toBeGreaterThanOrEqual(2));
+  });
+
+  test.each([
+    [2, 0.88],
+    [3, 0.92],
+    [4, 0.96],
+    [5, 1.0],
+    [6, 1.0]
+  ])('small-album penalty: %i compared songs scales the score by %f', (count, multiplier) => {
+    const songs = Array.from({ length: count }, (_, i) => ({ id: `s${i}`, albumId: 'cd', initialRating: 1500 }));
+    const ctx = Object.assign(app(), {
+      songs,
+      songRatings: new Map(songs.map((s, i) => [s.id, 1600 + i * 10])),
+      albums: new Map(TEST_ALBUMS.map(a => [a.id, a])),
+      elo: new window.EloRating(32)
+    });
+    compareAll(ctx, songs.map(s => s.id));
+    const [album] = ctx.getTopAlbums();
+    expect(album.finalScore / album.qualityScore).toBeCloseTo(multiplier, 10);
+  });
+
+  test('median takes the lower middle value for an even song count', () => {
+    const ctx = rankedContext(RATING_SCENARIOS.clearRankings);
+    const yeezus = ctx.getTopAlbums().find(a => a.album.id === 'yeezus');
+    // black-skinhead 1580, bound-2 1550
+    expect(yeezus.medianRating).toBe(1550);
+    expect(yeezus.averageRating).toBe(1565);
+  });
+
+  test('returns at most 10 albums', () => {
+    const songs = [];
+    for (let album = 0; album < 14; album++) {
+      for (let n = 0; n < 2; n++) songs.push({ id: `a${album}-${n}`, albumId: `album-${album}`, initialRating: 1500 });
+    }
+    const ctx = Object.assign(app(), {
+      songs,
+      songRatings: new Map(songs.map((s, i) => [s.id, 1400 + i])),
+      albums: new Map(Array.from({ length: 14 }, (_, i) => [`album-${i}`, { id: `album-${i}`, name: `Album ${i}` }])),
+      elo: new window.EloRating(32)
+    });
+    compareAll(ctx, songs.map(s => s.id));
+    expect(ctx.getTopAlbums()).toHaveLength(10);
+  });
+
+  test('no compared songs returns no albums', () => {
+    const ctx = Object.assign(app(), createMockContext(RATING_SCENARIOS.clearRankings));
+    expect(ctx.getTopAlbums()).toEqual([]);
+  });
+});
+
+// ======================================================================
+// Results screen and sharing use the same album ranking
+// ======================================================================
+describe('showResults album consistency', () => {
+  let savedAnalytics;
+  beforeAll(() => { savedAnalytics = window.analytics; window.analytics = null; });
+  afterAll(() => { window.analytics = savedAnalytics; });
+
+  test('results screen shows exactly getTopAlbums().slice(0, 5)', () => {
+    // Realistic state: a few compared songs plus many never-compared songs at the
+    // default 1500. The old results-screen formula counted those in its percentile
+    // cut-offs and ranked College Dropout 4th; sharing ranked it 2nd.
+    const ctx = Object.assign(Object.create(KanyeRankerApp.prototype), createMockContext(new Map(RATING_SCENARIOS.clearRankings)));
+    const filler = Array.from({ length: 150 }, (_, i) => ({ id: `filler-${i}`, albumId: 'unreleased', initialRating: 1500 }));
+    ctx.songs = [...TEST_SONGS, ...filler];
+    filler.forEach(s => ctx.songRatings.set(s.id, 1500));
+
+    // 21 comparisons among the fixture songs so results unlock (minimum is 20)
+    const ids = TEST_SONGS.map(s => s.id);
+    for (let i = 0; i < 21; i++) {
+      ctx.elo.recordComparison(ids[i % ids.length], ids[(i + 1) % ids.length], ids[i % ids.length]);
+    }
+    let shownAlbums = null;
+    ctx.ui = {
+      displayResults: (songs, albums) => { shownAlbums = albums; },
+      showScreen: jest.fn(),
+      showWarning: jest.fn()
+    };
+
+    ctx.showResults('early_exit');
+
+    const expected = ctx.getTopAlbums().slice(0, 5).map(a => a.album.id);
+    expect(shownAlbums.map(a => a.album.id)).toEqual(expected);
+    expect(expected.slice(0, 2)).toEqual(['mbdtf', 'cd']);
   });
 });

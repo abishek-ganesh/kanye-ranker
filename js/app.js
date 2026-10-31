@@ -1247,91 +1247,8 @@ class KanyeRankerApp {
             
             const topSongs = rankedSongs.slice(0, 10);
             
-            const albumStats = new Map();
-        
-        // Calculate percentile thresholds for "highly ranked" songs
-        const sortedRatings = rankedSongs.map(s => s.rating).sort((a, b) => b - a);
-        const top20PercentileRating = sortedRatings[Math.floor(sortedRatings.length * 0.2)] || 1500;
-        const top40PercentileRating = sortedRatings[Math.floor(sortedRatings.length * 0.4)] || 1500;
-        
-        // Only count songs that have actually been compared
-        rankedSongs.forEach(song => {
-            const comparisonCount = this.elo.getComparisonCount(song.id);
-            
-            // Only include songs that have been compared at least once
-            if (comparisonCount > 0) {
-                if (!albumStats.has(song.albumId)) {
-                    albumStats.set(song.albumId, {
-                        totalRating: 0,
-                        songCount: 0,
-                        comparedSongCount: 0,
-                        topSongsCount: 0, // Songs in top 20%
-                        goodSongsCount: 0, // Songs in top 40%
-                        songs: [],
-                        album: this.albums.get(song.albumId)
-                    });
-                }
-                const stats = albumStats.get(song.albumId);
-                stats.totalRating += song.rating;
-                stats.songCount++;
-                stats.comparedSongCount++;
-                stats.songs.push(song);
-                
-                // Count highly ranked songs
-                if (song.rating >= top20PercentileRating) {
-                    stats.topSongsCount++;
-                }
-                if (song.rating >= top40PercentileRating) {
-                    stats.goodSongsCount++;
-                }
-            }
-        });
-        
-        // Minimum threshold: album must have at least 2 compared songs to be ranked
-        const minComparedSongs = 2;
-        
-        const topAlbums = Array.from(albumStats.values())
-            .filter(stats => stats.comparedSongCount >= minComparedSongs)
-            .map(stats => {
-                // Calculate average rating
-                const averageRating = stats.totalRating / stats.songCount;
-                
-                // Calculate median rating for robustness
-                const sortedSongRatings = stats.songs.map(s => s.rating).sort((a, b) => b - a);
-                const medianRating = sortedSongRatings[Math.floor(sortedSongRatings.length / 2)];
-                
-                // Calculate a quality score that considers both average and quantity of good songs
-                // Formula: 40% average rating + 30% median rating + 20% top songs ratio + 10% good songs ratio
-                const topSongsRatio = stats.topSongsCount / Math.max(stats.songCount, 1);
-                const goodSongsRatio = stats.goodSongsCount / Math.max(stats.songCount, 1);
-                
-                // Normalize ratings to 0-1 scale (assuming ratings range from ~1000 to ~2000)
-                const normalizedAvg = (averageRating - 1000) / 1000;
-                const normalizedMedian = (medianRating - 1000) / 1000;
-                
-                const qualityScore = 
-                    (normalizedAvg * 0.4) +
-                    (normalizedMedian * 0.3) +
-                    (topSongsRatio * 0.2) +
-                    (goodSongsRatio * 0.1);
-                
-                // Apply a slight penalty for albums with very few compared songs
-                // This prevents albums with 2-3 highly rated songs from dominating
-                const songCountPenalty = Math.min(1, stats.comparedSongCount / 5);
-                const finalScore = qualityScore * (0.8 + 0.2 * songCountPenalty);
-                
-                return {
-                    ...stats,
-                    averageRating,
-                    medianRating,
-                    topSongsRatio,
-                    goodSongsRatio,
-                    qualityScore,
-                    finalScore
-                };
-            })
-            .sort((a, b) => b.finalScore - a.finalScore)
-            .slice(0, 5);
+            // Same ranking the export image, share text and insights use
+            const topAlbums = this.getTopAlbums().slice(0, 5);
         
         
         this.ui.displayResults(topSongs, topAlbums, this.albums);
@@ -1573,24 +1490,8 @@ class KanyeRankerApp {
             .slice(0, Math.min(limit, this.songs.length));
     }
     
-    calculateAlbumStats(songs) {
-        const albumStats = new Map();
-        songs.forEach(song => {
-            if (!albumStats.has(song.albumId)) {
-                albumStats.set(song.albumId, {
-                    totalRating: 0,
-                    songCount: 0,
-                    album: this.albums.get(song.albumId)
-                });
-            }
-            const stats = albumStats.get(song.albumId);
-            stats.totalRating += song.rating;
-            stats.songCount++;
-            stats.averageRating = stats.totalRating / stats.songCount;
-        });
-        return albumStats;
-    }
-    
+    // The single album ranking: results screen, export image, share text and insights
+    // all read from here. Percentile cut-offs use only songs the user has compared.
     getTopAlbums() {
         const rankedSongs = this.songs
             .map(song => ({

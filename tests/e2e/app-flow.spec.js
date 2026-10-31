@@ -315,6 +315,13 @@ test.describe('Early exit to results', () => {
     // Album rankings should be shown
     const topAlbums = page.locator('#top-albums .result-item');
     await expect(topAlbums.first()).toBeVisible({ timeout: 5000 });
+
+    // Albums on screen must match what export and share use
+    const shownAlbums = await page.locator('#top-albums .result-item .result-title').allTextContents();
+    const sharedAlbums = await page.evaluate(() =>
+      window.kanyeApp.getTopAlbums().slice(0, 5).map(a => a.album.name)
+    );
+    expect(shownAlbums.map(t => t.trim())).toEqual(sharedAlbums);
   });
 });
 
