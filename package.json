@@ -9,8 +9,9 @@
     "test:all": "jest && npx playwright test"
   },
   "devDependencies": {
+    "@playwright/test": "^1.51.0",
+    "http-server": "^14.1.1",
     "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
-    "@playwright/test": "^1.51.0"
+    "jest-environment-jsdom": "^29.7.0"
   }
 }
