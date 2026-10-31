@@ -173,13 +173,13 @@ test.describe('Song card click (choose mechanism)', () => {
 
     const counterBefore = await page.locator('#current-comparison').textContent();
 
-    // Rapidly click the card twice
-    await page.locator('#song-a .album-art').click();
-    await page.locator('#song-a .album-art').click();
-
-    // Check that isProcessingChoice was set (double-click guard)
-    const isProcessing = await page.evaluate(() => window.kanyeApp?.isProcessingChoice);
-    // isProcessing may be true or may have already resolved, either is fine
+    // Fire both clicks in the same tick. Two locator.click() calls don't test this:
+    // Playwright waits for the card's choice animation to settle before the second
+    // click, which on slow machines lands after the guard window as a real new choice.
+    await page.locator('#song-a .album-art').evaluate(el => {
+      el.click();
+      el.click();
+    });
 
     // Wait for processing to finish
     await page.waitForTimeout(600);
