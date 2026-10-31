@@ -4,9 +4,12 @@
       "type": "stdio",
       "command": "/Users/abishek/.local/bin/uvx",
       "args": [
-        "google-analytics-mcp"
+        "analytics-mcp"
       ],
-      "env": {}
+      "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "/Users/abishek/.config/gcloud/application_default_credentials.json",
+        "GOOGLE_PROJECT_ID": "mcp-calendar-463922"
+      }
     }
   }
 }
