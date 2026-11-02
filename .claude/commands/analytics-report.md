@@ -53,9 +53,13 @@ Report period: $ARGUMENTS (defaults to 'daily' if not specified)
    - Technical performance metrics
    - Error rates and issues
 
-6. **Adjust for Test Traffic**
-   - Exclude Santa Clara test traffic from calculations
-   - Note both raw and adjusted metrics where applicable
+6. **Exclude Test Traffic**
+   - Every GA4 `run_report` call must include a `dimension_filter` limiting hostName to production:
+     `{"filter": {"field_name": "hostName", "string_filter": {"match_type": 1, "value": "www.kanyeranker.com"}}}`
+   - When a report needs other filters, combine them with this one in an `and_group`
+   - Run one unfiltered report broken down by hostName and put raw vs filtered totals in Data Collection Notes
+   - If the report window overlaps 2026-10-10 to 2026-10-16 or 2026-10-29 to 2026-10-31, flag it: Playwright E2E runs (local and GitHub Actions CI) sent GA4 hits from localhost until the 2026-11-02 fix
+   - Clarity already excludes bot sessions, so no Clarity filter is needed
 
 7. **Create Report File**
    - Check if analytics-reports directory structure exists (only create if missing)
@@ -78,7 +82,7 @@ Report period: $ARGUMENTS (defaults to 'daily' if not specified)
    - Opportunities & Recommendations
    - Data Collection Notes
 
-6. **Special Considerations**
+9. **Special Considerations**
    - Compare to previous report if one exists from last week
    - Calculate week-over-week growth percentages
    - Highlight significant changes or trends

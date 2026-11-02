@@ -1,5 +1,5 @@
 // @ts-check
-const { test, expect } = require('@playwright/test');
+const { test, expect } = require('./fixtures');
 
 /**
  * Helper: wait for the app to fully initialize.
@@ -306,8 +306,7 @@ test.describe('Early exit to results', () => {
   test('show results button unlocks after 20 comparisons and navigates to results', async ({ page }) => {
     test.setTimeout(120_000); // This test makes many comparisons
 
-    // Record Clarity calls instead of loading the real tag
-    await page.route('**/*clarity.ms/**', route => route.abort());
+    // Record Clarity calls (the fixture already blocks the real tag)
     await page.addInitScript(() => {
       window.__clarityScreens = [];
       window.clarity = (...args) => {
@@ -363,6 +362,50 @@ test.describe('Early exit to results', () => {
     expect(screens).toEqual(expect.arrayContaining(['comparison', 'results']));
     expect(screens[screens.length - 1]).toBe('results');
   });
+});
+
+// ============================================================
+// Results Sharing
+// ============================================================
+test.describe('Results sharing', () => {
+  // share-integrated.js replaces the static Save buttons with these share sections
+  const sections = [
+    { container: '#song-share-buttons-container', shareType: 'songs' },
+    { container: '#album-share-buttons-container', shareType: 'albums' },
+  ];
+
+  for (const { container, shareType } of sections) {
+    test(`${shareType} share buttons render and track share_clicked`, async ({ page }) => {
+      test.setTimeout(120_000); // Needs 20 comparisons to unlock results
+
+      await page.goto('/');
+      await waitForAppReady(page);
+      await page.locator('#start-ranking').click();
+      await page.locator('#comparison-screen').waitFor({ state: 'visible', timeout: 5000 });
+      await makeComparisons(page, 20);
+      await page.locator('#show-results').click();
+      await expect(page.locator('#results-screen')).toBeVisible({ timeout: 5000 });
+
+      const copyText = page.locator(`${container} button`, { hasText: 'Copy Text' });
+      await expect(copyText).toBeVisible({ timeout: 5000 });
+
+      // gtag is suppressed on localhost, so spy on the tracking call itself
+      await page.evaluate(() => {
+        window.__shareTracked = [];
+        const original = window.analytics.trackShareClicked.bind(window.analytics);
+        window.analytics.trackShareClicked = (...args) => {
+          window.__shareTracked.push(args);
+          return original(...args);
+        };
+      });
+
+      await copyText.click();
+      await page.waitForFunction(() => window.__shareTracked.length > 0, { timeout: 5000 });
+
+      const tracked = await page.evaluate(() => window.__shareTracked);
+      expect(tracked).toEqual([['copy-text', shareType]]);
+    });
+  }
 });
 
 // ============================================================
