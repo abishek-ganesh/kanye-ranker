@@ -11,13 +11,21 @@
 
     // Album washes: [shadow, mid, highlight] ramps mapped over the Earth's luminance; ids match album-colors.js
     const WASHES = [
-        { id: 'grad', name: 'Graduation', stops: ['#1c0640', '#9c27b0', '#ff7ab6'], beams: ['#e91e63', '#9c27b0'] },
-        { id: 'mbdtf', name: 'MBDTF', stops: ['#2a0006', '#dc143c', '#ffd700'], beams: ['#dc143c', '#ffd700'] },
-        { id: 'yeezus', name: 'Yeezus', stops: ['#050505', '#b00000', '#ff5a3c'], beams: ['#ff0000', '#ff4500'] },
-        { id: 'ye', name: 'Ye', stops: ['#06204f', '#2196f3', '#29e753'], beams: ['#2196f3', '#29e753'] },
-        { id: 'cd', name: 'College Dropout', stops: ['#1f0f06', '#8b4513', '#f2d27a'], beams: ['#d4af37', '#8b4513'] },
-        { id: 'bully', name: 'Bully', stops: ['#030303', '#6e6e6e', '#f4f4f4'], beams: ['#d0d0d0', '#909090'] }
+        { id: 'grad', name: 'Graduation', stops: ['#1c0640', '#9c27b0', '#ff7ab6'], beams: ['#e91e63', '#9c27b0'], topSong: 'Stronger' },
+        { id: 'mbdtf', name: 'MBDTF', stops: ['#2a0006', '#dc143c', '#ffd700'], beams: ['#dc143c', '#ffd700'], topSong: 'POWER' },
+        { id: 'yeezus', name: 'Yeezus', stops: ['#050505', '#b00000', '#ff5a3c'], beams: ['#ff0000', '#ff4500'], topSong: 'Bound 2' },
+        { id: 'ye', name: 'Ye', stops: ['#06204f', '#2196f3', '#29e753'], beams: ['#2196f3', '#29e753'], topSong: 'Violent Crimes' },
+        { id: 'cd', name: 'College Dropout', stops: ['#1f0f06', '#8b4513', '#f2d27a'], beams: ['#d4af37', '#8b4513'], topSong: 'All Falls Down' },
+        { id: 'bully', name: 'Bully', stops: ['#030303', '#6e6e6e', '#f4f4f4'], beams: ['#d0d0d0', '#909090'], topSong: 'Preacher Man' }
     ];
+    // Real tour moments shown when the globe is tapped on Earth or Moon; the first tap always gets the SoFi line
+    const TOUR_LINES = [
+        { text: '“Make the earth move slower.”', source: 'Ye to his lighting crew · SoFi Stadium, April 1, 2026' },
+        { text: '“Coming back, standing on top of the world.”', source: 'Ye on the globe stage · PlaqueboyMax stream, May 2026' },
+        { text: 'Kid Cudi joined Ye on the globe for “Father Stretch My Hands Pt. 1”', source: 'Soldier Field, Chicago · September 4, 2026' },
+        { text: '40+ songs on the globe in one night', source: 'Soldier Field, Chicago · September 3, 2026' }
+    ];
+    const SPEED_UP_LINE = { text: 'Okay, full speed.', source: '' };
     const EARTH_BEAMS = ['#c6f25a', '#7fd6ff'];
     const MOON_BEAMS = ['#dfe8ff', '#a9b8d6'];
 
@@ -97,7 +105,20 @@
         return [mix(a[0], b[0], look.m), mix(a[1], b[1], look.m)];
     }
 
-    const Core = { TIMELINE, XFADE, WASH_STEP, WASHES, hexToRgb, buildLut, sceneAt, beamColorsFor };
+    // Picks the callout for a slow-down tap and advances state: SoFi first, then the album's top song on a wash, else the next tour line
+    function tapLine(label, state) {
+        const first = state.taps === 0;
+        state.taps++;
+        const wash = WASHES.find(w => w.name === label);
+        if (!first && wash) {
+            return { text: `“${wash.topSong}”`, source: `${wash.name}'s most-streamed song on Spotify` };
+        }
+        const line = TOUR_LINES[state.tour % TOUR_LINES.length];
+        state.tour++;
+        return line;
+    }
+
+    const Core = { TIMELINE, XFADE, WASH_STEP, WASHES, TOUR_LINES, SPEED_UP_LINE, hexToRgb, buildLut, sceneAt, beamColorsFor, tapLine };
     root.GlobeStageCore = Core;
     if (typeof module !== 'undefined' && module.exports) module.exports = Core;
     if (typeof document === 'undefined') return;
@@ -501,13 +522,30 @@
         }
 
         let calloutTimer = 0;
-        dome.addEventListener('click', () => {
-            slowUntil = performance.now() + 6000;
-            callout.innerHTML = '“Make the earth move slower.”<small>Ye to his lighting crew · SoFi Stadium, April 1, 2026</small>';
+        const tapState = { taps: 0, tour: 0 };
+        const showCallout = line => {
+            callout.textContent = line.text;
+            if (line.source) {
+                const small = document.createElement('small');
+                small.textContent = line.source;
+                callout.appendChild(small);
+            }
             callout.classList.add('show');
             clearTimeout(calloutTimer);
             calloutTimer = setTimeout(() => callout.classList.remove('show'), 3800);
-            if (window.analytics) window.analytics.track('globe_tapped', { scene: lastLabel || 'Earth' });
+        };
+        // Tap toggles: slow it down with a new line, or tap again while slowed to bring it back to full speed
+        dome.addEventListener('click', () => {
+            const now = performance.now();
+            const scene = lastLabel || 'Earth';
+            if (now < slowUntil) {
+                slowUntil = 0;
+                showCallout(SPEED_UP_LINE);
+            } else {
+                slowUntil = now + 6000;
+                showCallout(tapLine(scene, tapState));
+            }
+            if (window.analytics) window.analytics.track('globe_tapped', { scene });
         });
         startBtn.addEventListener('pointerenter', () => { hovering = true; });
         startBtn.addEventListener('pointerleave', () => { hovering = false; });

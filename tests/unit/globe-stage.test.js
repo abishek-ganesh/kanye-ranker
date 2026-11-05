@@ -259,3 +259,56 @@ describe('sceneAt auto mode', () => {
     });
   });
 });
+
+describe('tap callouts', () => {
+  const fresh = () => ({ taps: 0, tour: 0 });
+  const songs = require('../../data/songs.json').songs;
+
+  test('every wash topSong is that album\'s most-streamed song in songs.json', () => {
+    Core.WASHES.forEach(w => {
+      const top = songs
+        .filter(s => s.albumId === w.id)
+        .sort((a, b) => b.spotifyStreams - a.spotifyStreams)[0];
+      expect(top).toBeDefined();
+      expect(w.topSong).toBe(top.title);
+    });
+  });
+
+  test('tour lines all have text and a source', () => {
+    expect(Core.TOUR_LINES.length).toBeGreaterThan(1);
+    Core.TOUR_LINES.forEach(l => {
+      expect(l.text.length).toBeGreaterThan(0);
+      expect(l.source.length).toBeGreaterThan(0);
+    });
+  });
+
+  test('the first tap is always the SoFi line, even on an album wash', () => {
+    ['Earth', 'Moon', 'MBDTF'].forEach(label => {
+      expect(Core.tapLine(label, fresh())).toBe(Core.TOUR_LINES[0]);
+    });
+  });
+
+  test('later taps on a wash show that album\'s most-streamed song', () => {
+    const state = fresh();
+    Core.tapLine('Earth', state);
+    const line = Core.tapLine('Graduation', state);
+    expect(line.text).toContain('Stronger');
+    expect(line.source).toContain('Graduation');
+  });
+
+  test('Earth and Moon taps walk through every tour line before repeating', () => {
+    const state = fresh();
+    const n = Core.TOUR_LINES.length;
+    const seen = [];
+    for (let i = 0; i < n; i++) seen.push(Core.tapLine(i % 2 ? 'Moon' : 'Earth', state));
+    expect(new Set(seen).size).toBe(n);
+    expect(Core.tapLine('Earth', state)).toBe(Core.TOUR_LINES[0]);
+  });
+
+  test('wash taps do not use up a tour line', () => {
+    const state = fresh();
+    Core.tapLine('Earth', state);
+    Core.tapLine('Yeezus', state);
+    expect(Core.tapLine('Moon', state)).toBe(Core.TOUR_LINES[1]);
+  });
+});

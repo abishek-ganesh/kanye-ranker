@@ -73,6 +73,24 @@ test.describe('Globe stage', () => {
     }, { timeout: 5000 }).toBeLessThanOrEqual(8);
   });
 
+  test('tapping again while slowed speeds back up, and the next slow tap shows a new line', async ({ page }) => {
+    await waitForGlobeReady(page);
+    const dome = page.locator('#globe-dome');
+    const box = await dome.boundingBox();
+    expect(box).not.toBeNull();
+    const tap = () => dome.click({ position: { x: box.width * 0.5, y: box.height * 0.75 } });
+    const callout = page.locator('#globe-callout');
+
+    await tap();
+    await expect(callout).toContainText('Make the earth move slower');
+    await tap();
+    await expect(callout).toContainText('full speed');
+    await tap();
+    await expect(callout).toHaveClass(/\bshow\b/);
+    await expect(callout).not.toContainText('Make the earth move slower');
+    await expect(callout).not.toContainText('full speed');
+  });
+
   test('tapping the globe shows the callout and tracks globe_tapped', async ({ page }) => {
     await waitForGlobeReady(page);
     await page.evaluate(() => {
