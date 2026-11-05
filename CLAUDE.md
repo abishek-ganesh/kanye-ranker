@@ -39,7 +39,8 @@ kanye-ranker/
 │   ├── feedback.css
 │   ├── mobile-override.css
 │   ├── milestone-progress.css
-│   └── song-request.css
+│   ├── song-request.css
+│   └── globe-stage.css         # Landing globe stage band, beams, callout
 ├── js/
 │   ├── app.js                  # KanyeRankerApp: pairing algorithm, choice handling, results, album ranking
 │   ├── app-init.js             # Boots the app on window load (waits for video links)
@@ -49,6 +50,7 @@ kanye-ranker/
 │   ├── back-button.js          # Undo last comparison
 │   ├── song-request.js         # SongRequestQueue (queue logic)
 │   ├── song-request-ui.js      # Request button, badge, search drawer/sheet
+│   ├── globe-stage.js          # Landing globe stage: GlobeStageCore (scene timeline) + canvas dome renderer
 │   ├── video-loader.js         # Loads data/video-links.json into window.videoLinks
 │   ├── youtube-preview-fallback.js  # "Watch" button + YouTube modal + clip labels
 │   ├── export.js               # Canvas image generation for results
@@ -69,12 +71,13 @@ kanye-ranker/
 ├── assets/
 │   ├── album-covers/
 │   ├── goat.jpeg, goat_circle.png (favicon), kanyealbums.jpg (social preview)
+│   ├── stage/                  # earth.jpg, moon.jpg: NASA public-domain textures for the globe stage
 ├── scripts/                    # One-off data maintenance scripts (see scripts/README.md)
 ├── tests/
 │   ├── setup.js                # Jest setup: mocks + loads source files into jsdom
 │   ├── fixtures/test-data.js
-│   ├── unit/                   # Jest: elo, pairing, results, song-request, undo, seo
-│   └── e2e/                    # Playwright: app-flow, button-regression, mobile, song-request
+│   ├── unit/                   # Jest: elo, pairing, results, song-request, undo, seo, globe-stage
+│   └── e2e/                    # Playwright: app-flow, button-regression, mobile, song-request, globe-stage
 └── docs/                       # Gitignored, local only
     ├── ROADMAP.md
     ├── ALGORITHMS.md
@@ -109,7 +112,8 @@ kanye-ranker/
 6. **Insights** (`js/share-incentive-simple.js`): songs get an underrated pick, "Just Missed the Cut" (#11), and era preference; albums get "Your Kanye Timeline" and the album that just missed the top 5
 7. **Sharing/export**: Canvas-generated images; Web Share API on mobile, Clipboard API on desktop
 8. **Back button**: undo last comparison, rolling back ratings and all pairing state, in-memory history cleared on start/restart (on mobile, 768px and below, it only appears once 2 comparisons are done)
-9. **Dark mode, feedback form, rotating Kanye quotes**
+9. **Globe stage** (`js/globe-stage.js`): the landing hero is a dark stage band (dark in both themes) where START stands on a spinning dome, after the 2026 Ye Live tour stage. The dome is Canvas 2D sphere-mapped from `assets/stage/` textures and cycles Earth, album-color washes and the Moon (`TIMELINE`/`WASHES` in `GlobeStageCore`, wash ids match `album-colors.js`). Tapping it slows the spin and fires `globe_tapped`. It only animates while the landing screen is visible, shows a still frame under reduced motion, and lowers its render resolution on slow devices. `window.globeStage` exposes `isReady/isRunning/currentScene/domeTop` for E2E tests
+10. **Dark mode, feedback form, rotating Kanye quotes**
 
 ### Spotify Playlist Export (disabled)
 `js/spotify-playlist.js` (OAuth PKCE + playlist creation from Top 10) and `callback.html` exist, but the feature is disabled by commenting out its `<script>` tag in `index.html`, pending Spotify API access. Re-enable by uncommenting that tag. `scripts/fetch-spotify-uris.js` populated the `spotifyUri` fields it relies on.
@@ -119,7 +123,7 @@ kanye-ranker/
 - **Run locally**: `python3 serve.py` (port 8000). Opening `index.html` directly will fail to fetch the JSON data.
 - **SEO copy is static**: the landing "About" section (albums, FAQ), the JSON-LD (WebApplication + FAQPage), the meta description and `llms.txt` repeat song/album counts and the album list from `songs.json`. `tests/unit/seo.test.js` fails when they drift, so update them when the catalog changes
 - **Mobile-First**: Touch-friendly interface with large tap targets (44px minimum, enforced in E2E tests)
-- **Performance**: next comparison's album art is preloaded; YouTube iframes are only created when "Watch" is clicked
+- **Performance**: next comparison's album art is preloaded; YouTube iframes are only created when "Watch" is clicked; globe stage textures load after `window.load`
 - **Storage**: no ranking progress is persisted; every session starts fresh. localStorage holds the theme, back-button history, song request queue, share-incentive state, and the internal-user analytics flag
 - **No secrets**: only public identifiers (EmailJS public key, Spotify client ID) live in client code
 - **Analytics**: Google Analytics 4 (G-Z2S91E0R6Z) and Microsoft Clarity (spowj2ipam)
