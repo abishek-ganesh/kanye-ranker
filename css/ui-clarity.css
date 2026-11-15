@@ -220,3 +220,57 @@
         padding: 15px !important;
     }
 }
+/* Spotify link on each Top 10 row */
+.result-actions a.spotify-btn {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    line-height: normal;
+    background: #1DB954 !important;
+    color: #000 !important;
+    border: 2px solid #1DB954 !important;
+}
+
+.result-actions a.spotify-btn:hover {
+    background: #1ed760 !important;
+    border-color: #1ed760 !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Copy tracklist row above the Top 10 */
+.tracklist-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px 12px;
+    margin: 0 auto 1.25rem;
+}
+
+.tracklist-btn {
+    min-height: 44px;
+    cursor: pointer;
+    background: transparent !important;
+    color: var(--text-color, #000) !important;
+    border: 2px solid var(--text-color, #000) !important;
+}
+
+.tracklist-btn:hover {
+    transform: translateY(-1px) !important;
+}
+
+.tracklist-hint {
+    font-size: 0.85rem;
+    opacity: 0.75;
+}
+
+.tracklist-hint a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+.dark-mode .tracklist-bar .tracklist-btn {
+    background: transparent !important;
+    color: #fff !important;
+    border-color: #fff !important;
+}

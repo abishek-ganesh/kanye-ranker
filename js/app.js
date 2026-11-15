@@ -220,7 +220,12 @@ class KanyeRankerApp {
                 this.exportAlbumsImage();
             });
         }
-        
+
+        const copyTracklistBtn = document.getElementById('copy-tracklist');
+        if (copyTracklistBtn) {
+            copyTracklistBtn.addEventListener('click', () => this.ui.copyTracklist());
+        }
+
         // Song choice buttons
         if (this.ui.elements.songCards.a.chooseBtn) {
             this.ui.elements.songCards.a.chooseBtn.addEventListener('click', () => {

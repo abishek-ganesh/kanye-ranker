@@ -204,6 +204,17 @@ function withErrorHandling(fn, context) {
     };
 }
 
+// "spotify:track:<id>" -> open.spotify.com link (opens the app on mobile), or null
+function spotifyTrackUrl(spotifyUri) {
+    const match = /^spotify:track:([A-Za-z0-9]+)$/.exec(spotifyUri || '');
+    return match ? `https://open.spotify.com/track/${match[1]}` : null;
+}
+
+// One "Kanye West - Title" line per song, in rank order; real titles so import tools match
+function formatTracklist(songs) {
+    return songs.map(song => `Kanye West - ${song.title}`).join('\n');
+}
+
 // Export utilities for use in other modules
 window.KanyeUtils = {
     // Comparisons needed before "I'm Done" unlocks results (index.html hard-codes the 20 milestone label)
@@ -212,6 +223,8 @@ window.KanyeUtils = {
     getCaseInsensitiveValue,
     resolveVideoEntry,
     getCensoredTitle,
+    spotifyTrackUrl,
+    formatTracklist,
     trackAnalytics,
     safeQuerySelector,
     safeQuerySelectorAll,

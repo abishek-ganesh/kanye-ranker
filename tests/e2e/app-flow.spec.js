@@ -409,6 +409,52 @@ test.describe('Results sharing', () => {
 });
 
 // ============================================================
+// Listen: Spotify links and Copy tracklist
+// ============================================================
+test.describe('Results listening links', () => {
+  test('each Top 10 song links to Spotify and the tracklist copies in rank order', async ({ page }) => {
+    test.setTimeout(120_000); // Needs 20 comparisons to unlock results
+
+    await page.goto('/');
+    await waitForAppReady(page);
+    await page.locator('#start-ranking').click();
+    await page.locator('#comparison-screen').waitFor({ state: 'visible', timeout: 5000 });
+    await makeComparisons(page, 20);
+    await page.locator('#show-results').click();
+    await expect(page.locator('#results-screen')).toBeVisible({ timeout: 5000 });
+
+    const rows = page.locator('#top-songs .result-item');
+    await expect(rows).toHaveCount(10);
+
+    // Spotify link per row: open.spotify.com, new tab, at least one 44px dimension
+    const links = page.locator('#top-songs .spotify-btn');
+    await expect(links).toHaveCount(10);
+    for (let i = 0; i < 10; i++) {
+      const link = links.nth(i);
+      await expect(link).toHaveAttribute('href', /^https:\/\/open\.spotify\.com\/track\/[A-Za-z0-9]+$/);
+      await expect(link).toHaveAttribute('target', '_blank');
+      const box = await link.boundingBox();
+      expect(box.width >= 44 || box.height >= 44, `Spotify link ${i + 1} is ${box.width}x${box.height}`).toBe(true);
+    }
+
+    // Capture the clipboard write (reading the clipboard back isn't supported in every browser)
+    await page.evaluate(() => {
+      window.__copied = null;
+      navigator.clipboard.writeText = text => { window.__copied = text; return Promise.resolve(); };
+    });
+    await page.locator('#copy-tracklist').click();
+    await page.waitForFunction(() => window.__copied !== null, { timeout: 5000 });
+
+    const copied = await page.evaluate(() => window.__copied);
+    const expected = await page.evaluate(() =>
+      window.kanyeApp.ui.displayedTopSongs.map(s => `Kanye West - ${s.title}`).join('\n')
+    );
+    expect(copied).toBe(expected);
+    expect(copied.split('\n')).toHaveLength(10);
+  });
+});
+
+// ============================================================
 // Back Button
 // ============================================================
 test.describe('Back button', () => {

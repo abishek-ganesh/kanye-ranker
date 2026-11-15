@@ -18,7 +18,7 @@ node scripts/fetch-spotify-uris.js <CLIENT_ID> <CLIENT_SECRET>
 - Searches `track:<title> artist:<artist>` (strips "ft." features), using per-album artist overrides for collabs (Watch the Throne, Kids See Ghosts, Vultures); falls back to a looser query; takes the first hit
 - Handles 429 rate limits via `Retry-After`; requires Node 18+ (global `fetch`)
 - When adding a new album, add its ID to `ALBUM_NAMES` (and `ALBUM_ARTIST` if it is a collab)
-- The URIs feed the Spotify playlist export (`js/spotify-playlist.js`), which is currently disabled
+- The URIs feed the per-song "Spotify" links on the results screen (`KanyeUtils.spotifyTrackUrl`)
 
 ## check-video-links.js
 

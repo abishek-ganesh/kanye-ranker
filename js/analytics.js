@@ -237,6 +237,15 @@ class Analytics {
         });
     }
 
+    // Top 10 copied as plain text for playlist import tools
+    trackTracklistCopied(songCount) {
+        this.track('tracklist_copied', {
+            event_category: 'engagement',
+            event_label: 'results',
+            value: songCount
+        });
+    }
+
     // Track detailed song comparison
     trackSongComparison(winner, loser, comparisonNumber, timeTaken) {
         this.track('song_compared', {

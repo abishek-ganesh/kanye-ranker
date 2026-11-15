@@ -604,7 +604,8 @@ class UI {
             
             this.elements.topSongs.innerHTML = '';
             this.elements.topAlbums.innerHTML = '';
-            
+            this.displayedTopSongs = topSongs;
+
             topSongs.forEach((song, index) => {
                 try {
                     const album = albumsMap.get(song.albumId);
@@ -646,6 +647,7 @@ class UI {
 
         // Censor specific titles for display
         const displayTitle = KanyeUtils.getCensoredTitle(song.title);
+        const spotifyUrl = KanyeUtils.spotifyTrackUrl(song.spotifyUri);
 
         div.innerHTML = `
             <div class="result-rank">#${rank}</div>
@@ -661,9 +663,22 @@ class UI {
                         ${!videoId ? 'disabled' : ''}>
                     ▶ Watch
                 </button>
+                ${spotifyUrl ? `
+                <a class="btn-small spotify-btn" href="${spotifyUrl}" target="_blank" rel="noopener"
+                   aria-label="Open ${displayTitle} in Spotify">
+                    <svg class="spotify-glyph" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.42 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                    Spotify
+                </a>` : ''}
             </div>
         `;
-        
+
+        const spotifyBtn = div.querySelector('.spotify-btn');
+        if (spotifyBtn) {
+            spotifyBtn.addEventListener('click', () => {
+                KanyeUtils.trackAnalytics('trackExternalLinkClick', 'spotify', song.title, album ? album.name : '');
+            });
+        }
+
         // Apply album-specific colors to preview button
         const previewBtn = div.querySelector('.preview-btn');
         if (previewBtn && !previewBtn.disabled && window.getAlbumColors) {
@@ -699,6 +714,40 @@ class UI {
         return div;
     }
     
+    // Copies the displayed Top 10 as plain text; falls back to execCommand where the Clipboard API is blocked
+    async copyTracklist() {
+        const songs = this.displayedTopSongs || [];
+        if (songs.length === 0) return false;
+        const text = KanyeUtils.formatTracklist(songs);
+
+        let copied = false;
+        try {
+            await navigator.clipboard.writeText(text);
+            copied = true;
+        } catch (error) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.setAttribute('readonly', '');
+            textarea.style.cssText = 'position:fixed;top:0;left:0;opacity:0;';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                copied = document.execCommand('copy');
+            } catch (fallbackError) {
+                copied = false;
+            }
+            textarea.remove();
+        }
+
+        if (copied) {
+            this.showSuccess(`Copied your Top ${songs.length}. Paste it into TuneMyMusic to make a playlist.`);
+            KanyeUtils.trackAnalytics('trackTracklistCopied', songs.length);
+        } else {
+            this.showError("Couldn't copy the tracklist. Try again from a different browser.");
+        }
+        return copied;
+    }
+
     createAlbumResultItem(rank, albumData) {
         const div = document.createElement('div');
         div.className = 'result-item';

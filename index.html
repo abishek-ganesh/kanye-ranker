@@ -106,7 +106,7 @@
     <link rel="stylesheet" href="css/ui-clarity.css">
     <link rel="stylesheet" href="css/dark-mode.css">
     <link rel="stylesheet" href="css/feedback.css?v=kanye-design-2">
-    <link rel="stylesheet" href="css/mobile-override.css?v=3">
+    <link rel="stylesheet" href="css/mobile-override.css?v=4">
     <link rel="stylesheet" href="css/milestone-progress.css">
     <link rel="stylesheet" href="css/song-request.css?v=6">
     <link rel="stylesheet" href="css/globe-stage.css">
@@ -368,7 +368,12 @@
             
             <h1 id="results-header">Your Yeezy Hall of Fame</h1>
             <p class="results-subtitle" id="results-subtitle">The waves have spoken...</p>
-            
+
+            <div class="tracklist-bar">
+                <button id="copy-tracklist" class="btn-small tracklist-btn">📋 Copy tracklist</button>
+                <span class="tracklist-hint">Paste into <a href="https://www.tunemymusic.com/transfer" target="_blank" rel="noopener">TuneMyMusic</a> to make a playlist</span>
+            </div>
+
             <div id="top-songs" class="results-list"></div>
             
             <h2 id="albums-header">Most Influential Eras</h2>
@@ -444,7 +449,6 @@
     <script src="js/youtube-preview-fallback.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/export.js?v=2"></script>
-    <!-- <script src="js/spotify-playlist.js?v=1"></script> -->
     <script src="js/share-integrated.js?v=20"></script>
     <script src="js/share-incentive-simple.js?v=1"></script>
     <script src="js/song-request.js?v=2"></script>

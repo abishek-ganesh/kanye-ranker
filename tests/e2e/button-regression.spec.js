@@ -135,10 +135,10 @@ test.describe('Song card click (choose mechanism)', () => {
 
     // Click on album art inside card A (avoids links/preview buttons)
     await page.locator('#song-a .album-art').click();
-    await page.waitForTimeout(500);
 
-    const counterAfter = await page.locator('#current-comparison').textContent();
-    expect(parseInt(counterAfter)).toBeGreaterThan(parseInt(counterBefore));
+    // Poll instead of a fixed wait; the choice animation runs slower under parallel load
+    await expect.poll(async () => parseInt(await page.locator('#current-comparison').textContent()), { timeout: 5000 })
+      .toBeGreaterThan(parseInt(counterBefore));
   });
 
   test('clicking card B processes the choice and updates the screen', async ({ page }) => {
@@ -148,10 +148,10 @@ test.describe('Song card click (choose mechanism)', () => {
     const counterBefore = await page.locator('#current-comparison').textContent();
 
     await page.locator('#song-b .album-art').click();
-    await page.waitForTimeout(500);
 
-    const counterAfter = await page.locator('#current-comparison').textContent();
-    expect(parseInt(counterAfter)).toBeGreaterThan(parseInt(counterBefore));
+    // Poll instead of a fixed wait; the choice animation runs slower under parallel load
+    await expect.poll(async () => parseInt(await page.locator('#current-comparison').textContent()), { timeout: 5000 })
+      .toBeGreaterThan(parseInt(counterBefore));
   });
 
   test('app is ready for next input after processing a choice', async ({ page }) => {

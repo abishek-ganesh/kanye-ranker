@@ -255,3 +255,38 @@
         width: 100% !important;
     }
 }
+/* Top 10 song rows on mobile: rank and art on the left, title/album/buttons stacked and centered beside them */
+@media screen and (max-width: 768px) {
+    #top-songs .result-item {
+        display: grid;
+        grid-template-columns: auto 60px minmax(0, 1fr);
+        grid-template-areas:
+            "rank art info"
+            "rank art actions";
+        column-gap: 0.75rem;
+        row-gap: 0.4rem;
+        align-items: center;
+    }
+
+    #top-songs .result-rank { grid-area: rank; }
+    #top-songs .result-album-art { grid-area: art; margin: 0; }
+
+    #top-songs .result-info {
+        grid-area: info;
+        align-self: end;
+        width: auto !important;
+    }
+
+    #top-songs .result-album {
+        margin-bottom: 0;
+    }
+
+    #top-songs .result-actions {
+        grid-area: actions;
+        align-self: start;
+        width: auto !important;
+        margin: 0 !important;
+        flex-wrap: wrap;
+        justify-content: center !important;
+    }
+}
