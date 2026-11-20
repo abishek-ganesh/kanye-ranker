@@ -110,6 +110,7 @@
     <link rel="stylesheet" href="css/milestone-progress.css">
     <link rel="stylesheet" href="css/song-request.css?v=6">
     <link rel="stylesheet" href="css/globe-stage.css">
+    <link rel="stylesheet" href="css/tier-list.css">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z2S91E0R6Z"></script>
     <script>
@@ -369,6 +370,13 @@
             <h1 id="results-header">Your Yeezy Hall of Fame</h1>
             <p class="results-subtitle" id="results-subtitle">The waves have spoken...</p>
 
+            <div class="tier-cta-wrap">
+                <button id="open-tier-list" class="tier-cta" type="button">
+                    <span class="tier-cta-letters" aria-hidden="true"><span>S</span><span>A</span><span>B</span><span>C</span><span>D</span></span>
+                    <span class="tier-cta-text">Reveal your tier list</span>
+                </button>
+            </div>
+
             <div class="tracklist-bar">
                 <button id="copy-tracklist" class="btn-small tracklist-btn">📋 Copy tracklist</button>
                 <span class="tracklist-hint">Paste into <a href="https://www.tunemymusic.com/transfer" target="_blank" rel="noopener">TuneMyMusic</a> to make a playlist</span>
@@ -382,6 +390,61 @@
             <!-- Share sections container - will be populated by JS -->
             <div id="share-sections-container" class="share-sections-container"></div>
             
+        </div>
+    </div>
+
+    <!-- Tier List Screen (js/tier-list-ui.js) -->
+    <div id="tier-list-screen" class="screen">
+        <div class="tier-shell">
+            <div class="tier-topbar">
+                <button id="tier-back" class="tier-chip" type="button">← Results</button>
+                <h1 class="tier-title">Your Tier List</h1>
+            </div>
+
+            <div class="tier-tabs" role="tablist" aria-label="Tier list type">
+                <button class="tier-tab" type="button" role="tab" data-kind="songs" aria-selected="true">Songs</button>
+                <button class="tier-tab" type="button" role="tab" data-kind="albums" aria-selected="false">Albums</button>
+            </div>
+
+            <p id="tier-summary" class="tier-summary" aria-live="polite"></p>
+
+            <div class="tier-stage">
+                <div id="tier-board" class="tier-board" data-kind="songs" data-revealing="false"></div>
+                <button id="tier-skip-reveal" class="tier-skip" type="button" hidden>Skip</button>
+            </div>
+
+            <p class="tier-hint">Tap a tile to move it to another tier.</p>
+
+            <div class="tier-actions">
+                <button id="tier-share-image" class="tier-action tier-action-primary" type="button">📸 Share image</button>
+                <button id="tier-share-video" class="tier-action" type="button" hidden>🎬 Save reveal video</button>
+                <button id="tier-replay" class="tier-action" type="button">↻ Replay reveal</button>
+            </div>
+        </div>
+
+        <div id="tier-move-bar" class="tier-move-bar" hidden role="dialog" aria-label="Move tile">
+            <p class="tier-move-title" id="tier-move-title">Move to</p>
+            <div class="tier-move-buttons">
+                <button class="tier-move-btn" type="button" data-tier="S">S</button>
+                <button class="tier-move-btn" type="button" data-tier="A">A</button>
+                <button class="tier-move-btn" type="button" data-tier="B">B</button>
+                <button class="tier-move-btn" type="button" data-tier="C">C</button>
+                <button class="tier-move-btn" type="button" data-tier="D">D</button>
+                <button class="tier-move-btn tier-move-unranked" type="button" data-tier="unranked">Unranked</button>
+            </div>
+            <button id="tier-move-cancel" class="tier-move-cancel" type="button" aria-label="Cancel move">✕</button>
+        </div>
+
+        <div id="tier-video-overlay" class="tier-video-overlay" hidden>
+            <div class="tier-video-panel">
+                <canvas id="tier-video-canvas" class="tier-video-canvas"></canvas>
+                <p class="tier-video-status" id="tier-video-status">Recording your reveal…</p>
+                <div class="tier-video-progress"><span id="tier-video-progress-fill"></span></div>
+                <div class="tier-video-buttons">
+                    <button id="tier-video-save" class="tier-action tier-action-primary" type="button" hidden>Save video</button>
+                    <button id="tier-video-close" class="tier-action" type="button">Close</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -452,6 +515,8 @@
     <script src="js/share-integrated.js?v=20"></script>
     <script src="js/share-incentive-simple.js?v=1"></script>
     <script src="js/song-request.js?v=2"></script>
+    <script src="js/tier-list.js"></script>
+    <script src="js/tier-list-export.js"></script>
     <script src="js/app.js"></script>
     <script src="js/app-init.js"></script>
     <script src="js/back-button.js"></script>
@@ -460,5 +525,6 @@
     <script src="js/settings-menu.js"></script>
     <script src="js/song-request-ui.js?v=6"></script>
     <script src="js/globe-stage.js"></script>
+    <script src="js/tier-list-ui.js"></script>
 </body>
 </html>

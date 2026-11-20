@@ -246,6 +246,46 @@ class Analytics {
         });
     }
 
+    // Tier list screen opened (list_type: songs | albums)
+    trackTierListViewed(listType, itemCount, comparisons) {
+        this.track('tier_list_viewed', {
+            event_category: 'engagement',
+            event_label: 'tier_list',
+            list_type: listType,
+            item_count: itemCount,
+            comparisons_completed: comparisons
+        });
+    }
+
+    trackTierRevealReplayed(listType) {
+        this.track('tier_list_reveal_replayed', {
+            event_category: 'engagement',
+            event_label: 'tier_list',
+            list_type: listType
+        });
+    }
+
+    trackTierItemMoved(listType, fromTier, toTier) {
+        this.track('tier_item_moved', {
+            event_category: 'engagement',
+            event_label: 'tier_list',
+            list_type: listType,
+            from_tier: fromTier,
+            to_tier: toTier
+        });
+    }
+
+    // format: image | video; method: native | download
+    trackTierListShared(listType, format, method) {
+        this.track('tier_list_shared', {
+            event_category: 'sharing',
+            event_label: 'tier_list',
+            list_type: listType,
+            share_format: format,
+            share_method: method
+        });
+    }
+
     // Track detailed song comparison
     trackSongComparison(winner, loser, comparisonNumber, timeTaken) {
         this.track('song_compared', {

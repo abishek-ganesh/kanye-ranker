@@ -59,6 +59,7 @@ class KanyeRankerApp {
         this.shownNewAlbumSongs = new Set();
 
         this.songRequests = typeof SongRequestQueue !== 'undefined' ? new SongRequestQueue() : null;
+        this.tierList = typeof TierListCore !== 'undefined' ? new TierListCore() : null;
 
         this.init();
     }
@@ -1448,6 +1449,7 @@ class KanyeRankerApp {
         this.shownNewAlbumSongs.clear();
 
         this.songRequests?.clear();
+        this.tierList?.reset();
         
         this.ui.showScreen('landing');
         
@@ -1498,7 +1500,7 @@ class KanyeRankerApp {
     
     // The single album ranking: results screen, export image, share text and insights
     // all read from here. Percentile cut-offs use only songs the user has compared.
-    getTopAlbums() {
+    getTopAlbums(limit = 10) {
         const rankedSongs = this.songs
             .map(song => ({
                 ...song,
@@ -1581,7 +1583,22 @@ class KanyeRankerApp {
                 };
             })
             .sort((a, b) => b.finalScore - a.finalScore)
-            .slice(0, 10);
+            .slice(0, limit);
+    }
+
+    // Tier list input: compared songs scored by rating; every album, scored by the album ranking
+    // when it qualifies (2+ compared songs) and unscored otherwise, in release order
+    getTierListItems(kind) {
+        if (kind === 'albums') {
+            const scores = new Map(this.getTopAlbums(Infinity).map(stats => [stats.album?.id, stats.finalScore]));
+            return Array.from(this.albums.keys()).map(id => ({
+                id,
+                score: scores.has(id) ? scores.get(id) : null
+            }));
+        }
+        return this.songs
+            .filter(song => this.elo.getComparisonCount(song.id) > 0)
+            .map(song => ({ id: song.id, score: this.songRatings.get(song.id) }));
     }
     
     // ==============================

@@ -39,7 +39,8 @@ kanye-ranker/
 │   ├── mobile-override.css
 │   ├── milestone-progress.css
 │   ├── song-request.css
-│   └── globe-stage.css         # Landing globe stage band, beams, callout
+│   ├── globe-stage.css         # Landing globe stage band, beams, callout
+│   └── tier-list.css           # Tier list screen, results entry button, move bar, video overlay
 ├── js/
 │   ├── app.js                  # KanyeRankerApp: pairing algorithm, choice handling, results, album ranking
 │   ├── app-init.js             # Boots the app on window load (waits for video links)
@@ -49,6 +50,9 @@ kanye-ranker/
 │   ├── back-button.js          # Undo last comparison
 │   ├── song-request.js         # SongRequestQueue (queue logic)
 │   ├── song-request-ui.js      # Request button, badge, search drawer/sheet
+│   ├── tier-list.js            # TierListCore: S-D buckets, pinned moves, reveal order (pure, unit tested)
+│   ├── tier-list-ui.js         # Tier list screen: reveal, tap-to-move, share image/video
+│   ├── tier-list-export.js     # TierListExport: 1080x1920 canvas frames, PNG, MediaRecorder reveal video
 │   ├── globe-stage.js          # Landing globe stage: GlobeStageCore (scene timeline) + canvas dome renderer
 │   ├── video-loader.js         # Loads data/video-links.json into window.videoLinks
 │   ├── youtube-preview-fallback.js  # "Watch" button + YouTube modal + clip labels
@@ -74,8 +78,8 @@ kanye-ranker/
 ├── tests/
 │   ├── setup.js                # Jest setup: mocks + loads source files into jsdom
 │   ├── fixtures/test-data.js
-│   ├── unit/                   # Jest: elo, pairing, results, song-request, undo, seo, globe-stage, listen
-│   └── e2e/                    # Playwright: app-flow, button-regression, mobile, song-request, globe-stage
+│   ├── unit/                   # Jest: elo, pairing, results, song-request, undo, seo, globe-stage, listen, tier-list, tier-list-export
+│   └── e2e/                    # Playwright: app-flow, button-regression, mobile, song-request, globe-stage, tier-list
 └── docs/                       # Gitignored, local only
     ├── ROADMAP.md
     ├── ALGORITHMS.md
@@ -111,7 +115,8 @@ kanye-ranker/
 7. **Sharing/export**: Canvas-generated images; Web Share API on mobile, Clipboard API on desktop
 8. **Back button**: undo last comparison, rolling back ratings and all pairing state, in-memory history cleared on start/restart (on mobile, 768px and below, it only appears once 2 comparisons are done)
 9. **Globe stage** (`js/globe-stage.js`): the landing hero is a dark stage band (dark in both themes) where START stands on a spinning dome, after the 2026 Ye Live tour stage. The dome is Canvas 2D sphere-mapped from `assets/stage/` textures and cycles Earth, album-color washes and the Moon (`TIMELINE`/`WASHES` in `GlobeStageCore`, wash ids match `album-colors.js`). Tapping it slows the spin and fires `globe_tapped`. It only animates while the landing screen is visible, shows a still frame under reduced motion, and lowers its render resolution on slow devices. `window.globeStage` exposes `isReady/isRunning/currentScene/domeTop` for E2E tests
-10. **Dark mode, feedback form, rotating Kanye quotes**
+10. **Tier list** (`js/tier-list*.js`): "Reveal your tier list" near the top of results opens its own screen with Songs / Albums tabs. `TierListCore` buckets ranked items by rank percentile (S 10%, A 20%, B 30%, C 25%, D 15%; ties share a tier, #1 is always S). Songs = only compared songs; albums = all 17, with albums under the 2-compared-song minimum in an Unranked tray. Tiles fill in D up to S with a pause before S (skipped under reduced motion). Tap a tile, then a tier in the bottom move bar (or a tier label) to move it; moves are pinned, survive Continue Ranking, and clear on restart. Shares a 1080x1920 PNG per tab and a silent reveal video (canvas `captureStream` + MediaRecorder, MP4 where supported, else WebM); the on-screen reveal and the video share `TierListExport.revealSchedule`. `window.tierListUI` exposes `kind/board/isRevealing()` for E2E tests
+11. **Dark mode, feedback form, rotating Kanye quotes**
 
 ### Spotify (no API login)
 Each Top 10 row has a "Spotify" link (`open.spotify.com/track/<id>` from `spotifyUri`, opens the app on mobile), and "Copy tracklist" copies `Kanye West - Title` lines (real, uncensored titles) for import tools like TuneMyMusic. A real "Create playlist" button was built and deleted (2026-11-06): Spotify's 2026 Development Mode rules allow one Client ID per developer and 5 users per app, and public access needs a business with 250k MAU. The OAuth version is in git history before that date.
@@ -145,6 +150,7 @@ Each Top 10 row has a "Spotify" link (`open.spotify.com/track/<id>` from `spotif
 
 ## Recent Updates
 
+- Tier list: S-D song and album tiers from your ranking, D-to-S reveal, tap-to-move edits, share image and downloadable reveal video
 - Spotify links on each Top 10 song and "Copy tracklist" for playlist import tools; the disabled Spotify OAuth playlist export was deleted
 - CI with deploys gated on tests (Vercel Deployment Checks); undo rewritten to restore exact state; ~640 lines of dead pairing code removed; 26 broken Watch videos replaced; analytics tracking fixed
 - Mid-session song requests with queue management, plus cross-browser E2E coverage

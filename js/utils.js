@@ -215,6 +215,31 @@ function formatTracklist(songs) {
     return songs.map(song => `Kanye West - ${song.title}`).join('\n');
 }
 
+// Shares a file through the Web Share sheet on mobile, otherwise downloads it.
+// Returns 'native', 'download' or 'cancelled'.
+async function shareOrDownloadFile(blob, filename, text = '') {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const file = new File([blob], filename, { type: blob.type });
+    if (isMobile && navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+            await navigator.share({ files: [file], text });
+            return 'native';
+        } catch (err) {
+            if (err.name === 'AbortError') return 'cancelled';
+            // NotAllowedError etc.: fall through to a download
+        }
+    }
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    return 'download';
+}
+
 // Export utilities for use in other modules
 window.KanyeUtils = {
     // Comparisons needed before "I'm Done" unlocks results (index.html hard-codes the 20 milestone label)
@@ -225,6 +250,7 @@ window.KanyeUtils = {
     getCensoredTitle,
     spotifyTrackUrl,
     formatTracklist,
+    shareOrDownloadFile,
     trackAnalytics,
     safeQuerySelector,
     safeQuerySelectorAll,

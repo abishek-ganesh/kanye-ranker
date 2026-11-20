@@ -18,6 +18,10 @@ class UI {
         if (!screenValidation.isValid) {
             throw new Error(`Required screens not found: ${screenValidation.missing.join(', ')}`);
         }
+
+        // Optional screens (absent from the unit test DOM)
+        const tierListScreen = document.getElementById('tier-list-screen');
+        if (tierListScreen) this.screens.tierList = tierListScreen;
         
         this.elements = {
             startButton: document.getElementById('start-ranking'),
@@ -165,7 +169,7 @@ class UI {
         if (backButton) {
             const isMobile = window.innerWidth <= 768;
             // Hide back button on landing and results screens
-            if (screenName === 'landing' || screenName === 'results') {
+            if (screenName === 'landing' || screenName === 'results' || screenName === 'tierList') {
                 backButton.classList.remove('visible');
             } else if (screenName === 'comparison' && window.kanyeApp?.backButton) {
                 // On mobile, only show back button after at least 2 comparisons
