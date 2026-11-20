@@ -1,5 +1,5 @@
 // @ts-check
-const { test, expect } = require('./fixtures');
+const { test, expect, makeComparisons } = require('./fixtures');
 
 /**
  * E2E coverage for the mid-session "request a song" feature.
@@ -27,26 +27,6 @@ async function waitForAppReady(page) {
   await page.waitForFunction(() => {
     return window.kanyeApp && window.kanyeApp.songs && window.kanyeApp.songs.length > 0;
   }, { timeout: 15000 });
-}
-
-/**
- * Helper: click card A N times (adapted from app-flow.spec.js).
- * Waits on currentPairIndex advancing instead of a fixed sleep, so the next
- * pair is guaranteed to be rendered when this returns.
- */
-async function makeComparisons(page, count) {
-  for (let i = 0; i < count; i++) {
-    const albumArt = page.locator('#song-a .album-art');
-    await albumArt.waitFor({ state: 'visible', timeout: 5000 });
-    await page.waitForFunction(() => !window.kanyeApp?.isProcessingChoice, { timeout: 5000 });
-    const before = await page.evaluate(() => window.kanyeApp.currentPairIndex);
-    await albumArt.click();
-    await page.waitForFunction(
-      (idx) => window.kanyeApp.currentPairIndex > idx && !window.kanyeApp.isProcessingChoice,
-      before,
-      { timeout: 5000 }
-    );
-  }
 }
 
 /**

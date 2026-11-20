@@ -16,8 +16,9 @@ module.exports = defineConfig({
     timeout: 10_000,
   },
 
-  // Run tests sequentially in CI, parallel locally
+  // Tests run in parallel; GitHub's public-repo runners have 4 cores (Playwright defaults to half)
   fullyParallel: true,
+  workers: process.env.CI ? 4 : undefined,
 
   // Fail the build on CI if you accidentally left test.only in the source code
   forbidOnly: !!process.env.CI,

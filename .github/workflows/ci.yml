@@ -29,8 +29,24 @@ jobs:
       - name: Unit tests
         run: npm test
 
+      # Browser binaries are cached per Playwright version; system packages still install each run
+      - name: Get Playwright version
+        id: playwright
+        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}-chromium-webkit
+
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium webkit
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install chromium webkit
+
+      - name: Install Playwright system deps
+        run: npx playwright install-deps chromium webkit
 
       # Chromium + WebKit; iOS is the majority of traffic
       - name: E2E tests

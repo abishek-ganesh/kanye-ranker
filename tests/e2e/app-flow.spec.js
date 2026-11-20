@@ -1,5 +1,5 @@
 // @ts-check
-const { test, expect } = require('./fixtures');
+const { test, expect, makeComparisons } = require('./fixtures');
 
 /**
  * Helper: wait for the app to fully initialize.
@@ -14,25 +14,6 @@ async function waitForAppReady(page) {
   await page.waitForFunction(() => {
     return window.kanyeApp && window.kanyeApp.songs && window.kanyeApp.songs.length > 0;
   }, { timeout: 15000 });
-}
-
-/**
- * Helper: rapidly click through N comparisons by clicking song card A each time.
- * Note: The .btn-choose buttons are hidden via CSS (ui-clarity.css) and the entire
- * .song-card is clickable instead. We click on the album art image inside the card
- * to avoid accidentally hitting links or preview buttons (which are filtered out
- * by the card click handler).
- */
-async function makeComparisons(page, count) {
-  for (let i = 0; i < count; i++) {
-    const albumArt = page.locator('#song-a .album-art');
-    await albumArt.waitFor({ state: 'visible', timeout: 5000 });
-    // Wait for the app to be ready for input (not processing a previous choice)
-    await page.waitForFunction(() => !window.kanyeApp?.isProcessingChoice, { timeout: 5000 });
-    await albumArt.click();
-    // Brief pause for the app to process the choice and load next comparison
-    await page.waitForTimeout(350);
-  }
 }
 
 // ============================================================

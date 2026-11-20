@@ -1,5 +1,5 @@
 // @ts-check
-const { test, expect } = require('./fixtures');
+const { test, expect, makeComparisons } = require('./fixtures');
 
 /**
  * Mobile-specific E2E tests.
@@ -41,20 +41,6 @@ async function goToComparison(page) {
     () => document.getElementById('song-title-a')?.textContent?.length > 0,
     { timeout: 5000 }
   );
-}
-
-/**
- * Helper: rapidly click through N comparisons by tapping song card A.
- * The .btn-choose buttons are hidden via CSS; the entire .song-card is clickable.
- */
-async function makeComparisons(page, count) {
-  for (let i = 0; i < count; i++) {
-    const albumArt = page.locator('#song-a .album-art');
-    await albumArt.waitFor({ state: 'visible', timeout: 5000 });
-    await page.waitForFunction(() => !window.kanyeApp?.isProcessingChoice, { timeout: 5000 });
-    await albumArt.tap();
-    await page.waitForTimeout(350);
-  }
 }
 
 // ============================================================
@@ -195,7 +181,7 @@ test.describe('Mobile interactions', () => {
 
     await page.goto('/');
     await goToComparison(page);
-    await makeComparisons(page, 22);
+    await makeComparisons(page, 22, { tap: true });
 
     const showResultsBtn = page.locator('#show-results');
     await expect(showResultsBtn).toBeEnabled({ timeout: 5000 });

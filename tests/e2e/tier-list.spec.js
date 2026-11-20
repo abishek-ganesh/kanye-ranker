@@ -1,5 +1,5 @@
 // @ts-check
-const { test, expect } = require('./fixtures');
+const { test, expect, makeComparisons } = require('./fixtures');
 
 /**
  * E2E tests for the tier list screen: entry from results, the D-to-S reveal,
@@ -16,16 +16,6 @@ async function waitForAppReady(page) {
   await page.waitForFunction(() => {
     return window.kanyeApp && window.kanyeApp.songs && window.kanyeApp.songs.length > 0;
   }, { timeout: 15000 });
-}
-
-async function makeComparisons(page, count) {
-  for (let i = 0; i < count; i++) {
-    const albumArt = page.locator('#song-a .album-art');
-    await albumArt.waitFor({ state: 'visible', timeout: 5000 });
-    await page.waitForFunction(() => !window.kanyeApp?.isProcessingChoice, { timeout: 5000 });
-    await albumArt.click();
-    await page.waitForTimeout(350);
-  }
 }
 
 async function showResults(page) {
@@ -100,6 +90,8 @@ test.describe('Tier list entry and reveal', () => {
     await expect(board).toHaveAttribute('data-revealing', 'true');
     await expect(page.locator('#tier-skip-reveal')).toBeVisible();
 
+    // Fast-forward the ~8s reveal instead of waiting it out
+    await page.clock.runFor(15000);
     await expect(board).toHaveAttribute('data-revealing', 'false', { timeout: 15000 });
     await expect(page.locator('#tier-skip-reveal')).toBeHidden();
 
