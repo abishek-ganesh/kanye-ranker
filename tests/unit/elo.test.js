@@ -308,6 +308,16 @@ describe('EloRating', () => {
   // Skip Tracking
   // ====================================================================
   describe('Skip Tracking', () => {
+    test('getSongSkipCount counts skips across every pair a song was in, and reset clears it', () => {
+      elo.recordSkip('a', 'b');
+      elo.recordSkip('c', 'a');
+      expect(elo.getSongSkipCount('a')).toBe(2);
+      expect(elo.getSongSkipCount('b')).toBe(1);
+      expect(elo.getSongSkipCount('z')).toBe(0);
+      elo.reset();
+      expect(elo.getSongSkipCount('a')).toBe(0);
+    });
+
     test('recordSkip increments skip count', () => {
       elo.recordSkip('a', 'b');
       expect(elo.getSkipCount('a', 'b')).toBe(1);

@@ -338,3 +338,94 @@ describe('selectOpponentForWinner', () => {
     Math.random.mockRestore();
   });
 });
+
+// ======================================================================
+// Album coverage
+// ======================================================================
+describe('album coverage', () => {
+  // Real tier setup over the fixture catalog (6 albums, 14 songs)
+  function coverageContext() {
+    const ctx = Object.create(KanyeRankerApp.prototype);
+    Object.assign(ctx, createMockContext(), {
+      albumCoverage: { firstBy: 20, secondBy: 30, slack: 3, maxSkippedSongs: 2 }
+    });
+    ctx.initializeSongTiers();
+    return ctx;
+  }
+
+  function compare(ctx, a, b) {
+    ctx.elo.recordComparison(a, b, a);
+  }
+
+  test('every album starts in need, ordered by its biggest song', () => {
+    const needs = coverageContext().getAlbumCoverageNeeds();
+    expect(needs.map(n => n.albumId)).toEqual(['mbdtf', 'cd', 'tlop', 'yeezus', 'donda', 'v1']);
+    expect(needs.find(n => n.albumId === 'donda').songId).toBe('off-the-grid');
+    expect(needs.every(n => n.compared === 0)).toBe(true);
+  });
+
+  test('albums with one compared song move behind unseen ones; two compared songs drop out', () => {
+    const ctx = coverageContext();
+    compare(ctx, 'runaway', 'power');        // mbdtf: 2
+    compare(ctx, 'jesus-walks', 'carnival'); // cd: 1, v1: 1
+    const needs = ctx.getAlbumCoverageNeeds();
+    expect(needs.map(n => n.albumId)).toEqual(['tlop', 'yeezus', 'donda', 'cd', 'v1']);
+    expect(needs.find(n => n.albumId === 'cd').songId).toBe('all-falls-down');
+  });
+
+  test('is derived from comparison history, so undoing a comparison restores the need', () => {
+    const ctx = coverageContext();
+    compare(ctx, 'jail', 'off-the-grid');
+    expect(ctx.getAlbumCoverageNeeds().map(n => n.albumId)).not.toContain('donda');
+    ctx.elo.removeLastComparison('jail', 'off-the-grid');
+    expect(ctx.getAlbumCoverageNeeds().map(n => n.albumId)).toContain('donda');
+  });
+
+  test('skipped songs are not offered again, and an album drops out after two skipped songs', () => {
+    const ctx = coverageContext();
+    ctx.elo.recordSkip('carnival', 'off-the-grid');
+    expect(ctx.getAlbumCoverageNeeds().find(n => n.albumId === 'v1').songId).toBe('stars');
+    ctx.elo.recordSkip('stars', 'jail');
+    expect(ctx.getAlbumCoverageNeeds().map(n => n.albumId)).not.toContain('v1');
+  });
+
+  test('chance paces the remaining pairs before each deadline and stops at 30', () => {
+    const ctx = coverageContext();
+    const needs = ctx.getAlbumCoverageNeeds();
+    // 6 unseen albums: 3 pairs over 17 slots (20 - 3 slack); 12 units: 6 pairs over 27 slots
+    expect(ctx.getCoverageChance(needs, 0)).toBeCloseTo(6 / 27);
+    expect(ctx.getCoverageChance(needs, 16)).toBeGreaterThanOrEqual(1);
+    expect(ctx.getCoverageChance(needs, 30)).toBe(0);
+    expect(ctx.getCoverageChance([], 5)).toBe(0);
+  });
+
+  test('pairs the top songs of two different under-covered albums', () => {
+    const ctx = coverageContext();
+    jest.spyOn(Math, 'random').mockReturnValue(0);
+    const pair = ctx.generateCoveragePairing();
+    Math.random.mockRestore();
+    expect(pair.sort()).toEqual(['jesus-walks', 'runaway']);
+  });
+
+  test('with one album left, pairs it against a popular song', () => {
+    const ctx = coverageContext();
+    const coveredBy2 = { cd: ['jesus-walks', 'all-falls-down'], mbdtf: ['runaway', 'power'], yeezus: ['black-skinhead', 'bound-2'], tlop: ['ultralight-beam', 'father-stretch'], donda: ['jail', 'off-the-grid'] };
+    Object.values(coveredBy2).forEach(([a, b]) => compare(ctx, a, b));
+    jest.spyOn(Math, 'random').mockReturnValue(0);
+    const pair = ctx.generateCoveragePairing();
+    Math.random.mockRestore();
+    expect(pair).toContain('carnival');
+    const other = pair.find(id => id !== 'carnival');
+    expect(ctx.top50Array).toContain(other);
+  });
+
+  test('does nothing once every album has two compared songs', () => {
+    const ctx = coverageContext();
+    [['jesus-walks', 'all-falls-down'], ['runaway', 'power'], ['black-skinhead', 'bound-2'],
+     ['ultralight-beam', 'father-stretch'], ['jail', 'off-the-grid'], ['carnival', 'stars']]
+      .forEach(([a, b]) => compare(ctx, a, b));
+    jest.spyOn(Math, 'random').mockReturnValue(0);
+    expect(ctx.generateCoveragePairing()).toBeNull();
+    Math.random.mockRestore();
+  });
+});

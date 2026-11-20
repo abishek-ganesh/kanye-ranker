@@ -49,8 +49,6 @@ function createApp() {
     lastWinnerPosition: null,
     consecutiveWins: 0,
     comparisonsSinceBreak: 0,
-    newAlbumComparisonsShown: 0,
-    shownNewAlbumSongs: new Set(),
     songRequests: new SongRequestQueue(),
     ui: {
       disableComparisonButtons: jest.fn(),
@@ -72,13 +70,9 @@ function play(app, pair, side) {
 }
 
 // Simulates the pair generator running after a choice and mutating its state
-function generateNext(app, pair, { newAlbumSong } = {}) {
+function generateNext(app, pair) {
   app.pairings.push(pair);
   app.comparisonsSinceBreak++;
-  if (newAlbumSong) {
-    app.newAlbumComparisonsShown++;
-    app.shownNewAlbumSongs.add(newAlbumSong);
-  }
 }
 
 function ratingsOf(app) {
@@ -221,18 +215,6 @@ describe('undo restores pairing state', () => {
 
     app.backButton.goBack();
     expect(app.userFavorites.has('runaway')).toBe(false);
-  });
-
-  test('rewinds the new album boost counter and shown songs', () => {
-    const app = createApp();
-    play(app, ['runaway', 'power'], 'a');
-    generateNext(app, ['black-skinhead', 'bound-2'], { newAlbumSong: 'black-skinhead' });
-    expect(app.newAlbumComparisonsShown).toBe(1);
-
-    app.backButton.goBack();
-
-    expect(app.newAlbumComparisonsShown).toBe(0);
-    expect(app.shownNewAlbumSongs.has('black-skinhead')).toBe(false);
   });
 });
 

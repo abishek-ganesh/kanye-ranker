@@ -48,15 +48,9 @@ class KanyeRankerApp {
         this.carryOverProbability = 0.75; // 75% chance to carry over winner
         this.comparisonsSinceBreak = 0; // Track comparisons for fatigue prevention
 
-        // New album boost: surface new album songs in early comparisons
-        // To update for a future album, change albumId here only
-        this.newAlbumConfig = {
-            albumId: 'bully',
-            boostTarget: 4,  // guarantee this many new album comparisons
-            boostWindow: 10  // within the first N comparisons
-        };
-        this.newAlbumComparisonsShown = 0;
-        this.shownNewAlbumSongs = new Set();
+        // Album coverage: every album gets a compared song by comparison 20 and a second by 30,
+        // so the albums ranking and tier list aren't limited to the most-streamed albums
+        this.albumCoverage = { firstBy: 20, secondBy: 30, slack: 3, maxSkippedSongs: 2 };
 
         this.songRequests = typeof SongRequestQueue !== 'undefined' ? new SongRequestQueue() : null;
         this.tierList = typeof TierListCore !== 'undefined' ? new TierListCore() : null;
@@ -404,43 +398,20 @@ class KanyeRankerApp {
         // Track shown songs
         this.shownSongs = new Set();
         
-        // Create a list of top mainstream songs from each album for early comparisons
-        this.albumTopSongs = new Map();
-        const allAlbumIds = [...new Set(this.songs.map(s => s.albumId))];
-        
-        // Define songs to exclude from early comparisons (deep cuts, interludes, etc.)
+        // Each album's songs, most-streamed first, minus skits and interludes (album coverage draws from these)
         const excludedSongs = new Set([
-            'Frank\'s Track', 'Skit #1', 'Skit #2', 'Skit #3', 'Skit #4', 
+            'Frank\'s Track', 'Skit #1', 'Skit #2', 'Skit #3', 'Skit #4',
             'Intro', 'Outro', 'Interlude', 'I Love Kanye', 'Low Lights',
             'Pt. 2', 'Silver Surfer Intermission', 'Facts (Charlie Heat Version)',
             'Freestyle 4', '30 Hours', 'Feedback', 'Highlights'
         ]);
-        
-        allAlbumIds.forEach(albumId => {
-            // Filter to get only mainstream songs (very high streams, not deep cuts)
-            const albumSongs = songsWithStreams
-                .filter(s => s.albumId === albumId && 
-                            s.spotifyStreams > 150000000 && // Increased to 150M streams
-                            !excludedSongs.has(s.title) &&
-                            !s.title.toLowerCase().includes('skit') &&
-                            !s.title.toLowerCase().includes('interlude') &&
-                            !s.title.toLowerCase().includes('freestyle'))
-                .slice(0, 3); // Get top 3 to ensure we have good options
-            
-            // If we don't have enough mainstream songs, get the absolute top songs
-            const finalSongs = albumSongs.length >= 2 ? albumSongs.slice(0, 2) : 
-                               songsWithStreams
-                                   .filter(s => s.albumId === albumId && !excludedSongs.has(s.title))
-                                   .slice(0, 2);
-            
-            if (finalSongs.length > 0) {
-                this.albumTopSongs.set(albumId, finalSongs.map(s => s.id));
-            }
+        this.albumCoverageSongs = new Map();
+        songsWithStreams.forEach(s => {
+            const title = s.title.toLowerCase();
+            if (excludedSongs.has(s.title) || ['skit', 'interlude', 'freestyle'].some(w => title.includes(w))) return;
+            if (!this.albumCoverageSongs.has(s.albumId)) this.albumCoverageSongs.set(s.albumId, []);
+            this.albumCoverageSongs.get(s.albumId).push(s.id);
         });
-        
-        
-        // Track which albums have been shown
-        this.shownAlbums = new Set();
     }
     
     getCurrentPhase() {
@@ -725,31 +696,57 @@ class KanyeRankerApp {
         return null;
     }
     
-    generateNewAlbumBoostPairing() {
-        const albumId = this.newAlbumConfig.albumId;
-        const albumSongIds = this.songs
-            .filter(s => s.albumId === albumId)
-            .map(s => s.id);
+    // Albums still short of their coverage target, neediest first: fewest compared songs, then biggest next song.
+    // Derived from the comparison history, so undo needs no extra state. Albums whose songs keep getting skipped drop out.
+    getAlbumCoverageNeeds() {
+        const needs = [];
+        for (const [albumId, songIds] of this.albumCoverageSongs || []) {
+            const compared = songIds.filter(id => this.elo.getComparisonCount(id) > 0).length;
+            if (compared >= 2) continue;
+            const fresh = songIds.filter(id => this.elo.getComparisonCount(id) === 0);
+            const skipped = fresh.filter(id => this.elo.getSongSkipCount(id) > 0).length;
+            const candidates = fresh.filter(id => this.elo.getSongSkipCount(id) === 0);
+            if (skipped >= this.albumCoverage.maxSkippedSongs || candidates.length === 0) continue;
+            needs.push({ albumId, compared, songId: candidates[0] });
+        }
+        const order = new Map(this.allSongsArray.map((id, i) => [id, i]));
+        const streams = id => this.songs.find(s => s.id === id)?.spotifyStreams || 0;
+        return needs.sort((a, b) => (a.compared - b.compared) || (streams(b.songId) - streams(a.songId)) || (order.get(a.songId) - order.get(b.songId)));
+    }
 
-        if (albumSongIds.length === 0) return null;
+    // Chance this comparison should be a coverage pair: the pairs still needed spread over the slots left before each deadline
+    getCoverageChance(needs, completed) {
+        const { firstBy, secondBy } = this.albumCoverage;
+        if (completed >= secondBy || needs.length === 0) return 0;
+        const unseen = needs.filter(n => n.compared === 0).length;
+        const units = needs.reduce((sum, n) => sum + (2 - n.compared), 0);
+        // Each coverage pair covers two albums; pacing aims a few comparisons early so missed rolls can catch up
+        const slots = deadline => Math.max(1, deadline - this.albumCoverage.slack - completed);
+        const first = completed < firstBy ? Math.ceil(unseen / 2) / slots(firstBy) : 0;
+        const second = Math.ceil(units / 2) / slots(secondBy);
+        return Math.max(first, second);
+    }
 
-        // Prefer songs not yet shown; fall back to any album song
-        const unshown = albumSongIds.filter(id => !this.shownNewAlbumSongs.has(id));
-        const candidates = unshown.length > 0 ? unshown : albumSongIds;
-        const songId = candidates[Math.floor(Math.random() * candidates.length)];
-        this.shownNewAlbumSongs.add(songId);
+    // Pairs the best uncompared songs of two under-covered albums (one of the top 3 neediest, at random),
+    // or one such song against a similarly rated popular song when only one album is left
+    generateCoveragePairing() {
+        if (!this.albumCoverage) return null;
+        const completed = this.elo.getCompletedComparisons();
+        const needs = this.getAlbumCoverageNeeds();
+        if (Math.random() >= this.getCoverageChance(needs, completed)) return null;
 
-        // Pair against an established song from top 50 that hasn't been compared with this song
-        const opponents = this.top50Array.filter(id =>
-            id !== songId &&
-            !this.elo.hasBeenCompared(songId, id) &&
-            !this.elo.shouldSkipPairing(songId, id)
-        );
+        const pick = list => list.splice(Math.floor(Math.random() * Math.min(3, list.length)), 1)[0];
+        const pool = [...needs];
+        const first = pick(pool);
+        const sameTier = pool.filter(n => n.compared === first.compared);
+        const second = sameTier.length ? pick(sameTier) : pool[0];
 
-        if (opponents.length === 0) return null;
-
-        const opponentId = opponents[Math.floor(Math.random() * Math.min(20, opponents.length))];
-        return [songId, opponentId];
+        const songId = first.songId;
+        const opponentId = second?.songId ||
+            this.selectOpponentForWinner(songId, this.top50Array) ||
+            this.selectOpponentForWinner(songId, this.allSongsArray);
+        if (!opponentId) return null;
+        return Math.random() < 0.5 ? [songId, opponentId] : [opponentId, songId];
     }
 
     // Pairs a user-requested song (when the queue says it's due) against a similarly rated opponent
@@ -791,7 +788,7 @@ class KanyeRankerApp {
         const { phase, pool, poolName } = this.getCurrentPhase();
         const completedComparisons = this.elo.getCompletedComparisons();
 
-        // SONG REQUESTS: pre-empts the new album boost and winner carry-over
+        // SONG REQUESTS: pre-empts winner carry-over
         const requestedPair = this.generateRequestedPairing();
         if (requestedPair) {
             this.comparisonsSinceBreak++;
@@ -799,69 +796,13 @@ class KanyeRankerApp {
             return requestedPair;
         }
 
-        // NEW ALBUM BOOST: inject new album songs on every other comparison in the boost window
-        if (
-            completedComparisons < this.newAlbumConfig.boostWindow &&
-            this.newAlbumComparisonsShown < this.newAlbumConfig.boostTarget &&
-            completedComparisons % 2 === 0
-        ) {
-            const boostPair = this.generateNewAlbumBoostPairing();
-            if (boostPair) {
-                this.newAlbumComparisonsShown++;
-                this.comparisonsSinceBreak++;
-                return boostPair;
-            }
+        // ALBUM COVERAGE: paced so every album hits its compared-song targets on time
+        const coveragePair = this.generateCoveragePairing();
+        if (coveragePair) {
+            this.comparisonsSinceBreak++;
+            return coveragePair;
         }
 
-        // BALANCED APPROACH: Mix popular songs with album diversity in first 40 comparisons
-        if (completedComparisons < 40) {
-            // Check which albums haven't been shown yet
-            const unshownAlbums = [];
-            for (const [albumId, songIds] of this.albumTopSongs) {
-                if (!this.shownAlbums.has(albumId)) {
-                    unshownAlbums.push(albumId);
-                }
-            }
-            
-            // For first 10 comparisons: 90% popular songs, 10% album diversity
-            // For comparisons 11-20: 70% popular songs, 30% album diversity
-            // For comparisons 21-40: 50% popular songs, 50% album diversity
-            const albumDiversityChance = completedComparisons < 10 ? 0.1 : 
-                                         (completedComparisons < 20 ? 0.3 : 0.5);
-            
-            // If we have unshown albums and roll for diversity, show them
-            if (unshownAlbums.length > 0 && Math.random() < albumDiversityChance) {
-                const albumToShow = unshownAlbums[Math.floor(Math.random() * unshownAlbums.length)];
-                const albumSongIds = this.albumTopSongs.get(albumToShow);
-                
-                if (albumSongIds && albumSongIds.length > 0) {
-                    // Get the most popular song from this album that hasn't been shown
-                    const songId = albumSongIds[0]; // First song is most popular
-                    
-                    // Pair with another popular song for quality comparison
-                    const popularCandidates = this.top50Array.filter(id => 
-                        id !== songId && 
-                        !this.elo.hasBeenCompared(songId, id) &&
-                        !this.elo.shouldSkipPairing(songId, id)
-                    );
-                    
-                    if (popularCandidates.length > 0) {
-                        const opponentId = popularCandidates[Math.floor(Math.random() * Math.min(20, popularCandidates.length))];
-                        this.shownAlbums.add(albumToShow);
-                        
-                        // Also track the opponent's album
-                        const opponentSong = this.songs.find(s => s.id === opponentId);
-                        if (opponentSong) {
-                            this.shownAlbums.add(opponentSong.albumId);
-                        }
-                        
-                        this.comparisonsSinceBreak++;
-                        return [songId, opponentId];
-                    }
-                }
-            }
-        }
-        
         // Special handling for finals mode
         if (poolName === 'finals') {
             const finalsPair = this.generateFinalsPairing();
@@ -1353,8 +1294,6 @@ class KanyeRankerApp {
             lastWinnerPosition: this.lastWinnerPosition,
             consecutiveWins: this.consecutiveWins,
             comparisonsSinceBreak: this.comparisonsSinceBreak,
-            newAlbumComparisonsShown: this.newAlbumComparisonsShown,
-            shownNewAlbumSongs: [...this.shownNewAlbumSongs],
             songRequests: this.songRequests?.snapshot() ?? null
         };
     }
@@ -1375,8 +1314,6 @@ class KanyeRankerApp {
         this.lastWinnerPosition = state.lastWinnerPosition;
         this.consecutiveWins = state.consecutiveWins;
         this.comparisonsSinceBreak = state.comparisonsSinceBreak;
-        this.newAlbumComparisonsShown = state.newAlbumComparisonsShown;
-        this.shownNewAlbumSongs = new Set(state.shownNewAlbumSongs);
 
         // Pairs after pairIndex were generated from the outcome being undone
         const discarded = this.pairings.slice(pairIndex + 1);
@@ -1443,10 +1380,6 @@ class KanyeRankerApp {
         this.lastWinnerPosition = null;
         this.consecutiveWins = 0;
         this.comparisonsSinceBreak = 0;
-
-        // Reset new album boost state
-        this.newAlbumComparisonsShown = 0;
-        this.shownNewAlbumSongs.clear();
 
         this.songRequests?.clear();
         this.tierList?.reset();

@@ -3,6 +3,7 @@ class EloRating {
         this.k = k;
         this.comparisons = [];
         this.skipCount = {};
+        this.songSkipCount = {};
     }
 
     getExpectedScore(ratingA, ratingB) {
@@ -51,6 +52,12 @@ class EloRating {
     recordSkip(songIdA, songIdB) {
         const key = [songIdA, songIdB].sort().join('-');
         this.skipCount[key] = (this.skipCount[key] || 0) + 1;
+        [songIdA, songIdB].forEach(id => { this.songSkipCount[id] = (this.songSkipCount[id] || 0) + 1; });
+    }
+
+    // Skips of any pair this song was in
+    getSongSkipCount(songId) {
+        return this.songSkipCount[songId] || 0;
     }
 
     hasBeenCompared(songIdA, songIdB) {
@@ -164,6 +171,7 @@ class EloRating {
     reset() {
         this.comparisons = [];
         this.skipCount = {};
+        this.songSkipCount = {};
     }
 }
 

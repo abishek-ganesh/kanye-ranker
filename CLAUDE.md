@@ -93,17 +93,13 @@ kanye-ranker/
 - Initial rating: 1500 for all songs (`initialRating` in songs.json)
 - Dynamic K-factor per song, based on that song's prior comparisons: 48 (fewer than 3), 32 (3 to 6), 16 (7+). The `k = 32` constructor argument is stored but not used for updates.
 - Ratings are rounded to integers after each update
-- Phase-based dynamic pairing (popular songs first, finals mode at 80+ comparisons), winner carry-over, album diversity, classic-album boost, new-album boost, and cross-tier challenges. Full details in `docs/ALGORITHMS.md`.
+- Phase-based dynamic pairing (popular songs first, finals mode at 80+ comparisons), winner carry-over, album coverage (every album gets a compared song by comparison 20 and a second by 30), classic-album boost, and cross-tier challenges. Full details in `docs/ALGORITHMS.md`.
 
 ### Song Database
 - 17 albums, 198 songs (filtered to the most-streamed tracks, so per-album song counts are lower than `trackCount`)
 - Albums range from "The College Dropout" (2004) to "Bully" (2026)
 - Each song has `spotifyStreams`/`spotifyRank` (drive popularity tiers) and `spotifyUri`
 - `songs.json` is fetched with a cache-busting query (`?v=3`); bump it when the data changes
-
-### New Album Boost
-- Configured in `app.js` (`newAlbumConfig`): currently `bully`, 4 guaranteed comparisons within the first 10
-- To feature a future album, change `albumId` there only
 
 ### Core Features
 1. **Pairwise song comparison**: tap/click a card, or keyboard (Left/1, Right/2, Space/S to skip)
@@ -150,6 +146,7 @@ Each Top 10 row has a "Spotify" link (`open.spotify.com/track/<id>` from `spotif
 
 ## Recent Updates
 
+- Album coverage in early pairings: every album gets a compared song by comparison 20 and a second by 30, so all 17 albums can be ranked; replaced the album diversity roll and the Bully new-album boost (2026-11-13)
 - Tier list: S-D song and album tiers from your ranking, D-to-S reveal, tap-to-move edits, share image and downloadable reveal video
 - Spotify links on each Top 10 song and "Copy tracklist" for playlist import tools; the disabled Spotify OAuth playlist export was deleted
 - CI with deploys gated on tests (Vercel Deployment Checks); undo rewritten to restore exact state; ~640 lines of dead pairing code removed; 26 broken Watch videos replaced; analytics tracking fixed
