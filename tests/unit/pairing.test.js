@@ -429,3 +429,29 @@ describe('album coverage', () => {
     Math.random.mockRestore();
   });
 });
+
+// ======================================================================
+// Early pool exclusions
+// ======================================================================
+describe('initializeSongTiers exclusions', () => {
+  test('skits, interludes and freestyles stay out of the classic pool and album coverage', () => {
+    const songs = [
+      { id: 'famous', title: 'Famous', albumId: 'tlop', spotifyStreams: 900000000 },
+      { id: 'freestyle-4', title: 'Freestyle 4', albumId: 'tlop', spotifyStreams: 800000000 },
+      { id: 'highlights', title: 'Highlights', albumId: 'tlop', spotifyStreams: 700000000 },
+      { id: 'aotl-interlude', title: 'All of the Lights (Interlude)', albumId: 'mbdtf', spotifyStreams: 600000000 },
+      { id: 'power', title: 'POWER', albumId: 'mbdtf', spotifyStreams: 500000000 },
+      { id: 'skit-1', title: 'Skit #1', albumId: 'cd', spotifyStreams: 400000000 },
+      { id: 'jesus-walks', title: 'Jesus Walks', albumId: 'cd', spotifyStreams: 300000000 }
+    ];
+    const ctx = Object.create(KanyeRankerApp.prototype);
+    Object.assign(ctx, { songs, songRatings: new Map(songs.map(s => [s.id, 1500])) });
+    ctx.initializeSongTiers();
+
+    expect(ctx.classicAlbumArray.sort()).toEqual(['famous', 'jesus-walks', 'power']);
+    expect([...ctx.albumCoverageSongs.values()].flat().sort()).toEqual(['famous', 'jesus-walks', 'power']);
+    // Still rankable: they stay in the popularity pools and all-songs pool
+    expect(ctx.allSongsArray).toContain('freestyle-4');
+    expect(ctx.top20Array).toContain('freestyle-4');
+  });
+});

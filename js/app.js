@@ -376,9 +376,21 @@ class KanyeRankerApp {
         const top50Songs = songsWithStreams.slice(0, 50);
         const top100Songs = songsWithStreams.slice(0, 100);
         
+        // Skits, interludes, freestyles and other non-song tracks stay out of the early boost pools
+        const excludedSongs = new Set([
+            'Frank\'s Track', 'Skit #1', 'Skit #2', 'Skit #3', 'Skit #4',
+            'Intro', 'Outro', 'Interlude', 'I Love Kanye', 'Low Lights',
+            'Pt. 2', 'Silver Surfer Intermission', 'Facts (Charlie Heat Version)',
+            'Freestyle 4', '30 Hours', 'Feedback', 'Highlights'
+        ]);
+        const isEarlyPoolSong = s => {
+            const title = s.title.toLowerCase();
+            return !excludedSongs.has(s.title) && !['skit', 'interlude', 'freestyle'].some(w => title.includes(w));
+        };
+
         // Also create a special tier for moderately popular songs from classic albums
         const classicAlbumSongs = songsWithStreams
-            .filter(s => s.isFromPopularAlbum && s.spotifyStreams > 10000000)
+            .filter(s => s.isFromPopularAlbum && s.spotifyStreams > 10000000 && isEarlyPoolSong(s))
             .slice(0, 80); // Top 80 songs from classic albums
         
         // Create Sets for O(1) lookup to strictly enforce tier boundaries
@@ -398,17 +410,9 @@ class KanyeRankerApp {
         // Track shown songs
         this.shownSongs = new Set();
         
-        // Each album's songs, most-streamed first, minus skits and interludes (album coverage draws from these)
-        const excludedSongs = new Set([
-            'Frank\'s Track', 'Skit #1', 'Skit #2', 'Skit #3', 'Skit #4',
-            'Intro', 'Outro', 'Interlude', 'I Love Kanye', 'Low Lights',
-            'Pt. 2', 'Silver Surfer Intermission', 'Facts (Charlie Heat Version)',
-            'Freestyle 4', '30 Hours', 'Feedback', 'Highlights'
-        ]);
+        // Each album's songs, most-streamed first, minus excluded tracks (album coverage draws from these)
         this.albumCoverageSongs = new Map();
-        songsWithStreams.forEach(s => {
-            const title = s.title.toLowerCase();
-            if (excludedSongs.has(s.title) || ['skit', 'interlude', 'freestyle'].some(w => title.includes(w))) return;
+        songsWithStreams.filter(isEarlyPoolSong).forEach(s => {
             if (!this.albumCoverageSongs.has(s.albumId)) this.albumCoverageSongs.set(s.albumId, []);
             this.albumCoverageSongs.get(s.albumId).push(s.id);
         });
