@@ -1,0 +1,46 @@
+name: IndexNow
+
+# Tells Bing (and the engines that share its index) that the homepage changed.
+# Vercel only promotes a build after CI passes, so this waits until the live page
+# matches the pushed index.html before pinging.
+on:
+  push:
+    branches: [main]
+    paths: [index.html]
+  workflow_dispatch:
+
+concurrency:
+  group: indexnow
+  cancel-in-progress: true
+
+env:
+  SITE: https://www.kanyeranker.com
+  # Public by design: the same value is served at $SITE/$INDEXNOW_KEY.txt
+  INDEXNOW_KEY: 3a895aad7da92bea2cf467869d9fa77e
+
+jobs:
+  ping:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Wait for the new build to be live
+        id: live
+        run: |
+          for attempt in $(seq 1 80); do
+            if curl -fsS --compressed "$SITE/?indexnow=$GITHUB_SHA-$attempt" | cmp -s - index.html; then
+              echo "live=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            sleep 30
+          done
+          echo "::warning::Live page never matched index.html (CI failed or the deploy was held), so IndexNow was not pinged"
+
+      - name: Ping IndexNow
+        if: steps.live.outputs.live == 'true'
+        run: |
+          curl -fsS -o /dev/null -w 'IndexNow responded %{http_code}\n' \
+            -X POST https://api.indexnow.org/indexnow \
+            -H 'Content-Type: application/json; charset=utf-8' \
+            -d "{\"host\":\"www.kanyeranker.com\",\"key\":\"$INDEXNOW_KEY\",\"keyLocation\":\"$SITE/$INDEXNOW_KEY.txt\",\"urlList\":[\"$SITE/\"]}"

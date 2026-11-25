@@ -24,6 +24,7 @@ kanye-ranker/
 ├── index.html                  # Single page: landing, comparison, results screens
 ├── serve.py                    # Local dev server (python3 serve.py, port 8000)
 ├── robots.txt, sitemap.xml, llms.txt   # llms.txt: plain-text summary for AI crawlers
+├── 3a895aad7da92bea2cf467869d9fa77e.txt    # IndexNow key file (public; must match INDEXNOW_KEY in indexnow.yml)
 ├── .vercelignore               # Keeps tests/, scripts/, CLAUDE.md etc. off the live site
 ├── CNAME                       # Leftover from GitHub Pages
 ├── package.json                # Test scripts only (Jest, Playwright)
@@ -120,7 +121,8 @@ Each Top 10 row has a "Spotify" link (`open.spotify.com/track/<id>` from `spotif
 ## Development Notes
 
 - **Run locally**: `python3 serve.py` (port 8000). Opening `index.html` directly will fail to fetch the JSON data.
-- **SEO copy is static**: the landing "About" section (albums, FAQ), the JSON-LD (WebApplication + FAQPage), the meta description and `llms.txt` repeat song/album counts and the album list from `songs.json`. `tests/unit/seo.test.js` fails when they drift, so update them when the catalog changes
+- **SEO copy is static**: the landing "About" section (albums, FAQ), the JSON-LD (WebApplication + FAQPage), the meta description and `llms.txt` repeat song/album counts and the album list from `songs.json`. `tests/unit/seo.test.js` fails when they drift, so update them when the catalog changes. The title and description are repeated in the `og:` and `twitter:` tags (the test keeps them identical and within 60 / 160 characters), and each FAQ item lives twice: visible in `.about-faq` and in the FAQPage JSON-LD
+- **Search wording comes from real queries**: exports from Search Console and Bing Webmaster live in `analytics-reports/search/` (gitignored). As of 2026-11-25 the page shows up for song/album "ranker", "tier list" and "niche Kanye songs" searches, which is why the title, About intro and FAQ use those words. `meta keywords` was removed (search engines ignore it); Ye/Yeezy are tied to Kanye West through `sameAs` links in the JSON-LD
 - **Mobile-First**: Touch-friendly interface with large tap targets (44px minimum, enforced in E2E tests)
 - **Performance**: next comparison's album art is preloaded; YouTube iframes are only created when "Watch" is clicked; globe stage textures load after `window.load`
 - **Storage**: no ranking progress is persisted; every session starts fresh. localStorage holds the theme, back-button history, song request queue, share-incentive state, and the internal-user analytics flag
@@ -141,11 +143,13 @@ Each Top 10 row has a "Spotify" link (`open.spotify.com/track/<id>` from `spotif
 - **Gated on CI**: `.github/workflows/ci.yml` runs Jest plus Playwright (Desktop Chrome, Mobile Safari) on every push and PR. A Vercel Deployment Check requires the `test` job to pass before a build is promoted to the custom domain, so a red build never goes live
 - **Don't rename the `test` job** without updating the Deployment Check in Vercel (Project Settings > Build and Deployment > Deployment Checks); Vercel matches checks by job name and would hold every deploy
 - Emergency bypass: **Force Promote** on the Vercel deployment page
+- `.github/workflows/indexnow.yml` runs when a push to `main` changes `index.html`: it waits until the live page matches the pushed file (so only after Vercel promotes the build), then pings IndexNow so Bing recrawls the homepage. It is not a deployment check. Google does not use IndexNow; request indexing in Search Console after copy changes
 - `.github/workflows/clip-check.yml` runs `scripts/check-video-links.js` weekly to catch dead Watch videos; it is not a deployment check
 - GitHub Pages was turned off 2026-10-30 (it was a redundant build nothing pointed at)
 
 ## Recent Updates
 
+- Search copy tuned from Search Console and Bing data (2026-11-25): title and FAQ now cover album ranking, tier lists, niche songs and "Ye"; Kanye West entity links in the JSON-LD; IndexNow ping on deploy
 - Album coverage in early pairings: every album gets a compared song by comparison 20 and a second by 30, so all 17 albums can be ranked; replaced the album diversity roll and the Bully new-album boost (2026-11-13)
 - Tier list: S-D song and album tiers from your ranking, D-to-S reveal, tap-to-move edits, share image and downloadable reveal video
 - Spotify links on each Top 10 song and "Copy tracklist" for playlist import tools; the disabled Spotify OAuth playlist export was deleted

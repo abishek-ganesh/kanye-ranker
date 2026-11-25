@@ -1,6 +1,6 @@
 # Kanye Ranker
 
-> Kanye Ranker (https://www.kanyeranker.com/) is a free web app that ranks Kanye West songs by personal taste. It shows two songs at a time, the user picks one, and an Elo rating turns those picks into a personal Top 10 songs and Top 5 albums that can be shared as an image. No account or sign-up.
+> Kanye Ranker (https://www.kanyeranker.com/) is a free web app that ranks Kanye West (Ye) songs and albums by personal taste. It shows two songs at a time, the user picks one, and an Elo rating turns those picks into a personal Top 10 songs, Top 5 albums and S to D tier lists for songs and albums, all shareable as images. No account or sign-up.
 
 ## How it works
 
@@ -9,6 +9,9 @@
 - Results unlock after 20 comparisons; ranking can continue as long as the user wants
 - Popular songs appear first, then closer matchups as the list takes shape
 - Users can request specific songs mid-session, undo the last pick, and watch a YouTube clip for many songs
+- Album rankings come from the song picks; albums are never compared directly
+- Tier list: after results unlock, songs and albums are sorted into S, A, B, C and D tiers that the user can adjust, then share as an image or a short reveal video
+- Results also name the user's most underrated pick (the least-streamed song in their Top 10) and link each Top 10 song to Spotify
 - Nothing is saved to a server; each visit starts fresh
 
 ## Coverage

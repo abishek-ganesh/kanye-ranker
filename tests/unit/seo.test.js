@@ -63,6 +63,40 @@ describe('structured data', () => {
   });
 });
 
+describe('search and social tags', () => {
+  const meta = sel => doc.querySelector(sel).content;
+
+  test('social titles and descriptions match the page title and description', () => {
+    const description = meta('meta[name="description"]');
+    expect(meta('meta[property="og:title"]')).toBe(doc.title);
+    expect(meta('meta[name="twitter:title"]')).toBe(doc.title);
+    expect(meta('meta[property="og:description"]')).toBe(description);
+    expect(meta('meta[name="twitter:description"]')).toBe(description);
+  });
+
+  test('title and description fit in a search result', () => {
+    expect(doc.title.length).toBeLessThanOrEqual(60);
+    expect(meta('meta[name="description"]').length).toBeLessThanOrEqual(160);
+  });
+
+  test('structured data ties the app to the Kanye West entity, so Ye and Yeezy resolve to him', () => {
+    const { about } = structuredData().app;
+    expect(about.alternateName).toEqual(expect.arrayContaining(['Ye', 'Yeezy']));
+    expect(about.sameAs).toEqual(expect.arrayContaining([
+      'https://en.wikipedia.org/wiki/Kanye_West',
+      'https://www.wikidata.org/wiki/Q15935'
+    ]));
+  });
+});
+
+describe('IndexNow', () => {
+  test('the key in the workflow has a matching key file at the site root', () => {
+    const workflow = fs.readFileSync(path.join(root, '.github/workflows/indexnow.yml'), 'utf8');
+    const key = workflow.match(/INDEXNOW_KEY: ([0-9a-f]{32})/)[1];
+    expect(fs.readFileSync(path.join(root, `${key}.txt`), 'utf8')).toBe(key);
+  });
+});
+
 describe('llms.txt', () => {
   test('lists the real song count and every album', () => {
     expect(llms).toContain(`${songCount} of Kanye West's most-streamed songs across ${albums.length} albums`);
