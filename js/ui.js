@@ -12,6 +12,9 @@ class UI {
         
         // Track achieved milestones
         this.achievedMilestones = new Set();
+
+        // Progress bar copy and thresholds for the current mode (see setProgressMode)
+        this.progress = UI.PROGRESS_MODES.songs;
         
         // Validate screens exist
         const screenValidation = KanyeUtils.validateElements(this.screens, true);
@@ -200,10 +203,27 @@ class UI {
         this.updateShowResultsButton(completedComparisons !== null ? completedComparisons : current);
     }
     
+    // Swaps the milestone labels, unlock count and button copy between song and album mode
+    setProgressMode(mode) {
+        this.progress = UI.PROGRESS_MODES[mode] || UI.PROGRESS_MODES.songs;
+        this.achievedMilestones.clear();
+        const max = this.progress.milestones[this.progress.milestones.length - 1];
+        document.querySelectorAll('.milestone').forEach((elem, index) => {
+            if (index === 0) return;
+            const value = this.progress.milestones[index];
+            // milestone-progress.css positions by data-value, so place markers from their value instead
+            elem.style.left = `${(value / max) * 100}%`;
+            const label = elem.querySelector('.milestone-number');
+            if (label) label.textContent = index === this.progress.milestones.length - 1 ? `${value}+` : String(value);
+        });
+        const btnText = this.elements.showResultsButton?.querySelector('.btn-text');
+        if (btnText) btnText.textContent = this.progress.doneLabel;
+    }
+
     updateMilestoneProgress(current) {
-        const unlockAt = KanyeUtils.RESULTS_UNLOCK_AT;
-        const milestones = [0, unlockAt, 50, 100];
-        const maxMilestone = 100;
+        const { unlockAt, milestones, prize } = this.progress;
+        const maxMilestone = milestones[milestones.length - 1];
+        const [, , solidAt] = milestones;
         
         // Calculate progress percentage (capped at 100)
         const progressPercentage = Math.min((current / maxMilestone) * 100, 100);
@@ -272,16 +292,16 @@ class UI {
         const progressMessage = document.getElementById('progress-message');
         if (progressMessage) {
             if (current === 0) {
-                progressMessage.textContent = `Start your journey • ${unlockAt} comparisons to unlock results`;
+                progressMessage.textContent = `Start your journey • ${unlockAt} comparisons to unlock ${prize}`;
                 progressMessage.classList.remove('unlocked');
             } else if (current < unlockAt) {
-                progressMessage.textContent = `Keep going! ${unlockAt - current} more to unlock results`;
+                progressMessage.textContent = `Keep going! ${unlockAt - current} more to unlock ${prize}`;
                 progressMessage.classList.remove('unlocked');
-            } else if (current < 50) {
-                progressMessage.textContent = 'You can stop anytime • Keep ranking or view your results';
+            } else if (current < solidAt) {
+                progressMessage.textContent = `You can stop anytime • Keep ranking or view ${prize}`;
                 progressMessage.classList.add('unlocked');
-            } else if (current < 100) {
-                progressMessage.textContent = 'Power ranker! Keep going or view your results';
+            } else if (current < maxMilestone) {
+                progressMessage.textContent = `Power ranker! Keep going or view ${prize}`;
                 progressMessage.classList.add('unlocked');
             } else {
                 progressMessage.textContent = `${current} comparisons • Continue as long as you want to perfect your rankings`;
@@ -369,7 +389,7 @@ class UI {
     }
     
     updateShowResultsButton(currentComparisons) {
-        const minComparisons = KanyeUtils.RESULTS_UNLOCK_AT;
+        const minComparisons = this.progress.unlockAt;
         const showResultsBtn = this.elements.showResultsButton;
         const lockIcon = showResultsBtn.querySelector('.btn-lock-icon');
         const btnText = showResultsBtn.querySelector('.btn-text');
@@ -396,7 +416,7 @@ class UI {
             showResultsBtn.disabled = false;
             showResultsBtn.classList.remove('btn-locked');
             if (lockIcon) lockIcon.style.display = 'none';
-            showResultsBtn.title = 'Show your results';
+            showResultsBtn.title = `Show ${this.progress.prize}`;
             
             // Safari fix: Force button state update
             if (window.safari || /^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
@@ -407,6 +427,31 @@ class UI {
         }
     }
     
+    // Album mode: each card shows an album (cover, name, artist, year) and its two biggest songs
+    displayAlbumComparison(albumA, albumB, highlightsA = [], highlightsB = []) {
+        [['a', albumA, highlightsA], ['b', albumB, highlightsB]].forEach(([side, album, highlights]) => {
+            const card = this.elements.songCards[side];
+            if (!card || !album) return;
+            card.title.textContent = album.name;
+            card.album.textContent = UI.albumArtist(album);
+            card.year.textContent = `(${album.year})`;
+            card.albumArt.onerror = function() {
+                this.onerror = null;
+                this.src = 'assets/album-covers/placeholder.svg';
+            };
+            card.albumArt.style.backgroundColor = album.id === 'v1' || album.id === 'v2' ? '#000' : '';
+            card.albumArt.src = album.coverArt ? `assets/album-covers/${album.coverArt}` : 'assets/album-covers/placeholder.svg';
+            card.albumArt.alt = `${album.name} album cover`;
+            const label = document.getElementById(`clip-label-${side}`);
+            if (label) label.textContent = highlights.join(' · ');
+        });
+    }
+
+    // Credited artist for album cards (collabs and group albums aren't solo Kanye)
+    static albumArtist(album) {
+        return UI.ALBUM_ARTISTS[album?.id] || 'Kanye West';
+    }
+
     displayComparison(songA, songB, albumsMap) {
         
         try {
@@ -867,6 +912,19 @@ class UI {
         this.elements.skipButton.disabled = false;
     }
 }
+
+UI.PROGRESS_MODES = {
+    songs: { unlockAt: KanyeUtils.RESULTS_UNLOCK_AT, milestones: [0, KanyeUtils.RESULTS_UNLOCK_AT, 50, 100], prize: 'your results', doneLabel: "I'm Done - Show Results" },
+    albums: { unlockAt: KanyeUtils.ALBUM_TIER_UNLOCK_AT, milestones: [0, KanyeUtils.ALBUM_TIER_UNLOCK_AT, 30, 50], prize: 'your tier list', doneLabel: "I'm Done - Show Tier List" }
+};
+
+UI.ALBUM_ARTISTS = {
+    wtt: 'Kanye West & Jay-Z',
+    cruel: 'Kanye West & G.O.O.D. Music',
+    ksg: 'Kids See Ghosts (Kanye & Kid Cudi)',
+    v1: '¥$ (Ye & Ty Dolla $ign)',
+    v2: '¥$ (Ye & Ty Dolla $ign)'
+};
 
 // Make class available globally
 window.UI = UI;

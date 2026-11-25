@@ -29,6 +29,7 @@
         constructor(app) {
             this.app = app;
             this.kind = 'songs';
+            this.albumsOnly = false;
             this.board = null;
             this.selectedId = null;
             this.revealing = false;
@@ -57,7 +58,10 @@
                 videoFill: $('tier-video-progress-fill'),
                 videoSave: $('tier-video-save'),
                 videoClose: $('tier-video-close'),
-                tabs: Array.from(document.querySelectorAll('.tier-tab'))
+                tabs: Array.from(document.querySelectorAll('.tier-tab')),
+                tabsWrap: document.querySelector('.tier-tabs'),
+                title: document.querySelector('.tier-title'),
+                rankSongs: $('tier-rank-songs')
             };
             this.bind();
             this.el.shareVideo.hidden = !window.TierListExport?.videoSupport?.().supported;
@@ -67,12 +71,17 @@
             return this.app.tierList;
         }
 
+        // Which ranking mode produced this tier list, for analytics
+        get mode() {
+            return this.albumsOnly ? 'albums' : 'songs';
+        }
+
         bind() {
             this.el.open.addEventListener('click', () => this.open());
             this.el.back.addEventListener('click', () => this.close());
             this.el.skip.addEventListener('click', () => this.finishReveal());
             this.el.replay.addEventListener('click', () => {
-                window.analytics?.trackTierRevealReplayed(this.kind);
+                window.analytics?.trackTierRevealReplayed(this.kind, this.mode);
                 this.render(true);
             });
             this.el.tabs.forEach(tab => tab.addEventListener('click', () => this.setKind(tab.dataset.kind)));
@@ -83,6 +92,7 @@
                 btn.addEventListener('click', () => this.moveSelected(btn.dataset.tier));
             });
             this.el.videoClose.addEventListener('click', () => this.closeVideo());
+            this.el.rankSongs?.addEventListener('click', () => this.app.switchToSongMode());
 
             // One delegated handler for tiles and tier labels
             this.el.board.addEventListener('click', e => {
@@ -117,21 +127,31 @@
             return this.revealing;
         }
 
-        open() {
+        // albumsOnly: opened from album mode, so there's no Songs tab and Back returns to the comparisons
+        open({ albumsOnly = false } = {}) {
             if (!this.core) return;
-            this.kind = 'songs';
+            this.albumsOnly = albumsOnly;
+            this.kind = albumsOnly ? 'albums' : 'songs';
             this.revealedKinds.clear();
+            this.el.tabsWrap.hidden = albumsOnly;
+            if (this.el.rankSongs) this.el.rankSongs.hidden = !albumsOnly;
+            this.el.back.textContent = albumsOnly ? '← Keep ranking' : '← Results';
+            this.el.title.textContent = albumsOnly ? 'Your Album Tier List' : 'Your Tier List';
             this.app.ui.showScreen('tierList');
             window.analytics?.trackScreenView('tier_list');
             window.scrollTo(0, 0);
             this.syncTabs();
             this.render(true);
-            window.analytics?.trackTierListViewed(this.kind, TierListCore.rankedCount(this.board), this.app.elo.getCompletedComparisons());
+            window.analytics?.trackTierListViewed(this.kind, TierListCore.rankedCount(this.board), this.app.comparisonsDone(), this.mode);
         }
 
         close() {
             this.stopReveal();
             this.clearSelection();
+            if (this.albumsOnly) {
+                this.app.resumeAlbumRanking();
+                return;
+            }
             this.app.ui.showScreen('results');
             window.scrollTo(0, 0);
         }
@@ -143,7 +163,7 @@
             this.kind = kind;
             this.syncTabs();
             this.render(!this.revealedKinds.has(kind));
-            window.analytics?.trackTierListViewed(kind, TierListCore.rankedCount(this.board), this.app.elo.getCompletedComparisons());
+            window.analytics?.trackTierListViewed(kind, TierListCore.rankedCount(this.board), this.app.comparisonsDone(), this.mode);
         }
 
         syncTabs() {
@@ -230,9 +250,16 @@
                     : 'Compare a few songs first to build your tier list.';
             } else {
                 const total = this.app.albums.size;
-                this.el.summary.textContent = ranked === total
-                    ? `All ${total} albums, ranked from your picks.`
-                    : `${ranked} of ${total} albums ranked from your picks.`;
+                if (this.albumsOnly) {
+                    const picks = this.app.comparisonsDone();
+                    this.el.summary.textContent = ranked === total
+                        ? `All ${total} albums, ranked from your ${picks} picks. Keep ranking to sharpen it.`
+                        : `${ranked} of ${total} albums ranked so far. Keep ranking to place the rest.`;
+                } else {
+                    this.el.summary.textContent = ranked === total
+                        ? `All ${total} albums, ranked from your picks.`
+                        : `${ranked} of ${total} albums ranked from your picks.`;
+                }
             }
         }
 
@@ -351,7 +378,7 @@
                 moved.focus({ preventScroll: true });
                 moved.scrollIntoView({ block: 'nearest', behavior: reducedMotion() ? 'auto' : 'smooth' });
             }
-            window.analytics?.trackTierItemMoved(this.kind, from, tier);
+            window.analytics?.trackTierItemMoved(this.kind, from, tier, this.mode);
         }
 
         // ---------- Sharing ----------
@@ -375,7 +402,7 @@
                 const blob = await this.exporter().renderImage(canvas);
                 this.app.ui.hideOverlay();
                 const method = await KanyeUtils.shareOrDownloadFile(blob, `kanye-tier-list-${kind}.png`, SHARE_TEXT[kind]);
-                if (method !== 'cancelled') window.analytics?.trackTierListShared(kind, 'image', method);
+                if (method !== 'cancelled') window.analytics?.trackTierListShared(kind, 'image', method, this.mode);
             } catch (error) {
                 this.app.ui.hideOverlay();
                 KanyeUtils.handleError(error, 'tier-list-image');
@@ -412,7 +439,7 @@
                     const filename = `kanye-tier-list-${kind}.${result.extension}`;
                     const method = await KanyeUtils.shareOrDownloadFile(result.blob, filename, SHARE_TEXT[kind]);
                     if (method !== 'cancelled') {
-                        window.analytics?.trackTierListShared(kind, 'video', method);
+                        window.analytics?.trackTierListShared(kind, 'video', method, this.mode);
                         this.closeVideo();
                     }
                 };

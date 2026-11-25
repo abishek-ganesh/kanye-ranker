@@ -257,6 +257,8 @@ class YouTubePreviewFallback {
     }
     
     markPreviewableSongs() {
+        // Album mode cards show albums, not songs; their caption line belongs to ui.displayAlbumComparison
+        if (document.body.classList.contains('album-mode')) return;
         const songCards = document.querySelectorAll('.song-card');
         
         // Only log debug info once per session

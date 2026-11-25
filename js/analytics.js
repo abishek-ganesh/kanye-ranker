@@ -76,10 +76,11 @@ class Analytics {
         });
     }
 
-    trackComparisonSkipped(comparisonNumber) {
+    trackComparisonSkipped(comparisonNumber, mode = 'songs') {
         this.track('comparison_skipped', {
             event_category: 'engagement',
-            comparison_number: comparisonNumber
+            comparison_number: comparisonNumber,
+            ranking_mode: mode
         });
     }
 
@@ -247,42 +248,66 @@ class Analytics {
     }
 
     // Tier list screen opened (list_type: songs | albums)
-    trackTierListViewed(listType, itemCount, comparisons) {
+    // mode: 'songs' (song comparisons) or 'albums' (album mode) for every tier list event
+    trackTierListViewed(listType, itemCount, comparisons, mode = 'songs') {
         this.track('tier_list_viewed', {
             event_category: 'engagement',
             event_label: 'tier_list',
             list_type: listType,
             item_count: itemCount,
-            comparisons_completed: comparisons
+            comparisons_completed: comparisons,
+            ranking_mode: mode
         });
     }
 
-    trackTierRevealReplayed(listType) {
+    trackTierRevealReplayed(listType, mode = 'songs') {
         this.track('tier_list_reveal_replayed', {
             event_category: 'engagement',
             event_label: 'tier_list',
-            list_type: listType
+            list_type: listType,
+            ranking_mode: mode
         });
     }
 
-    trackTierItemMoved(listType, fromTier, toTier) {
+    trackTierItemMoved(listType, fromTier, toTier, mode = 'songs') {
         this.track('tier_item_moved', {
             event_category: 'engagement',
             event_label: 'tier_list',
             list_type: listType,
             from_tier: fromTier,
-            to_tier: toTier
+            to_tier: toTier,
+            ranking_mode: mode
         });
     }
 
     // format: image | video; method: native | download
-    trackTierListShared(listType, format, method) {
+    trackTierListShared(listType, format, method, mode = 'songs') {
         this.track('tier_list_shared', {
             event_category: 'sharing',
             event_label: 'tier_list',
             list_type: listType,
             share_format: format,
-            share_method: method
+            share_method: method,
+            ranking_mode: mode
+        });
+    }
+
+    // source: 'button' (landing) or 'link' (?mode=albums)
+    trackAlbumModeStarted(source) {
+        this.track('album_mode_started', {
+            event_category: 'engagement',
+            event_label: source,
+            ranking_mode: 'albums'
+        });
+    }
+
+    trackAlbumComparisonMade(comparisonNumber, winnerAlbum, loserAlbum) {
+        this.track('album_comparison_made', {
+            event_category: 'gameplay',
+            comparison_number: comparisonNumber,
+            winner_album: winnerAlbum,
+            loser_album: loserAlbum,
+            ranking_mode: 'albums'
         });
     }
 

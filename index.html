@@ -98,7 +98,7 @@
                         "name": "Can I rank Kanye's albums too?",
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "Yes. Your album ranking comes from your song picks, so you never have to compare albums directly. Results show your Top 5 albums, and the album tier list sorts all 17 into S to D tiers once you have ranked enough songs from each."
+                            "text": "Yes, two ways. Tap Rank albums instead to compare the 17 albums head to head: after 15 picks you get an S to D album tier list. Or rank songs, and your Top 5 albums and album tier list come from your song picks."
                         }
                     },
                     {
@@ -143,6 +143,7 @@
     <link rel="stylesheet" href="css/milestone-progress.css">
     <link rel="stylesheet" href="css/song-request.css?v=6">
     <link rel="stylesheet" href="css/globe-stage.css">
+    <link rel="stylesheet" href="css/album-mode.css">
     <link rel="stylesheet" href="css/tier-list.css">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z2S91E0R6Z"></script>
@@ -202,6 +203,11 @@
                 <button id="start-ranking" class="btn btn-primary btn-hero">
                     START
                 </button>
+                <!-- Album mode entry: stands on the dome under START (css/album-mode.css) -->
+                <button id="start-album-mode" class="album-mode-cta" type="button">
+                    <span class="album-mode-cta-label">Rank albums instead</span>
+                    <span class="album-mode-cta-sub">Album tier list in 15 picks</span>
+                </button>
             </div>
             <div id="globe-callout" class="globe-callout" aria-live="polite"></div>
             <div class="globe-meta" aria-hidden="true">
@@ -247,7 +253,7 @@
 
             <section class="instructions about-section" aria-labelledby="about-heading">
                 <h2 id="about-heading">ABOUT KANYE RANKER</h2>
-                <p class="about-lead">Kanye Ranker is a Kanye West (Ye) song and album ranker. It shows you two songs at a time: pick the one you like more, or skip if you can't decide. After 20 picks you unlock your personal Top 10 songs, Top 5 albums and an S to D tier list, ready to share as an image. Keep going and your ranking gets sharper.</p>
+                <p class="about-lead">Kanye Ranker is a Kanye West (Ye) song and album ranker. It shows you two songs at a time: pick the one you like more, or skip if you can't decide. After 20 picks you unlock your personal Top 10 songs, Top 5 albums and an S to D tier list, ready to share as an image. Keep going and your ranking gets sharper. Want just the albums? Rank albums instead puts the 17 albums head to head and builds your album tier list in 15 picks.</p>
 
                 <h3>THE ALBUMS</h3>
                 <ul class="about-albums">
@@ -286,7 +292,7 @@
                     </div>
                     <div class="faq-item">
                         <h4>Can I rank Kanye&#x27;s albums too?</h4>
-                        <p>Yes. Your album ranking comes from your song picks, so you never have to compare albums directly. Results show your Top 5 albums, and the album tier list sorts all 17 into S to D tiers once you have ranked enough songs from each.</p>
+                        <p>Yes, two ways. Tap Rank albums instead to compare the 17 albums head to head: after 15 picks you get an S to D album tier list. Or rank songs, and your Top 5 albums and album tier list come from your song picks.</p>
                     </div>
                     <div class="faq-item">
                         <h4>Can I make a Kanye West tier list?</h4>
@@ -464,6 +470,7 @@
                 <button id="tier-share-image" class="tier-action tier-action-primary" type="button">📸 Share image</button>
                 <button id="tier-share-video" class="tier-action" type="button" hidden>🎬 Save reveal video</button>
                 <button id="tier-replay" class="tier-action" type="button">↻ Replay reveal</button>
+                <button id="tier-rank-songs" class="tier-action" type="button" hidden>🎵 Rank songs too</button>
             </div>
         </div>
 
@@ -562,6 +569,7 @@
     <script src="js/song-request.js?v=2"></script>
     <script src="js/tier-list.js"></script>
     <script src="js/tier-list-export.js"></script>
+    <script src="js/album-ranker.js"></script>
     <script src="js/app.js"></script>
     <script src="js/app-init.js"></script>
     <script src="js/back-button.js"></script>

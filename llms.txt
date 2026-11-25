@@ -9,7 +9,7 @@
 - Results unlock after 20 comparisons; ranking can continue as long as the user wants
 - Popular songs appear first, then closer matchups as the list takes shape
 - Users can request specific songs mid-session, undo the last pick, and watch a YouTube clip for many songs
-- Album rankings come from the song picks; albums are never compared directly
+- Album rankings come from the song picks, or from album mode (https://www.kanyeranker.com/?mode=albums), which compares the 17 albums head to head and builds an S to D album tier list after 15 picks
 - Tier list: after results unlock, songs and albums are sorted into S, A, B, C and D tiers that the user can adjust, then share as an image or a short reveal video
 - Results also name the user's most underrated pick (the least-streamed song in their Top 10) and link each Top 10 song to Spotify
 - Nothing is saved to a server; each visit starts fresh

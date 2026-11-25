@@ -956,6 +956,11 @@ body {
 }
 
 @media (max-width: 480px) {
+    /* Long quotes wrap to 7 lines and would push the stage's buttons below the fold */
+    .main-quote {
+        font-size: 1.125rem;
+    }
+
     .app-title {
         font-size: 2.5rem;
     }

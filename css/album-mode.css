@@ -1,0 +1,77 @@
+/* Album mode: landing entry button, and the comparison screen while albums go head to head */
+
+.stage-performer {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Sits on the dome under START, so it shares the stage's dark look in both themes */
+.album-mode-cta {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    min-height: 48px;
+    max-width: calc(100% - 32px);
+    padding: 7px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    border-radius: 999px;
+    background: rgba(4, 6, 10, 0.62);
+    color: #f3f3f3;
+    font: inherit;
+    cursor: pointer;
+    pointer-events: auto;
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.album-mode-cta:hover {
+    background: rgba(4, 6, 10, 0.85);
+    border-color: #ffffff;
+}
+
+.album-mode-cta:focus-visible {
+    outline: 3px solid #ffffff;
+    outline-offset: 3px;
+}
+
+.album-mode-cta-label {
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.album-mode-cta-sub {
+    font-size: 0.72rem;
+    opacity: 0.75;
+}
+
+/* Song-only controls make no sense when the cards are albums (ids beat mobile-override.css) */
+body.album-mode #comparison-screen .song-actions,
+body.album-mode #song-request-btn {
+    display: none !important;
+}
+
+body.album-mode .song-card::before {
+    content: "Click anywhere to choose this album" !important;
+}
+
+/* The card's clip-label line carries the album's two biggest songs, in the Watch row's place */
+body.album-mode #comparison-screen .clip-label {
+    min-height: 1.2em;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 600;
+    color: inherit;
+    opacity: 0.75;
+}
+
+@media (max-width: 768px) {
+    body.album-mode #comparison-screen .clip-label {
+        grid-row: 4 !important;
+        font-size: 12px !important;
+    }
+}

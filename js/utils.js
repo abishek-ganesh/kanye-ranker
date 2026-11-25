@@ -244,6 +244,7 @@ async function shareOrDownloadFile(blob, filename, text = '') {
 window.KanyeUtils = {
     // Comparisons needed before "I'm Done" unlocks results (index.html hard-codes the 20 milestone label)
     RESULTS_UNLOCK_AT: 20,
+    ALBUM_TIER_UNLOCK_AT: 15,
     applyAlbumButtonColors,
     getCaseInsensitiveValue,
     resolveVideoEntry,
