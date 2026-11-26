@@ -1249,6 +1249,7 @@ class KanyeRankerApp {
         this.ui.updateModeSwitch('songs', this.getModeStatus());
         this.ui.showScreen('results');
         window.scrollTo(0, 0);
+        window.tasteCardUI?.refresh();
         
         // Track analytics
         if (window.analytics && topSongs.length > 0 && topAlbums.length > 0) {
@@ -1442,6 +1443,7 @@ class KanyeRankerApp {
 
         this.songRequests?.clear();
         this.tierList?.reset();
+        window.tasteCardUI?.reset();
         
         this.ui.showScreen('landing');
         

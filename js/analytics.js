@@ -292,6 +292,42 @@ class Analytics {
         });
     }
 
+    // Taste card (AI parody of Ye on the Top 10); tone: roast | hype, sent as event_label
+    trackTasteCardRequested(tone, isRegenerate = false) {
+        this.track('taste_card_requested', {
+            event_category: 'engagement',
+            event_label: tone,
+            is_regenerate: isRegenerate
+        });
+    }
+
+    // isFallback: the endpoint answered with a stock card instead of a generated one
+    trackTasteCardGenerated(tone, isFallback = false) {
+        this.track('taste_card_generated', {
+            event_category: 'engagement',
+            event_label: tone,
+            is_fallback: isFallback
+        });
+    }
+
+    // status: HTTP status, or 'timeout' | 'network' | 'bad_response'
+    trackTasteCardFailed(tone, status) {
+        this.track('taste_card_failed', {
+            event_category: 'error',
+            event_label: tone,
+            error_message: String(status)
+        });
+    }
+
+    // method: native | download
+    trackTasteCardShared(tone, method) {
+        this.track('taste_card_shared', {
+            event_category: 'sharing',
+            event_label: tone,
+            share_method: method
+        });
+    }
+
     // source: 'button' (landing) or 'link' (?mode=albums)
     trackAlbumModeStarted(source) {
         this.track('album_mode_started', {

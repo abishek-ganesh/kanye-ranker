@@ -1,0 +1,415 @@
+/* Taste card: "What would Ye say about your list?" on the song results page (js/taste-card.js) */
+
+#taste-card [hidden] {
+    display: none !important;
+}
+
+.taste-section {
+    max-width: 600px;
+    margin: 0 auto 1.75rem;
+    text-align: center;
+}
+
+/* Id + class to beat the `#results-screen h2` section heading size and spacing */
+#results-screen .taste-heading {
+    margin: 0 0 0.15rem;
+    font-size: 1.3rem;
+    font-weight: 900;
+    line-height: 1.25;
+    color: var(--text-color);
+}
+
+.taste-sub {
+    margin: 0 0 0.9rem;
+    font-size: 0.85rem;
+    opacity: 0.75;
+}
+
+/* ---------- Tone buttons ---------- */
+
+.taste-tones {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+.taste-tone-btn {
+    flex: 1;
+    min-height: 48px;
+    padding: 8px 16px;
+    border: 2px solid var(--text-color);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text-color);
+    font: inherit;
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+}
+
+.taste-tone-btn[aria-pressed="true"] {
+    background: var(--text-color);
+    color: var(--background-color);
+}
+
+/* While a card loads, the tone being fetched stays solid and the other steps back */
+.taste-tone-btn:disabled {
+    cursor: progress;
+}
+
+.taste-tone-btn:disabled:not([aria-pressed="true"]) {
+    opacity: 0.4;
+}
+
+.taste-tone-btn:focus-visible,
+.taste-action:focus-visible {
+    outline: 3px solid var(--secondary-color);
+    outline-offset: 3px;
+}
+
+@media (hover: hover) {
+    .taste-tone-btn:not(:disabled):hover,
+    .taste-action:not(:disabled):hover {
+        transform: translateY(-1px);
+    }
+}
+
+.taste-error {
+    margin: 0.85rem auto 0;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #b3261e;
+}
+
+.taste-error:empty {
+    display: none;
+}
+
+.dark-mode .taste-error {
+    color: #ff8a80;
+}
+
+/* ---------- Card shell (also the loading state); dark in both themes, like the share image ---------- */
+
+.taste-shell {
+    --taste-accent: #d4af37;
+    position: relative;
+    overflow: hidden;
+    margin: 1.1rem auto 0;
+    padding: 30px 28px 26px;
+    border: 1px solid #111;
+    border-radius: 22px;
+    background: linear-gradient(165deg, #1e1e1e 0%, #0b0b0b 72%);
+    color: #f3f3f3;
+    text-align: left;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.taste-shell::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 5px;
+    background: var(--taste-accent);
+}
+
+/* Set on the section so the loading state already wears the tone it is fetching */
+.taste-section[data-tone="roast"] .taste-shell {
+    --taste-accent: #ff6b4a;
+}
+
+.dark-mode .taste-shell {
+    border-color: #3a3a3a;
+    background: linear-gradient(165deg, #262626 0%, #101010 72%);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* ---------- Loading ---------- */
+
+.taste-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    min-height: 220px;
+    text-align: center;
+}
+
+.taste-loading-bars {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 5px;
+    height: 36px;
+}
+
+.taste-loading-bars i {
+    width: 6px;
+    height: 100%;
+    border-radius: 3px;
+    background: var(--taste-accent);
+    transform-origin: bottom;
+    animation: taste-bars 0.9s ease-in-out infinite alternate;
+}
+
+.taste-loading-bars i:nth-child(1) { animation-delay: -0.2s; }
+.taste-loading-bars i:nth-child(2) { animation-delay: -0.65s; }
+.taste-loading-bars i:nth-child(3) { animation-delay: -0.4s; }
+.taste-loading-bars i:nth-child(4) { animation-delay: -0.85s; }
+.taste-loading-bars i:nth-child(5) { animation-delay: -0.1s; }
+
+@keyframes taste-bars {
+    from { transform: scaleY(0.25); }
+    to { transform: scaleY(1); }
+}
+
+.taste-loading-text {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+/* ---------- The card ---------- */
+
+.taste-result.is-entering {
+    animation: taste-in 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes taste-in {
+    from { opacity: 0; transform: translateY(14px) scale(0.98); }
+    to { opacity: 1; transform: none; }
+}
+
+.taste-result-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.taste-kicker {
+    padding: 4px 11px;
+    border-radius: 999px;
+    background: var(--taste-accent);
+    color: #111;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    line-height: 1.4;
+    text-transform: uppercase;
+}
+
+.taste-site {
+    color: #8f8f8f;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.taste-archetype {
+    margin: 16px 0 16px;
+    color: #fff;
+    font-size: clamp(1.55rem, 6.2vw, 2.15rem);
+    font-weight: 900;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    overflow-wrap: break-word;
+    text-wrap: balance;
+}
+
+.taste-lines {
+    padding-left: 14px;
+    border-left: 3px solid var(--taste-accent);
+}
+
+.taste-line {
+    margin: 0 0 12px;
+    color: #ececec;
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.45;
+    overflow-wrap: break-word;
+}
+
+.taste-line:last-child {
+    margin-bottom: 0;
+}
+
+.taste-parody-label {
+    margin: 12px 0 0;
+    color: #9a9a9a;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.taste-quote,
+.taste-dna {
+    margin: 20px 0 0;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.taste-label {
+    margin: 0 0 8px;
+    color: #d4af37;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.taste-quote-text {
+    margin: 0;
+    color: #d8d8d8;
+    font-size: 0.95rem;
+    font-style: italic;
+    font-weight: 500;
+    line-height: 1.5;
+    overflow-wrap: break-word;
+}
+
+.taste-quote-text::before { content: '\201C'; }
+.taste-quote-text::after { content: '\201D'; }
+
+.taste-dna-row {
+    display: grid;
+    grid-template-columns: minmax(0, 8.4em) 1fr 2.9em;
+    align-items: center;
+    gap: 10px;
+    margin-top: 9px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.taste-dna-track {
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    overflow: hidden;
+}
+
+.taste-dna-fill {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: var(--taste-era, #d4af37);
+    transform-origin: left;
+}
+
+.taste-result.is-entering .taste-dna-fill {
+    animation: taste-grow 0.8s 0.25s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes taste-grow {
+    from { transform: scaleX(0); }
+    to { transform: none; }
+}
+
+.taste-dna-row[data-era="college"] { --taste-era: #d4af37; }
+.taste-dna-row[data-era="experimental"] { --taste-era: #e5484d; }
+.taste-dna-row[data-era="modern"] { --taste-era: #ff8a3d; }
+.taste-dna-row[data-era="new"] { --taste-era: #cfcfcf; }
+
+.taste-dna-percent {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Actions under the card (same pills as the tier list actions) ---------- */
+
+.taste-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 1rem;
+}
+
+.taste-action {
+    min-height: 48px;
+    padding: 0 22px;
+    border: 2px solid var(--text-color);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text-color);
+    font: inherit;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+.taste-action-primary {
+    background: var(--text-color);
+    color: var(--background-color);
+}
+
+.taste-action:disabled {
+    opacity: 0.6;
+    cursor: progress;
+}
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 540px) {
+    .taste-section {
+        margin-bottom: 1.5rem;
+    }
+
+    #results-screen .taste-heading {
+        font-size: 1.15rem;
+    }
+
+    .taste-tone-btn {
+        padding: 8px 10px;
+        font-size: 0.85rem;
+    }
+
+    .taste-shell {
+        padding: 26px 20px 22px;
+        border-radius: 18px;
+    }
+
+    .taste-line {
+        font-size: 1rem;
+    }
+
+    .taste-action {
+        flex: 1;
+        padding: 0 14px;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .taste-tone-btn,
+    .taste-action {
+        transition: none;
+    }
+
+    .taste-result.is-entering,
+    .taste-result.is-entering .taste-dna-fill {
+        animation: none;
+    }
+
+    /* A still equalizer: uneven bars instead of moving ones */
+    .taste-loading-bars i {
+        animation: none;
+    }
+
+    .taste-loading-bars i:nth-child(1) { transform: scaleY(0.45); }
+    .taste-loading-bars i:nth-child(2) { transform: scaleY(0.8); }
+    .taste-loading-bars i:nth-child(3) { transform: scaleY(1); }
+    .taste-loading-bars i:nth-child(4) { transform: scaleY(0.6); }
+    .taste-loading-bars i:nth-child(5) { transform: scaleY(0.35); }
+}

@@ -8,6 +8,10 @@
 const fs = require('fs');
 const path = require('path');
 
+// Server tests (api/) opt into the node environment, where there is no page to set up.
+// The block is closed at the end of the file and left unindented to keep the diff small.
+if (typeof window !== 'undefined') {
+
 // ---------------------------------------------------------------------------
 // 1. Mock globals that source files depend on at parse/init time
 // ---------------------------------------------------------------------------
@@ -151,3 +155,5 @@ loadSource('js/app.js');
 
 // Load back-button.js (BackButtonManager, used by app.js for undo)
 loadSource('js/back-button.js');
+
+} // end of browser-only setup

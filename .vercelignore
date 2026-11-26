@@ -10,3 +10,6 @@ playwright.config.js
 serve.py
 scripts
 tests
+
+# Local secrets
+.env*

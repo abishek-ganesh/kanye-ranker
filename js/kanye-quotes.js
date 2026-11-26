@@ -88,6 +88,10 @@
         }
     ];
 
+    // api/taste.js reads the same list on the server, where there is no page to cycle quotes on
+    if (typeof module !== 'undefined' && module.exports) module.exports = kanyeQuotes;
+    if (typeof document === 'undefined') return;
+
     function getRandomQuote() {
         return kanyeQuotes[Math.floor(Math.random() * kanyeQuotes.length)];
     }
