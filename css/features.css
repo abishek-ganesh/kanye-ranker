@@ -819,6 +819,23 @@ body.dark-mode .insight-song {
     gap: 25px;
 }
 
+/* Results button rows (song rows are inline-styled by share-integrated.js): on phones, smaller labels fit
+   side by side; wider fonts wrap inside a taller button instead of pushing "Start Over" off screen */
+@media (max-width: 480px) {
+    .action-container.reorganized > div > .btn-large,
+    #bottom-action-buttons > .btn-large,
+    .album-results-actions .btn-large {
+        min-width: 0;
+        height: auto;
+        min-height: 60px;
+        padding: 6px 10px;
+        font-size: 0.78rem;
+        letter-spacing: 0.02em;
+        line-height: 1.2;
+        white-space: normal;
+    }
+}
+
 /* Share sections container at bottom */
 .share-sections-container,
 #share-sections-container {
