@@ -26,8 +26,8 @@ module.exports = defineConfig({
   // Retry failed tests once in CI
   retries: process.env.CI ? 1 : 0,
 
-  // Reporter
-  reporter: process.env.CI ? 'dot' : 'list',
+  // On CI, 'github' posts each failure as a run annotation (readable without logging in)
+  reporter: process.env.CI ? [['github'], ['dot']] : 'list',
 
   // Shared settings for all projects
   use: {
