@@ -176,7 +176,7 @@
     z-index: 6;
     left: max(16px, env(safe-area-inset-left, 0px));
     right: max(16px, env(safe-area-inset-right, 0px));
-    bottom: 14px;
+    bottom: 28px;
     display: flex;
     justify-content: space-between;
     align-items: baseline;

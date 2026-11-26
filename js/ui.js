@@ -25,6 +25,8 @@ class UI {
         // Optional screens (absent from the unit test DOM)
         const tierListScreen = document.getElementById('tier-list-screen');
         if (tierListScreen) this.screens.tierList = tierListScreen;
+        const albumResultsScreen = document.getElementById('album-results-screen');
+        if (albumResultsScreen) this.screens.albumResults = albumResultsScreen;
         
         this.elements = {
             startButton: document.getElementById('start-ranking'),
@@ -172,7 +174,7 @@ class UI {
         if (backButton) {
             const isMobile = window.innerWidth <= 768;
             // Hide back button on landing and results screens
-            if (screenName === 'landing' || screenName === 'results' || screenName === 'tierList') {
+            if (screenName === 'landing' || screenName === 'results' || screenName === 'tierList' || screenName === 'albumResults') {
                 backButton.classList.remove('visible');
             } else if (screenName === 'comparison' && window.kanyeApp?.backButton) {
                 // On mobile, only show back button after at least 2 comparisons
@@ -427,12 +429,12 @@ class UI {
         }
     }
     
-    // Album mode: each card shows an album (cover, name, artist, year) and its two biggest songs
-    displayAlbumComparison(albumA, albumB, highlightsA = [], highlightsB = []) {
+    // Album mode: each card shows an album (cover, name, artist, year) and a line of its biggest songs
+    displayAlbumComparison(albumA, albumB, highlightsA = '', highlightsB = '') {
         [['a', albumA, highlightsA], ['b', albumB, highlightsB]].forEach(([side, album, highlights]) => {
             const card = this.elements.songCards[side];
             if (!card || !album) return;
-            card.title.textContent = album.name;
+            card.title.textContent = UI.ALBUM_SHORT_NAMES[album.id] || album.name;
             card.album.textContent = UI.albumArtist(album);
             card.year.textContent = `(${album.year})`;
             card.albumArt.onerror = function() {
@@ -443,7 +445,26 @@ class UI {
             card.albumArt.src = album.coverArt ? `assets/album-covers/${album.coverArt}` : 'assets/album-covers/placeholder.svg';
             card.albumArt.alt = `${album.name} album cover`;
             const label = document.getElementById(`clip-label-${side}`);
-            if (label) label.textContent = highlights.join(' · ');
+            if (label) label.textContent = highlights;
+        });
+    }
+
+    // Album results page: every album in head-to-head rating order
+    displayAlbumRanking(ranked, picks) {
+        const list = document.getElementById('album-ranking');
+        const subtitle = document.getElementById('album-results-subtitle');
+        if (subtitle) subtitle.textContent = `All ${ranked.length} albums, ranked from your ${picks} head-to-head picks`;
+        if (!list) return;
+        list.replaceChildren(...ranked.map(({ album }, index) =>
+            this.createAlbumResultItem(index + 1, { album }, `${UI.albumArtist(album)} · ${album.year}`)));
+    }
+
+    // Songs / Albums switch on both results pages; current is the mode whose results are showing
+    updateModeSwitch(current, status) {
+        document.querySelectorAll('.mode-tab').forEach(tab => {
+            tab.setAttribute('aria-selected', String(tab.dataset.mode === current));
+            const statusEl = tab.querySelector('.mode-tab-status');
+            if (statusEl) statusEl.textContent = status[tab.dataset.mode] || '';
         });
     }
 
@@ -797,7 +818,7 @@ class UI {
         return copied;
     }
 
-    createAlbumResultItem(rank, albumData) {
+    createAlbumResultItem(rank, albumData, subtitle = albumData.album.year) {
         const div = document.createElement('div');
         div.className = 'result-item';
         
@@ -810,7 +831,7 @@ class UI {
             <img class="result-album-art" src="${albumArtPath}" alt="${albumData.album.name} album cover">
             <div class="result-info">
                 <div class="result-title">${albumData.album.name}</div>
-                <div class="result-album">${albumData.album.year}</div>
+                <div class="result-album">${subtitle}</div>
             </div>
         `;
         
@@ -915,7 +936,12 @@ class UI {
 
 UI.PROGRESS_MODES = {
     songs: { unlockAt: KanyeUtils.RESULTS_UNLOCK_AT, milestones: [0, KanyeUtils.RESULTS_UNLOCK_AT, 50, 100], prize: 'your results', doneLabel: "I'm Done - Show Results" },
-    albums: { unlockAt: KanyeUtils.ALBUM_TIER_UNLOCK_AT, milestones: [0, KanyeUtils.ALBUM_TIER_UNLOCK_AT, 30, 50], prize: 'your tier list', doneLabel: "I'm Done - Show Tier List" }
+    albums: { unlockAt: KanyeUtils.ALBUM_TIER_UNLOCK_AT, milestones: [0, KanyeUtils.ALBUM_TIER_UNLOCK_AT, 30, 50], prize: 'your album ranking', doneLabel: "I'm Done - Show Results" }
+};
+
+// Card titles that would otherwise wrap to a second line
+UI.ALBUM_SHORT_NAMES = {
+    mbdtf: 'MBDTF'
 };
 
 UI.ALBUM_ARTISTS = {

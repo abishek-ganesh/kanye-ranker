@@ -7,7 +7,8 @@
     body:has(#landing-screen.active) #back-button,
     #results-screen #back-button,
     #results-screen.active ~ #back-button,
-    body:has(#results-screen.active) #back-button {
+    body:has(#results-screen.active) #back-button,
+    body:has(#album-results-screen.active) #back-button {
         display: none !important;
     }
     

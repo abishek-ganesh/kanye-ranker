@@ -203,17 +203,16 @@
                 <button id="start-ranking" class="btn btn-primary btn-hero">
                     START
                 </button>
-                <!-- Album mode entry: stands on the dome under START (css/album-mode.css) -->
-                <button id="start-album-mode" class="album-mode-cta" type="button">
-                    <span class="album-mode-cta-label">Rank albums instead</span>
-                    <span class="album-mode-cta-sub">Album tier list in 15 picks</span>
-                </button>
             </div>
             <div id="globe-callout" class="globe-callout" aria-live="polite"></div>
             <div class="globe-meta" aria-hidden="true">
-                <span>On the dome · <b id="globe-scene">Earth</b></span>
-                <span>Tap the globe</span>
+                <span><span class="globe-meta-prefix">On the dome · </span><b id="globe-scene">Earth</b></span>
             </div>
+            <!-- Album mode entry, bottom right of the stage (css/album-mode.css) -->
+            <button id="start-album-mode" class="album-mode-cta" type="button">
+                <span class="album-mode-cta-label">Rank albums instead</span>
+                <span class="album-mode-cta-sub">Album tier list in 15 picks</span>
+            </button>
         </section>
 
         <div class="container">
@@ -399,6 +398,16 @@
     <!-- Results Screen -->
     <div id="results-screen" class="screen">
         <div class="container">
+            <div class="results-mode-switch" role="tablist" aria-label="Your rankings">
+                <button class="mode-tab" type="button" role="tab" data-mode="songs" aria-selected="false">
+                    <span class="mode-tab-label">🎵 Songs</span>
+                    <span class="mode-tab-status"></span>
+                </button>
+                <button class="mode-tab" type="button" role="tab" data-mode="albums" aria-selected="false">
+                    <span class="mode-tab-label">💿 Albums</span>
+                    <span class="mode-tab-status"></span>
+                </button>
+            </div>
             <div class="download-buttons">
                 <button id="export-songs-image" class="btn btn-secondary btn-large">
                     <span class="btn-icon">📸</span>
@@ -444,6 +453,41 @@
         </div>
     </div>
 
+    <!-- Album Results Screen: album mode's head-to-head ranking (js/app.js showAlbumResults) -->
+    <div id="album-results-screen" class="screen">
+        <div class="container">
+            <div class="results-mode-switch" role="tablist" aria-label="Your rankings">
+                <button class="mode-tab" type="button" role="tab" data-mode="songs" aria-selected="false">
+                    <span class="mode-tab-label">🎵 Songs</span>
+                    <span class="mode-tab-status"></span>
+                </button>
+                <button class="mode-tab" type="button" role="tab" data-mode="albums" aria-selected="false">
+                    <span class="mode-tab-label">💿 Albums</span>
+                    <span class="mode-tab-status"></span>
+                </button>
+            </div>
+            <div class="album-results-actions">
+                <button id="album-keep-ranking" class="btn btn-secondary btn-large">
+                    <span class="btn-icon">➕</span>
+                    <span class="btn-label">KEEP RANKING ALBUMS</span>
+                </button>
+                <button id="album-restart" class="btn btn-secondary btn-large">
+                    <span class="btn-icon">🔄</span>
+                    <span class="btn-label">START OVER</span>
+                </button>
+            </div>
+            <h1 id="album-results-header">Your Album Ranking</h1>
+            <p class="results-subtitle" id="album-results-subtitle"></p>
+            <div class="tier-cta-wrap">
+                <button id="open-album-tier-list" class="tier-cta" type="button">
+                    <span class="tier-cta-letters" aria-hidden="true"><span>S</span><span>A</span><span>B</span><span>C</span><span>D</span></span>
+                    <span class="tier-cta-text">Reveal your tier list</span>
+                </button>
+            </div>
+            <div id="album-ranking" class="results-list"></div>
+        </div>
+    </div>
+
     <!-- Tier List Screen (js/tier-list-ui.js) -->
     <div id="tier-list-screen" class="screen">
         <div class="tier-shell">
@@ -470,7 +514,6 @@
                 <button id="tier-share-image" class="tier-action tier-action-primary" type="button">📸 Share image</button>
                 <button id="tier-share-video" class="tier-action" type="button" hidden>🎬 Save reveal video</button>
                 <button id="tier-replay" class="tier-action" type="button">↻ Replay reveal</button>
-                <button id="tier-rank-songs" class="tier-action" type="button" hidden>🎵 Rank songs too</button>
             </div>
         </div>
 

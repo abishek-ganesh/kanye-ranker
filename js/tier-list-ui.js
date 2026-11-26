@@ -60,15 +60,15 @@
                 videoClose: $('tier-video-close'),
                 tabs: Array.from(document.querySelectorAll('.tier-tab')),
                 tabsWrap: document.querySelector('.tier-tabs'),
-                title: document.querySelector('.tier-title'),
-                rankSongs: $('tier-rank-songs')
+                title: document.querySelector('.tier-title')
             };
             this.bind();
             this.el.shareVideo.hidden = !window.TierListExport?.videoSupport?.().supported;
         }
 
+        // Album mode keeps its own pins, so moves there never touch the song-mode album tier list
         get core() {
-            return this.app.tierList;
+            return this.albumsOnly ? this.app.albumTierList : this.app.tierList;
         }
 
         // Which ranking mode produced this tier list, for analytics
@@ -92,7 +92,6 @@
                 btn.addEventListener('click', () => this.moveSelected(btn.dataset.tier));
             });
             this.el.videoClose.addEventListener('click', () => this.closeVideo());
-            this.el.rankSongs?.addEventListener('click', () => this.app.switchToSongMode());
 
             // One delegated handler for tiles and tier labels
             this.el.board.addEventListener('click', e => {
@@ -129,13 +128,11 @@
 
         // albumsOnly: opened from album mode, so there's no Songs tab and Back returns to the comparisons
         open({ albumsOnly = false } = {}) {
-            if (!this.core) return;
             this.albumsOnly = albumsOnly;
+            if (!this.core) return;
             this.kind = albumsOnly ? 'albums' : 'songs';
             this.revealedKinds.clear();
             this.el.tabsWrap.hidden = albumsOnly;
-            if (this.el.rankSongs) this.el.rankSongs.hidden = !albumsOnly;
-            this.el.back.textContent = albumsOnly ? '← Keep ranking' : '← Results';
             this.el.title.textContent = albumsOnly ? 'Your Album Tier List' : 'Your Tier List';
             this.app.ui.showScreen('tierList');
             window.analytics?.trackScreenView('tier_list');
@@ -149,7 +146,7 @@
             this.stopReveal();
             this.clearSelection();
             if (this.albumsOnly) {
-                this.app.resumeAlbumRanking();
+                this.app.showAlbumResults();
                 return;
             }
             this.app.ui.showScreen('results');
@@ -253,7 +250,7 @@
                 if (this.albumsOnly) {
                     const picks = this.app.comparisonsDone();
                     this.el.summary.textContent = ranked === total
-                        ? `All ${total} albums, ranked from your ${picks} picks. Keep ranking to sharpen it.`
+                        ? `All ${total} albums, ranked from your ${picks} head-to-head picks.`
                         : `${ranked} of ${total} albums ranked so far. Keep ranking to place the rest.`;
                 } else {
                     this.el.summary.textContent = ranked === total

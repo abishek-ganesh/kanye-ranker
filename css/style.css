@@ -531,8 +531,9 @@ body {
     min-height: 120px;
 }
 
-/* Results Screen */
-#results-screen h1 {
+/* Results Screen (and album mode's results page) */
+#results-screen h1,
+#album-results-screen h1 {
     text-align: center;
     font-size: 2.5rem;
     font-weight: 900;
@@ -956,11 +957,6 @@ body {
 }
 
 @media (max-width: 480px) {
-    /* Long quotes wrap to 7 lines and would push the stage's buttons below the fold */
-    .main-quote {
-        font-size: 1.125rem;
-    }
-
     .app-title {
         font-size: 2.5rem;
     }

@@ -199,7 +199,8 @@
 
             const btnH = startBtn.offsetHeight || 64;
             const canvasTop = Math.round(btnH + (narrow ? 64 : 84));
-            const stageH = canvasTop + ch + 44;
+            // Bottom strip holds the scene label and the album mode button
+            const stageH = canvasTop + ch + 64;
             stage.style.height = stageH + 'px';
 
             const scale = Math.min(window.devicePixelRatio || 1, qualityCap, 900 / cw);

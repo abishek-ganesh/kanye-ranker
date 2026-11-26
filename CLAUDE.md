@@ -42,7 +42,7 @@ kanye-ranker/
 │   ├── song-request.css
 │   ├── globe-stage.css         # Landing globe stage band, beams, callout
 │   ├── tier-list.css           # Tier list screen, results entry button, move bar, video overlay
-│   └── album-mode.css          # "Rank albums instead" button (under START on the stage), album-mode comparison cards
+│   └── album-mode.css          # "Rank albums instead" button (bottom right of the globe stage), album-mode comparison cards
 ├── js/
 │   ├── app.js                  # KanyeRankerApp: pairing algorithm, choice handling, results, album ranking
 │   ├── app-init.js             # Boots the app on window load (waits for video links)
@@ -102,7 +102,7 @@ kanye-ranker/
 - 17 albums, 198 songs (filtered to the most-streamed tracks, so per-album song counts are lower than `trackCount`)
 - Albums range from "The College Dropout" (2004) to "Bully" (2026)
 - Each song has `spotifyStreams`/`spotifyRank` (drive popularity tiers) and `spotifyUri`
-- `songs.json` is fetched with a cache-busting query (`?v=3`); bump it when the data changes
+- `songs.json` is fetched with a cache-busting query (`?v=4`); bump it when the data changes
 
 ### Core Features
 1. **Pairwise song comparison**: tap/click a card, or keyboard (Left/1, Right/2, Space/S to skip)
@@ -115,7 +115,7 @@ kanye-ranker/
 8. **Back button**: undo last comparison, rolling back ratings and all pairing state, in-memory history cleared on start/restart (on mobile, 768px and below, it only appears once 2 comparisons are done)
 9. **Globe stage** (`js/globe-stage.js`): the landing hero is a dark stage band (dark in both themes) where START stands on a spinning dome, after the 2026 Ye Live tour stage. The dome is Canvas 2D sphere-mapped from `assets/stage/` textures and cycles Earth, album-color washes and the Moon (`TIMELINE`/`WASHES` in `GlobeStageCore`, wash ids match `album-colors.js`). Tapping it slows the spin and fires `globe_tapped`. It only animates while the landing screen is visible, shows a still frame under reduced motion, and lowers its render resolution on slow devices. `window.globeStage` exposes `isReady/isRunning/currentScene/domeTop` for E2E tests
 10. **Tier list** (`js/tier-list*.js`): "Reveal your tier list" near the top of results opens its own screen with Songs / Albums tabs. `TierListCore` buckets ranked items by rank percentile (S 10%, A 20%, B 30%, C 25%, D 15%; ties share a tier, #1 is always S). Songs = only compared songs; albums = all 17, with albums under the 2-compared-song minimum in an Unranked tray. Tiles fill in D up to S with a pause before S (skipped under reduced motion). Tap a tile, then a tier in the bottom move bar (or a tier label) to move it; moves are pinned, survive Continue Ranking, and clear on restart. Shares a 1080x1920 PNG per tab and a silent reveal video (canvas `captureStream` + MediaRecorder, MP4 where supported, else WebM); the on-screen reveal and the video share `TierListExport.revealSchedule`. `window.tierListUI` exposes `kind/board/isRevealing()` for E2E tests
-11. **Album mode** (`js/album-ranker.js`, "ALBUM MODE" section of `js/app.js`): "Rank albums instead" under START on the landing globe stage, or the `/?mode=albums` link, compares the 17 albums head to head instead of songs. `app.mode` is `'albums'` and `body.album-mode` hides song-only controls (Watch, song requests); cards show cover, name, artist, year and the album's two biggest songs. `AlbumRankerCore` pairs unseen albums first (all 17 within 9 picks), then the least-compared album against a close-rated album it hasn't faced, never rematches, and keeps its own `EloRating`. The done button opens the album tier list at 15 picks (`KanyeUtils.ALBUM_TIER_UNLOCK_AT`; milestones 15/30/50 via `UI.PROGRESS_MODES`), albums only, with "← Keep ranking" and "Rank songs too". Undo works through the same back button. Restart or starting song mode exits album mode and drops `?mode` from the URL
+11. **Album mode** (`js/album-ranker.js`, "ALBUM MODE" section of `js/app.js`): "Rank albums instead" at the bottom right of the landing globe stage, or the `/?mode=albums` link, compares the 17 albums head to head instead of songs. `body.album-mode` hides song-only controls (Watch, song requests); cards show cover, name (`UI.ALBUM_SHORT_NAMES`, e.g. MBDTF), artist, year and the top 3 songs plus "+N more". `AlbumRankerCore` pairs unseen albums first (all 17 within 9 picks), then the least-compared album against a close-rated album it hasn't faced, never rematches, and keeps its own `EloRating`. I'm Done at 15 picks (`KanyeUtils.ALBUM_TIER_UNLOCK_AT`; milestones 15/30/50 via `UI.PROGRESS_MODES`) opens `#album-results-screen`: all 17 ranked, Reveal your tier list (albums only, own pins in `app.albumTierList`), Keep ranking albums, Start Over. **Song and album sessions coexist**: `app.mode` is the active one, `setMode()` parks the other mode's pick counter and undo history in `app.modeState`, and the Songs / Albums switch on both results pages (`.mode-tab`, `openSongMode`/`openAlbumMode`) shows results when unlocked or resumes/starts that ranking. Only Start Over clears both. Covers are preloaded when album mode starts
 12. **Dark mode, feedback form, rotating Kanye quotes**
 
 ### Spotify (no API login)
@@ -152,7 +152,7 @@ Each Top 10 row has a "Spotify" link (`open.spotify.com/track/<id>` from `spotif
 
 ## Recent Updates
 
-- Album mode (2026-11-25): rank the 17 albums head to head from the landing page or `/?mode=albums`, album tier list after 15 picks. Built for the "kanye album ranker" and "kanye tier list" searches
+- Album mode (2026-11-25): rank the 17 albums head to head from the landing page or `/?mode=albums`; album results and tier list after 15 picks; song and album rankings coexist behind a Songs / Albums switch on the results pages. Built for the "kanye album ranker" and "kanye tier list" searches. Vultures 1 cover shrunk from a 3.9MB PNG to a 120KB JPG
 - Search copy tuned from Search Console and Bing data (2026-11-25): title and FAQ now cover album ranking, tier lists, niche songs and "Ye"; Kanye West entity links in the JSON-LD; IndexNow ping on deploy
 - Album coverage in early pairings: every album gets a compared song by comparison 20 and a second by 30, so all 17 albums can be ranked; replaced the album diversity roll and the Bully new-album boost (2026-11-13)
 - Tier list: S-D song and album tiers from your ranking, D-to-S reveal, tap-to-move edits, share image and downloadable reveal video

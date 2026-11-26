@@ -55,9 +55,12 @@ class KanyeRankerApp {
         this.songRequests = typeof SongRequestQueue !== 'undefined' ? new SongRequestQueue() : null;
         this.tierList = typeof TierListCore !== 'undefined' ? new TierListCore() : null;
 
-        // 'songs' (default) or 'albums' (albums head to head, ending on the album tier list)
+        // 'songs' (default) or 'albums' (albums head to head). Both sessions can exist side by side;
+        // modeState keeps the inactive mode's pick counter and undo history until Start Over
         this.mode = 'songs';
+        this.modeState = {};
         this.albumRanker = null;
+        this.albumTierList = null;
         this.albumHighlights = new Map();
 
         this.init();
@@ -119,7 +122,7 @@ class KanyeRankerApp {
                 window.KanyeMessages.getRandomMessage('loading') : 
                 'Loading song database...';
             this.ui.showOverlay(loadingMessage);
-            const response = await fetch('data/songs.json?v=3');
+            const response = await fetch('data/songs.json?v=4');
             
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -188,6 +191,15 @@ class KanyeRankerApp {
         }
 
         document.getElementById('start-album-mode')?.addEventListener('click', () => this.startAlbumRanking('button'));
+        document.getElementById('album-keep-ranking')?.addEventListener('click', () => this.startAlbumRanking('results'));
+        document.getElementById('album-restart')?.addEventListener('click', () => this.restart());
+        document.getElementById('open-album-tier-list')?.addEventListener('click', () => window.tierListUI?.open({ albumsOnly: true }));
+        // Songs / Albums switch on both results pages
+        document.querySelectorAll('.mode-tab').forEach(tab => tab.addEventListener('click', () => {
+            if (tab.getAttribute('aria-selected') === 'true') return;
+            if (tab.dataset.mode === 'albums') this.openAlbumMode();
+            else this.openSongMode();
+        }));
         
         if (this.ui.elements.skipButton) {
             this.ui.elements.skipButton.addEventListener('click', () => {
@@ -297,7 +309,7 @@ class KanyeRankerApp {
     
     startRanking() {
         try {
-            this.exitAlbumMode();
+            this.setMode('songs');
             if (window.analytics) {
                 window.analytics.trackScreenView('comparison');
                 window.analytics.trackRankingStarted();
@@ -1191,7 +1203,7 @@ class KanyeRankerApp {
     // completionType: 'early_exit' (user pressed I'm Done) or 'all_pairs_exhausted'
     showResults(completionType = 'early_exit') {
         if (this.mode === 'albums') {
-            this.showAlbumTierList();
+            this.showAlbumResults();
             return;
         }
         try {
@@ -1234,7 +1246,9 @@ class KanyeRankerApp {
         
         
         this.ui.displayResults(topSongs, topAlbums, this.albums);
+        this.ui.updateModeSwitch('songs', this.getModeStatus());
         this.ui.showScreen('results');
+        window.scrollTo(0, 0);
         
         // Track analytics
         if (window.analytics && topSongs.length > 0 && topAlbums.length > 0) {
@@ -1401,7 +1415,11 @@ class KanyeRankerApp {
     // Session methods removed - no longer saving/loading sessions
     
     restart() {
-        this.exitAlbumMode();
+        // Start Over clears both the song and the album session
+        this.setMode('songs');
+        this.modeState = {};
+        this.albumRanker = null;
+        this.albumTierList = null;
         this.songRatings.clear();
         this.songs.forEach(song => {
             this.songRatings.set(song.id, song.initialRating);
@@ -1587,61 +1605,123 @@ class KanyeRankerApp {
     }
 
     // ==============================
-    // ALBUM MODE: albums head to head, ending on the album tier list
+    // ALBUM MODE: albums head to head. The album and song sessions live side by side,
+    // and the results pages switch between them; only Start Over throws either away
     // ==============================
+
+    // Switches the active mode, parking the other mode's pick counter and undo history
+    setMode(mode) {
+        if (mode === this.mode) return;
+        this.modeState[this.mode] = { pairIndex: this.currentPairIndex, history: this.backButton?.history || [] };
+        this.mode = mode;
+        const saved = this.modeState[mode] || { pairIndex: 0, history: [] };
+        this.currentPairIndex = saved.pairIndex;
+        this.backButton?.setHistory(saved.history);
+        this.isProcessingChoice = false;
+        document.body.classList.toggle('album-mode', mode === 'albums');
+        this.ui.setProgressMode(mode);
+
+        // Drop ?mode=albums once songs are active, so a refresh doesn't land back in album mode
+        if (mode === 'songs') {
+            const url = new URL(window.location.href);
+            if (url.searchParams.has('mode')) {
+                url.searchParams.delete('mode');
+                window.history.replaceState(null, '', url);
+            }
+        }
+    }
+
+    // Starts album mode, or picks up the album session where it left off
     startAlbumRanking(source = 'button') {
         try {
             if (typeof AlbumRankerCore === 'undefined' || !this.albums.size) {
                 throw new Error('Album mode is unavailable');
             }
-            this.mode = 'albums';
-            this.albumRanker = new AlbumRankerCore(Array.from(this.albums.keys()));
-            this.currentPairIndex = 0;
-            this.isProcessingChoice = false;
-            this.backButton?.clear();
-            this.tierList?.reset();
-            document.body.classList.add('album-mode');
-            this.ui.setProgressMode('albums');
-
+            if (!this.albumRanker) {
+                this.albumRanker = new AlbumRankerCore(Array.from(this.albums.keys()));
+                this.albumTierList = typeof TierListCore !== 'undefined' ? new TierListCore() : null;
+                this.modeState.albums = { pairIndex: 0, history: [] };
+                this.preloadAlbumCovers();
+                window.analytics?.trackAlbumModeStarted(source);
+            }
+            this.setMode('albums');
             window.analytics?.trackScreenView('comparison');
-            window.analytics?.trackAlbumModeStarted(source);
-
             this.ui.showScreen('comparison');
             window.scrollTo(0, 0);
-            this.ui.updateProgressBar(0, 0, 0);
             this.showNextComparison();
         } catch (error) {
             KanyeUtils.handleError(error, 'initialization');
         }
     }
 
-    exitAlbumMode() {
-        if (this.mode !== 'albums') return;
-        this.mode = 'songs';
-        this.albumRanker = null;
-        this.backButton?.clear();
-        document.body.classList.remove('album-mode');
-        this.ui.setProgressMode('songs');
-
-        // Drop ?mode=albums so a refresh doesn't put song mode back into album mode
-        const url = new URL(window.location.href);
-        if (url.searchParams.has('mode')) {
-            url.searchParams.delete('mode');
-            window.history.replaceState(null, '', url);
+    // Songs from the results switch: results if unlocked, otherwise continue (or start) ranking songs
+    openSongMode() {
+        if (!this.pairings.length) {
+            this.startRanking();
+            return;
+        }
+        this.setMode('songs');
+        if (this.elo.getCompletedComparisons() >= KanyeUtils.RESULTS_UNLOCK_AT) {
+            this.showResults('mode_switch');
+        } else {
+            this.ui.showScreen('comparison');
+            window.scrollTo(0, 0);
+            this.showNextComparison();
         }
     }
 
-    // Starts a fresh song session from album mode
-    switchToSongMode() {
-        this.restart();
-        this.startRanking();
+    // Albums from the results switch: album results if unlocked, otherwise continue (or start) album picks
+    openAlbumMode() {
+        if ((this.albumRanker?.completed() || 0) >= KanyeUtils.ALBUM_TIER_UNLOCK_AT) {
+            this.showAlbumResults();
+        } else {
+            this.startAlbumRanking('results');
+        }
+    }
+
+    // Status line under each tab of the results Songs / Albums switch
+    getModeStatus() {
+        const songs = this.elo.getCompletedComparisons();
+        const albums = this.albumRanker?.completed() || 0;
+        const songUnlock = KanyeUtils.RESULTS_UNLOCK_AT;
+        const albumUnlock = KanyeUtils.ALBUM_TIER_UNLOCK_AT;
+        return {
+            songs: songs >= songUnlock ? 'Your Top 10' : this.pairings.length ? `${songs}/${songUnlock} picks` : 'Rank songs',
+            albums: albums >= albumUnlock ? `All ${this.albums.size} ranked` : this.albumRanker ? `${albums}/${albumUnlock} picks` : 'Head to head'
+        };
+    }
+
+    // The album results page: all albums ranked by their head-to-head rating
+    showAlbumResults() {
+        const done = this.albumRanker?.completed() || 0;
+        const unlockAt = KanyeUtils.ALBUM_TIER_UNLOCK_AT;
+        if (done < unlockAt) {
+            this.ui.showWarning(`Need ${unlockAt}+ picks for your album ranking (${done} done)`);
+            return;
+        }
+        this.setMode('albums');
+        const ranked = this.albumRanker.items()
+            .map(({ id, score }) => ({ album: this.albums.get(id), score }))
+            .sort((a, b) => (b.score ?? -Infinity) - (a.score ?? -Infinity));
+        this.ui.displayAlbumRanking(ranked, done);
+        this.ui.updateModeSwitch('albums', this.getModeStatus());
+        window.analytics?.trackScreenView('album_results');
+        this.ui.showScreen('albumResults');
+        window.scrollTo(0, 0);
+    }
+
+    // Album covers are all needed within the first 9 picks, so fetch them up front
+    preloadAlbumCovers() {
+        this.albums.forEach(album => {
+            if (album.coverArt) new Image().src = `assets/album-covers/${album.coverArt}`;
+        });
     }
 
     showNextAlbumComparison() {
         const pair = this.albumRanker?.current();
         if (!pair) {
             this.ui.showSuccess("You've compared every pair of albums!");
-            this.showAlbumTierList();
+            this.showAlbumResults();
             return;
         }
         const [albumA, albumB] = pair.map(id => this.albums.get(id));
@@ -1690,32 +1770,15 @@ class KanyeRankerApp {
         }, 100);
     }
 
-    showAlbumTierList() {
-        const done = this.albumRanker?.completed() || 0;
-        const unlockAt = KanyeUtils.ALBUM_TIER_UNLOCK_AT;
-        if (done < unlockAt) {
-            this.ui.showWarning(`Need ${unlockAt}+ picks for your tier list (${done} done)`);
-            return;
-        }
-        window.tierListUI?.open({ albumsOnly: true });
-    }
-
-    // Back from the album tier list: pick up where the comparisons left off
-    resumeAlbumRanking() {
-        this.ui.showScreen('comparison');
-        window.scrollTo(0, 0);
-        this.showNextComparison();
-    }
-
-    // An album's two most-streamed songs, shown on its card as a memory jog
+    // An album's three most-streamed songs plus how many more are in the ranker, shown on its card as a memory jog
     getAlbumHighlights(albumId) {
         if (!this.albumHighlights.has(albumId)) {
-            const titles = this.songs
+            const songs = this.songs
                 .filter(song => song.albumId === albumId)
-                .sort((a, b) => (b.spotifyStreams || 0) - (a.spotifyStreams || 0))
-                .slice(0, 2)
-                .map(song => KanyeUtils.getCensoredTitle(song.title));
-            this.albumHighlights.set(albumId, titles);
+                .sort((a, b) => (b.spotifyStreams || 0) - (a.spotifyStreams || 0));
+            const top = songs.slice(0, 3).map(song => KanyeUtils.getCensoredTitle(song.title)).join(' · ');
+            const more = songs.length - 3;
+            this.albumHighlights.set(albumId, more > 0 ? `${top} +${more}\u00a0more` : top);
         }
         return this.albumHighlights.get(albumId);
     }

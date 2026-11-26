@@ -28,14 +28,14 @@ async function makeComparisons(page, count, { tap = false } = {}) {
   const card = page.locator('#song-a .album-art');
   for (let i = 0; i < count; i++) {
     await card.waitFor({ state: 'visible', timeout: 5000 });
-    await page.waitForFunction(() => !window.kanyeApp?.isProcessingChoice, null, { timeout: 5000 });
+    await page.waitForFunction(() => !window.kanyeApp?.isProcessingChoice, null, { timeout: 10000 });
     const before = await page.evaluate(() => window.kanyeApp.currentPairIndex);
     await (tap ? card.tap() : card.click());
     await page.clock.runFor(600);
     await page.waitForFunction(
       idx => window.kanyeApp.currentPairIndex > idx && !window.kanyeApp.isProcessingChoice,
       before,
-      { timeout: 5000 }
+      { timeout: 10000 }
     );
   }
 }

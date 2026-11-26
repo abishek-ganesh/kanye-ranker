@@ -1,19 +1,17 @@
 /* Album mode: landing entry button, and the comparison screen while albums go head to head */
 
-.stage-performer {
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-}
-
-/* Sits on the dome under START, so it shares the stage's dark look in both themes */
+/* Bottom right of the globe stage, beside the scene label; dark like the stage in both themes */
 .album-mode-cta {
+    position: absolute;
+    z-index: 7;
+    right: max(16px, env(safe-area-inset-right, 0px));
+    bottom: 10px;
     display: inline-flex;
     flex-direction: column;
     align-items: center;
     gap: 1px;
     min-height: 48px;
-    max-width: calc(100% - 32px);
+    max-width: 60%;
     padding: 7px 20px;
     border: 1px solid rgba(255, 255, 255, 0.55);
     border-radius: 999px;
@@ -49,6 +47,22 @@
     opacity: 0.75;
 }
 
+/* Phones: just the scene name on the left, so the button has room on the right */
+@media (max-width: 480px) {
+    .globe-meta-prefix {
+        display: none;
+    }
+
+    .album-mode-cta {
+        padding: 6px 14px;
+    }
+
+    .album-mode-cta-label {
+        font-size: 0.78rem;
+        letter-spacing: 0.06em;
+    }
+}
+
 /* Song-only controls make no sense when the cards are albums (ids beat mobile-override.css) */
 body.album-mode #comparison-screen .song-actions,
 body.album-mode #song-request-btn {
@@ -75,3 +89,74 @@ body.album-mode #comparison-screen .clip-label {
         font-size: 12px !important;
     }
 }
+
+/* Songs / Albums switch at the top of both results pages */
+.results-mode-switch {
+    display: flex;
+    gap: 6px;
+    max-width: 420px;
+    margin: 0 auto 1.5rem;
+    padding: 5px;
+    border-radius: 16px;
+    background: var(--accent-white);
+    border: 1px solid var(--border-color);
+}
+
+.mode-tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    min-height: 52px;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--text-color);
+    font: inherit;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.mode-tab-label {
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.mode-tab-status {
+    font-size: 0.75rem;
+    opacity: 0.7;
+}
+
+.mode-tab[aria-selected="true"] {
+    background: var(--text-color);
+    color: var(--background-color);
+    cursor: default;
+}
+
+.mode-tab:not([aria-selected="true"]):hover {
+    background: var(--border-color);
+}
+
+.mode-tab:focus-visible {
+    outline: 3px solid var(--secondary-color);
+    outline-offset: 2px;
+}
+
+/* Album results action row, laid out like the song results row share-integrated.js builds */
+.album-results-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.album-results-actions .btn {
+    flex: 1;
+}
+

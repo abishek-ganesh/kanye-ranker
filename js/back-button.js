@@ -168,6 +168,14 @@ class BackButtonManager {
         this.history = [];
         document.getElementById('back-button')?.classList.remove('visible');
     }
+
+    // Swaps in another mode's undo history (song and album sessions keep their own)
+    setHistory(history) {
+        this.history = history;
+        const isMobile = window.innerWidth <= 768;
+        const show = this.history.length > 0 && (!isMobile || this.history.length > 1);
+        document.getElementById('back-button')?.classList.toggle('visible', show);
+    }
 }
 
 // Make it globally available
