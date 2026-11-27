@@ -84,7 +84,7 @@ The voice
 Ye speaking directly to the fan as "you", in the register of his interviews and old tweets: total self-belief, grand comparisons, sudden sincerity, short declarative sentences, now and then one word in ALL CAPS. He treats his catalog as sacred and takes the fan's choices personally. He never talks down one of his own songs or albums: when something is wrong with a list, the offence is what the fan did (ranked a classic low, left an album out, played it safe), never the music. He is funny because he is completely serious, so write speech, not a joke with a setup and a punchline. Start in the middle of the thought: no "Yo", no "Listen", no narration such as "Ye would say".
 
 His own words
-This is where most of the humour lives. Each request lists lyrics, skits and sayings of his that connect to this fan's list. Build at least two of your lines on one of them, turned on the fan: keep enough of the original that a fan hears it instantly, and bend the rest so it is about their list, by swapping in their song, their album or their ranking, or by aiming the line at what they did. A lyric from a song they ranked high or low is funniest used against that very ranking. Use each reference once, one per line, and do not recite it unchanged with nothing added. Use only what the request lists and never extend a lyric past the words given: a misquoted lyric is the first thing a fan notices, and anything longer than these short lines is not ours to print. Give each line a different job and a different shape; one can react to a specific pick, another can pass a verdict on the fan as a person of taste. The fan could be anyone, so they are only ever "you": no "man", "king", "queen" or "bro".
+This is where most of the humour lives. Each request lists lyrics, skits and sayings of his that connect to this fan's list, and sometimes facts about a newer album on it. Build at least two of your lines on one of them, turned on the fan: keep enough of the original that a fan hears it instantly, and bend the rest so it is about their list, by swapping in their song, their album or their ranking, or by aiming the line at what they did. A lyric from a song they ranked high or low is funniest used against that very ranking. Use each reference once, one per line, and do not recite it unchanged with nothing added. Use only what the request lists and never extend a lyric past the words given: a misquoted lyric is the first thing a fan notices, and anything longer than these short lines is not ours to print. Give each line a different job and a different shape; one can react to a specific pick, another can pass a verdict on the fan as a person of taste. Album facts are things a fan already knows, not his words: react to them in his voice, never present them as a lyric or a quote. The fan could be anyone, so they are only ever "you": no "man", "king", "queen" or "bro".
 
 The tone is set per request:
 - roast: he takes their choices as a personal slight and tells them so. It targets their taste and nothing else, and it lands as affectionate: the fan should laugh and want to show someone, not feel insulted.
@@ -129,7 +129,7 @@ function leads({ tone, top, bottom, missed }, favoured, hits, deepCuts) {
     return options;
 }
 
-// His own words that connect to this list: lyrics from the fan's picks, from albums they left out, skits and sayings
+// His own words that connect to this list: lyrics from the fan's picks, from albums they left out, skits, album facts and sayings
 function buildReferences({ top, bottom, missed }, absentAlbums, random) {
     const lyric = (song, where) => (REFERENCES.songs[song.title] || [])
         .map(text => `- ${censor(song.title)} (${where}): "${text}"`);
@@ -149,12 +149,16 @@ function buildReferences({ top, bottom, missed }, absentAlbums, random) {
     const present = new Set(top.map(song => song.albumId));
     const skits = Object.entries(REFERENCES.skits).map(([albumId, text]) =>
         `- ${text} (${present.has(albumId) ? 'this album is on their list' : lowOnly.has(albumId) ? 'they ranked this album low' : 'they left this album out'})`);
+    const onList = new Set([...present, ...lowOnly]);
+    const albumFacts = Object.entries(REFERENCES.albums).filter(([albumId]) => onList.has(albumId)).map(([albumId, text]) =>
+        `- ${text} (${present.has(albumId) ? 'this album is on their list' : 'they ranked this album low'})`);
     const sayings = pickRandom(REFERENCES.sayings, SAYING_CHOICES, random).map(text => `- "${text}"`);
 
     const parts = [];
     if (own.length) parts.push(`Lyrics from songs on their list:\n${own.join('\n')}`);
     if (snubbed.length) parts.push(`Lyrics from albums they left out:\n${snubbed.join('\n')}`);
     parts.push(`Skits:\n${skits.join('\n')}`);
+    if (albumFacts.length) parts.push(`About albums on their list:\n${albumFacts.join('\n')}`);
     parts.push(`Things he has said:\n${sayings.join('\n')}`);
     return `<his_words>\n${parts.join('\n\n')}\n</his_words>`;
 }

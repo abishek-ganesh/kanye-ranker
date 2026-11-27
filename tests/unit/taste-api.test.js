@@ -663,6 +663,21 @@ describe('buildUserMessage', () => {
       ]);
     });
 
+    test('album facts appear only for newer albums on the list, each saying where the album sits', () => {
+      const firstOf = albumId => byStreams.find(song => song.albumId === albumId).id;
+      const classics = ['Runaway', 'POWER', 'Stronger', 'Heartless', 'Gold Digger'].map(idOf);
+      const none = buildUserMessage(validate({ tone: 'roast', top: classics }), QUOTE_CHOICES, seeded(1));
+      expect(none).not.toContain('About albums on their list');
+
+      const top = [...classics, firstOf('v1'), firstOf('bully')];
+      const facts = wordsUnder(buildUserMessage(validate({ tone: 'roast', top, bottom: [firstOf('donda2')] }), QUOTE_CHOICES, seeded(1)), 'About albums on their list');
+      expect(facts).toEqual([
+        `- ${REFERENCES.albums.donda2} (they ranked this album low)`,
+        `- ${REFERENCES.albums.v1} (this album is on their list)`,
+        `- ${REFERENCES.albums.bully} (this album is on their list)`
+      ]);
+    });
+
     test('offers four different sayings, all from the references file', () => {
       for (let seed = 0; seed < 30; seed++) {
         const lines = wordsUnder(buildUserMessage(ranking(), QUOTE_CHOICES, seeded(seed)), 'Things he has said');
@@ -1207,8 +1222,19 @@ describe('ye-references', () => {
     });
   });
 
+  test('album fact keys are real album ids and each fact is a one-paragraph description', () => {
+    expect(Object.keys(REFERENCES.albums).length).toBeGreaterThan(0);
+    Object.entries(REFERENCES.albums).forEach(([albumId, text]) => {
+      expect({ albumId, known: ALBUMS.has(albumId) }).toEqual({ albumId, known: true });
+      expect(typeof text).toBe('string');
+      expect(text.length).toBeGreaterThan(0);
+      expect(text.length).toBeLessThanOrEqual(300);
+      expect(text).not.toMatch(/[\r\n]/);
+    });
+  });
+
   test('nothing in the file is uncensored', () => {
-    const everything = [...lyrics.map(([, text]) => text), ...REFERENCES.sayings, ...Object.values(REFERENCES.skits)];
+    const everything = [...lyrics.map(([, text]) => text), ...REFERENCES.sayings, ...Object.values(REFERENCES.skits), ...Object.values(REFERENCES.albums)];
     const bad = everything.filter(text => /nigga|fuck|shit|bitch/i.test(text));
     expect(bad).toEqual([]);
   });

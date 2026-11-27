@@ -53,6 +53,14 @@ module.exports = {
         lr: 'The Late Registration skits follow Broke Phi Broke, a fraternity proud of having no money that throws Kanye out for owning new shoes and making beats on the side.'
     },
 
+    // Facts a fan knows about the newer albums, in our own words (no lyrics on file for these); offered when the album is on the list
+    albums: {
+        donda2: 'Donda 2 (2022) launched only on his own Stem Player, a $200 handheld gadget, with no Apple Music, Spotify or YouTube. On release day buyers got just four songs; the rest came later.',
+        v1: 'Vultures 1 (2024) brought back explicit lyrics after two clean albums. Carnival, built on a chant sung by a couple of hundred Inter Milan football ultras, hit #1 on the Billboard Hot 100, his first #1 song in 13 years.',
+        v2: 'Vultures 2 (2024) missed release dates for months, then dropped by surprise in the middle of the night, and critics panned it for sounding unfinished.',
+        bully: 'Bully (2026) is mostly him singing, not rapping, over sample-heavy beats that nod to his early records. Rough versions came out a year early, it was delayed several times, and critics split on whether it was a return to form or a copy of his own past.'
+    },
+
     // Tweets and interview moments
     sayings: [
         "I'ma let you finish, but...",
