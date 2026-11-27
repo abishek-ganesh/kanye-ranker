@@ -445,6 +445,9 @@ test.describe('Taste card errors', () => {
 // Reset
 // ============================================================
 test.describe('Taste card reset', () => {
+  // Each test ranks twice (up to 45 picks), which can pass 60s on a slow CI runner
+  test.slow();
+
   test('stays when results come back with the same Top 10', async ({ page }) => {
     const requests = await mockTaste(page);
     await rankToResults(page);
